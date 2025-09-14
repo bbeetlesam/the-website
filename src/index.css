@@ -3,34 +3,32 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    font-family: 'Balsamiq Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 2.5;
-    background-color: #f8f7f3;
-    color: #252525;
+  * {
+    /* Debugging outline */
+    /*outline: 1px solid red;*/
   }
 
-  body {
-    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><path d='M0 0H50V50H0z' fill='none' stroke='%23d6d6d6' stroke-width='2' stroke-linecap='square'/></svg>") repeat fixed;
-    margin: 0;
-    display: flex;
-    place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
+  html, body {
+    @apply flex m-0 p-0 bg-[#f8f7f3] text-[#272727] font-childlike font-medium overflow-x-hidden;
+    /*min-width: 100vw;*/
+    /*place-items: center;*/
+  }
+
+  /* custom scrollbar styling */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: #272727 transparent;
   }
 }
 
 @layer components {
   .header {
-    font-size: 3.2em;
-    line-height: 1.1;
+    @apply leading-tight text-5xl;
   }
 
   .logo {
-    height: 10em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
+    @apply h-40 p-6 transition filter will-change-auto;
+    transition-duration: 300ms;
   }
   .logo:hover {
     filter: drop-shadow(0 0 2em rgba(0, 14, 255, 0.67));
@@ -40,6 +38,12 @@
   }
 
   .read-the-docs {
-    color: #888;
+    @apply text-gray-500; /* optional color #888 */
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><path d='M0 0H50V50H0z' fill='none' stroke='%23d6d6d6' stroke-width='2' stroke-linecap='square'/></svg>") repeat fixed;
   }
 }
