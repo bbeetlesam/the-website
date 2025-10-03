@@ -1,19 +1,21 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header.tsx";
-import Main from "./components/Main.tsx";
+import Home from "./components/Home.tsx";
 import Footer from "./components/Footer.tsx";
-import RoughLine from "./components/RoughLine.tsx";
 import './App.css'
 
 function App() {
   return (
-    <>
-      <Header />
-      <RoughLine />
-      <Main />
-      <RoughLine />
-      <Footer />
-    </>
-  )
+    <Router>
+      <div className="min-h-screen flex flex-col bg-grid">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
+  );
 }
 
 export default App
