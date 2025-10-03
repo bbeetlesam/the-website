@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        handwriting: ['"Balsamiq Sans"', 'cursive'],
+        TASA: ["TASA Explorer", 'sans-writing'],
+        winky: ["Winky Sans", 'sans-writing']
       },
       colors: {
         bgLight: '#f8f7f3',
