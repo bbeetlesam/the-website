@@ -17,3 +17,9 @@ a design that doesn’t cause eye cancer.
 This one’s still shit, but hey, it’s at least 5% less shitty than the previous version.\
 Enjoy, and don’t forget to poop while smoking a cigar, it’s a heavenly combo.
 </details>
+
+## Website References and Inspirations
+
+- [Nathaniel Barlam](https://nathanielbarlam.com/)
+- [Goodgis](https://goodgis.fun/)
+- [MySketchBooth](https://mysketchbooth.com/)
