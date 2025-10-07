@@ -1,36 +1,44 @@
 // header component
 import { NavLink } from "react-router-dom";
+import type { FC } from "react";
+import RoughBorder from "../libraries/RoughBorder.tsx";
 
-function Header() {
+type RouteItem = {
+  path: string;
+  label: string;
+  title?: string;
+};
+
+const Header: FC = () => {
+  const routes: RouteItem[] = [
+    { path: "/games", label: "Games", title: "Explore my games!" },
+    { path: "/music", label: "Music", title: "Pieces of my arts!" },
+    { path: "/bio", label: "Bio", title: "Who I really am?" },
+  ];
+
   return (
-    <header className="z-10 w-full px-10 py-0 mt-7 mb-7">
+    <header className="z-10 w-full px-10 py-0 mt-7 mb-7 text-[#323237]">
       <div className="flex justify-between items-center text-2xl">
         {/* left section */}
         <div className="flex items-center gap-4">
           {/* the icon */}
           <NavLink to="/">
-            <img src="/header-icon.png" alt="bbeetlesam" className="h-12 w-12"/>
+            <RoughBorder strokeWidth={2.5} isAnimatingWhenHovered={true} animFrame={150}>
+              <img src="/header-icon.png" alt="bbeetlesam" className="h-12 w-12"/>
+            </RoughBorder>
           </NavLink>
-          {/* nav link */}
-          <nav className="flex gap-3 text-[1.1rem] font-childlike">
-            <NavLink to="/games" title="Explore my games!"
-              className={({ isActive }) =>
-                `hover:text-black${isActive ? " underline" : ""}`
-              }
-            > Games
-            </NavLink>
-            <NavLink to="/music" title="Pieces of my arts!"
-              className={({ isActive }) =>
-                `hover:text-black${isActive ? " underline" : ""}`
-              }
-            > Music
-            </NavLink>
-            <NavLink to="/bio" title="Who am I?"
-              className={({ isActive }) =>
-                `hover:text-black${isActive ? " underline" : ""}`
-              }
-            > Bio
-            </NavLink>
+          {/* nav links */}
+          <nav className="flex gap-3 text-[1.1rem] font-childlike leading-none">
+            {routes.map(({ path, label, title }: RouteItem) => (
+              <NavLink
+                key={path}
+                to={path}
+                title={title}
+                className={({ isActive }) => `hover:text-black${isActive ? " underline" : ""}`}
+              >
+                {label}
+              </NavLink>
+            ))}
           </nav>
         </div>
 
