@@ -13,6 +13,7 @@ const Header: FC = () => {
   const routes: RouteItem[] = [
     { path: "/games", label: "Games", title: "Explore my games!" },
     { path: "/music", label: "Music", title: "Pieces of my arts!" },
+    { path: "/blogs", label: "Blogs", title: "Read my thoughts!" },
     { path: "/bio", label: "Bio", title: "Who I really am?" },
   ];
 
