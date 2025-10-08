@@ -9,12 +9,24 @@ type RouteItem = {
   title?: string;
 };
 
+type SocialLink = {
+  href: string;
+  title?: string;
+  icon: string;
+};
+
 const Header: FC = () => {
   const routes: RouteItem[] = [
     { path: "/games", label: "Games", title: "Explore my games!" },
-    { path: "/music", label: "Music", title: "Pieces of my arts!" },
+    { path: "/arts", label: "Arts", title: "Pieces of my arts!" },
     { path: "/blogs", label: "Blogs", title: "Read my thoughts!" },
-    { path: "/bio", label: "Bio", title: "Who I really am?" },
+    { path: "/bio", label: "Bio", title: "Who am I really?" },
+  ];
+
+  const socialLinks: SocialLink[] = [
+    { href: "https://bbeetlesam.itch.io", title: "My weird games.", icon: "fa-brands fa-itch-io" },
+    { href: "https://github.com/bbeetlesam", title: "My chaos GitHub.", icon: "fa-brands fa-github" },
+    { href: "https://instagram.com/jstsams", title: "My unpopular Instagram.", icon: "fa-brands fa-instagram" },
   ];
 
   return (
@@ -30,14 +42,14 @@ const Header: FC = () => {
           </NavLink>
           {/* nav links */}
           <nav className="flex gap-3 text-[1.1rem] font-childlike leading-none">
-            {routes.map(({ path, label, title }: RouteItem) => (
+            {routes.map((route: RouteItem) => (
               <NavLink
-                key={path}
-                to={path}
-                title={title}
+                key={route.path}
+                to={route.path}
+                title={route.title}
                 className={({ isActive }) => `hover:text-black${isActive ? " underline" : ""}`}
               >
-                {label}
+                {route.label}
               </NavLink>
             ))}
           </nav>
@@ -45,15 +57,11 @@ const Header: FC = () => {
 
         {/* right section */}
         <div className="flex items-center gap-2 text-2xl">
-          <a href="https://bbeetlesam.itch.io" target="_blank" rel="noopener noreferrer" title="My weird games.">
-            <i className="fa-brands fa-itch-io hover:text-black"></i>
-          </a>
-          <a href="https://github.com/bbeetlesam" target="_blank" rel="noopener noreferrer" title="My chaos GitHub.">
-            <i className="fa-brands fa-github hover:text-black"></i>
-          </a>
-          <a href="https://instagram.com/jstsams" target="_blank" rel="noopener noreferrer" title="Me. Simply me.">
-            <i className="fa-brands fa-instagram hover:text-black"></i>
-          </a>
+          {socialLinks.map((link: SocialLink) => (
+            <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" title={link.title}>
+              <i className={`${link.icon} hover:text-black`}></i>
+            </a>
+          ))}
         </div>
       </div>
     </header>
