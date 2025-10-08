@@ -19,19 +19,28 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v4
 
-      - name: fetch my itch.io
+      - name: fetch my itch.io (all games)
         env:
           ITCH_API_KEY: ${{ secrets.ITCH_API_KEY }}
         run: |
           mkdir -p data
+          mkdir -p .dump
           curl -H "Authorization: Bearer $ITCH_API_KEY" \
             "https://itch.io/api/1/key/my-games" \
-            -o data/itch_games.json
+            -o .dump/itch_games_all.json
 
-      - name: prettify json output
+          # status log
+          echo "fetched from itch.io and saved to .dump/itch_games_all.json"
+
+      - name: filter (published only) and prettify json output
         run: |
-          cat data/itch_games.json | jq '.' > data/itch_games_pretty.json
+          jq '.games |= map(select(.published == true))' .dump/itch_games_all.json > data/itch_games.json
+
+          jq '.' data/itch_games.json > data/itch_games_pretty.json
           mv data/itch_games_pretty.json data/itch_games.json
+
+          # status log
+          echo "filtered and prettified, saved to data/itch_games.json"
 
       - name: commit and push updated data
         run: |
