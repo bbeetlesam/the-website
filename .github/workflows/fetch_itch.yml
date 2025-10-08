@@ -1,0 +1,41 @@
+name: fetch itch.io data
+
+on:
+  schedule:
+    - cron: "0 00 * * 0"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-games:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
+      - name: fetch my itch.io
+        env:
+          ITCH_API_KEY: ${{ secrets.ITCH_API_KEY }}
+        run: |
+          mkdir -p data
+          curl -H "Authorization: Bearer $ITCH_API_KEY" \
+            "https://itch.io/api/1/key/my-games" \
+            -o data/games.json
+
+      - name: commit and push updated data
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add data/games.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto update itch.io games data $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+            git push
+          fi
