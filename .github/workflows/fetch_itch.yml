@@ -26,16 +26,21 @@ jobs:
           mkdir -p data
           curl -H "Authorization: Bearer $ITCH_API_KEY" \
             "https://itch.io/api/1/key/my-games" \
-            -o data/games.json
+            -o data/itch_games.json
+
+      - name: prettify json output
+        run: |
+          cat data/itch_games.json | jq '.' > data/itch_games_pretty.json
+          mv data/itch_games_pretty.json data/itch_games.json
 
       - name: commit and push updated data
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add data/games.json
+          git add data/itch_games.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Auto update itch.io games data $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+            git commit -m "auto update itch.io games data at $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
             git push
           fi
