@@ -36,7 +36,7 @@ jobs:
         run: |
           jq '.games |= map(select(.published == true))' .dump/itch_games_all.json > data/itch_games.json
 
-          jq '.' data/itch_games.json > data/itch_games_pretty.json
+          jq --sort-keys '.' data/itch_games.json > data/itch_games_pretty.json
           mv data/itch_games_pretty.json data/itch_games.json
 
           # status log
