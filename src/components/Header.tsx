@@ -2,6 +2,7 @@
 import { NavLink } from "react-router-dom";
 import type { FC } from "react";
 import RoughBorder from "../libraries/RoughBorder.tsx";
+import headerIcon from "../assets/header-icon.png";
 
 type RouteItem = {
   path: string;
@@ -36,8 +37,10 @@ const Header: FC = () => {
         <div className="flex items-center gap-4">
           {/* the icon */}
           <NavLink to="/">
-            <RoughBorder strokeWidth={2.5} isAnimatingWhenHovered={true} animFrame={150}>
-              <img src="/header-icon.png" alt="bbeetlesam" className="h-12 w-12"/>
+            <RoughBorder strokeWidth={2.5} isAnimatingWhenHovered={true} animFrame={250}
+              fill="rgba(50,39,39,0.02)" hoverColor="black" roughOptions={{ bowing: 1.5 }}
+            >
+              <img src={headerIcon} alt="bbeetlesam" className="h-12 w-12"/>
             </RoughBorder>
           </NavLink>
           {/* nav links */}
