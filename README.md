@@ -18,6 +18,13 @@ This one’s still shit, but hey, it’s at least 5% less shitty than the previo
 Enjoy, and don’t forget to poop while smoking a cigar, it’s a heavenly combo.
 </details>
 
+## Libraries Used
+
+- [React](https://react.dev/)
+- [Rough.js](https://roughjs.com/)
+- [Font Awesome](https://fontawesome.com/)
+- [Overlay Scrollbars](https://kingsora.github.io/OverlayScrollbars/)
+
 ## Website References and Inspirations
 
 - [Nathaniel Barlam](https://nathanielbarlam.com/)
