@@ -43,8 +43,8 @@ const Header: FC = () => {
               <img src={headerIcon} alt="bbeetlesam" className="h-12 w-12"/>
             </RoughBorder>
           </NavLink>
-          {/* nav links */}
-          <nav className="flex gap-3 text-[1.1rem] font-childlike leading-none">
+          {/* nav links on desktop */}
+          <nav className="hidden md:flex gap-3 text-[1.1rem] leading-none">
             {routes.map((route: RouteItem) => (
               <NavLink
                 key={route.path}
@@ -56,6 +56,14 @@ const Header: FC = () => {
               </NavLink>
             ))}
           </nav>
+          {/* hamburger button on mobile */}
+          <button className="md:hidden p-2 rounded" aria-label="Open menu">
+            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+              <line x1="0" y1="5" x2="24" y2="5" />
+              <line x1="0" y1="12" x2="24" y2="12" />
+              <line x1="0" y1="19" x2="24" y2="19" />
+            </svg>
+          </button>
         </div>
 
         {/* right section */}
