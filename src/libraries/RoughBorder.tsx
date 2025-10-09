@@ -20,7 +20,7 @@ const PAGE_RANDOM_SEED: number = (() => {
       return arr[0] >>> 0;
     }
   } catch {
-    // ignore (no-op)
+    // ignore (no-op), just like my heart :(
   }
   return Math.floor(Math.random() * 0xffffffff) >>> 0;
 })();
@@ -40,6 +40,8 @@ type RoughBorderProps = {
   contentZIndex?: number;
   roughOptions?: Record<string, unknown>;
   onHover?: () => void;
+  // don't redraw when size changes are smaller than this (px)
+  redrawThreshold?: number;
 };
 
 function RoughBorder({
@@ -52,63 +54,66 @@ function RoughBorder({
     animFrame = 400,
     hoverColor = stroke,
     backgroundCanvas = "transparent",
-    fill = "transparent",
-    canvasZIndex = 0,
-    contentZIndex = 1,
-    roughOptions,
-    onHover,
-  }: RoughBorderProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+      fill = "transparent",
+      canvasZIndex = 0,
+      contentZIndex = 1,
+      roughOptions,
+      onHover,
+      redrawThreshold = 2,
+    }: RoughBorderProps) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const pad = Math.ceil((strokeWidth ?? 2) * 2 + 2);
   const [isHovered, setIsHovered] = useState(false);
   const [tick, setTick] = useState(0);
   const intervalRef = useRef<number | null>(null);
+  // pull redrawThreshold from the props (default 2px)
+  // ensure a sane integer threshold
+  const redrawThresholdVal = Math.max(0, Math.floor(redrawThreshold));
 
   useEffect(() => {
+    let prev = { width: 0, height: 0 };
     const updateSize = () => {
-      if (wrapperRef.current) {
-        const rect = wrapperRef.current.getBoundingClientRect();
-        setSize({ width: Math.round(rect.width), height: Math.round(rect.height) });
-      }
+      const el = wrapperRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const w = Math.round(rect.width), h = Math.round(rect.height);
+      const dw = Math.abs(w - prev.width), dh = Math.abs(h - prev.height);
+      if (dw <= redrawThresholdVal && dh <= redrawThresholdVal) return;
+      prev = { width: w, height: h };
+      setSize({ width: w, height: h });
     };
     updateSize();
-    const observer = new window.ResizeObserver(updateSize);
-    if (wrapperRef.current) observer.observe(wrapperRef.current);
-    return () => observer.disconnect();
-  }, []);
+    const obs = new ResizeObserver(updateSize);
+    if (wrapperRef.current) obs.observe(wrapperRef.current);
+    return () => obs.disconnect();
+  }, [redrawThresholdVal]);
 
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
-
     const onEnter = () => {
       if (!isAnimatingWhenHovered) return;
-
       setIsHovered(true);
-      if (onHover) onHover();
+      onHover?.();
       if (intervalRef.current == null) {
-        const frame = Math.max(30, Math.round(animFrame));
-        intervalRef.current = window.setInterval(() => setTick((t) => t + 1), frame);
+        intervalRef.current = window.setInterval(() => setTick((t) => t + 1), Math.max(30, Math.round(animFrame)));
       }
     };
-
     const onLeave = () => {
       if (!isAnimatingWhenHovered) return;
-
       setIsHovered(false);
       if (intervalRef.current != null) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
     };
-
-    el.addEventListener("mouseenter", onEnter);
-    el.addEventListener("mouseleave", onLeave);
+    el.addEventListener('mouseenter', onEnter);
+    el.addEventListener('mouseleave', onLeave);
     return () => {
-      el.removeEventListener("mouseenter", onEnter);
-      el.removeEventListener("mouseleave", onLeave);
+      el.removeEventListener('mouseenter', onEnter);
+      el.removeEventListener('mouseleave', onLeave);
       if (intervalRef.current != null) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
@@ -117,6 +122,7 @@ function RoughBorder({
   }, [isAnimatingWhenHovered, animFrame, onHover]);
   
   useEffect(() => {
+    let cancelled = false;
     (async () => {
       const canvas = canvasRef.current;
       if (!(canvas && size.width && size.height)) return;
@@ -124,21 +130,17 @@ function RoughBorder({
 
       canvas.width = (size.width + pad * 2) * dpr;
       canvas.height = (size.height + pad * 2) * dpr;
-
       canvas.style.width = `${size.width + pad * 2}px`;
       canvas.style.height = `${size.height + pad * 2}px`;
 
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       if (!ctx) return;
-
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // clear previous drawing
       ctx.clearRect(0, 0, (size.width + pad * 2) * dpr, (size.height + pad * 2) * dpr);
 
-      // ensure rough is loaded (lazy-imported)
       await ensureRough();
-      // rough is now non-null
-      const rc = rough!.canvas(canvas);
+      if (cancelled || !rough) return;
+      const rc = rough.canvas(canvas);
 
       const opts: Record<string, unknown> = {
         ...(roughOptions || {}),
@@ -148,33 +150,24 @@ function RoughBorder({
         fill,
       };
 
-      // deterministic seed helper (djb2)
+      // simple deterministic seed (djb2)
       const makeSeedFrom = (s: string) => {
         let h = 5381;
-        for (let i = 0; i < s.length; i++) {
-          h = ((h << 5) + h) + s.charCodeAt(i);
-          h |= 0;
-        }
-        return h >>> 0;
+        for (let i = 0; i < s.length; i++) h = ((h << 5) + h) + s.charCodeAt(i);
+        return (h >>> 0);
       };
 
-          try {
-            const base = `${size.width}x${size.height}-${stroke}-${strokeWidth}-${roughness}-${fill}`;
-            const effectiveBase = `${PAGE_RANDOM_SEED}-${base}`;
-            opts.seed = isAnimatingWhenHovered ? makeSeedFrom(effectiveBase + '-' + tick) : makeSeedFrom(effectiveBase);
-          } catch {
-            // ignore; roughjs will fallback
-          }
+      try {
+        const base = `${PAGE_RANDOM_SEED}-${size.width}x${size.height}-${stroke}-${strokeWidth}-${roughness}-${fill}`;
+        opts.seed = isAnimatingWhenHovered ? makeSeedFrom(base + '-' + tick) : makeSeedFrom(base);
+      } catch {
+        // noop
+      }
 
-      rc.rectangle(
-        pad + strokeWidth / 2,
-        pad + strokeWidth / 2,
-        size.width - strokeWidth,
-        size.height - strokeWidth,
-        opts as Record<string, unknown>
-      );
+      rc.rectangle(pad + strokeWidth / 2, pad + strokeWidth / 2, size.width - strokeWidth, size.height - strokeWidth, opts);
     })();
-  }, [size, stroke, strokeWidth, roughness, pad, isHovered, isAnimatingWhenHovered, hoverColor, fill, tick, roughOptions]);
+    return () => { cancelled = true; };
+  }, [size, stroke, strokeWidth, roughness, pad, isHovered, isAnimatingWhenHovered, hoverColor, fill, tick, roughOptions, redrawThreshold]);
 
   return (
     <div
