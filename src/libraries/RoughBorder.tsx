@@ -1,6 +1,29 @@
 import { useRef, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import rough from "roughjs/bin/rough";
+let rough: { canvas: (el: HTMLCanvasElement) => { rectangle: (x: number, y: number, width: number, height: number, options?: Record<string, unknown>) => void } } | null = null;
+
+async function ensureRough() {
+  if (rough) return rough;
+  const mod = await import('roughjs/bin/rough');
+  const modAny = mod as unknown as { default?: unknown };
+  const loaded = modAny.default ?? mod;
+  rough = loaded as unknown as { canvas: (el: HTMLCanvasElement) => { rectangle: (x: number, y: number, width: number, height: number, options?: Record<string, unknown>) => void } };
+  return rough;
+}
+
+const PAGE_RANDOM_SEED: number = (() => {
+  try {
+    if (typeof crypto !== 'undefined' && 'getRandomValues' in crypto) {
+      const arr = new Uint32Array(1);
+      // crypto.getRandomValues exists on the global Crypto type
+      (crypto as unknown as Crypto).getRandomValues(arr);
+      return arr[0] >>> 0;
+    }
+  } catch {
+    // ignore (no-op)
+  }
+  return Math.floor(Math.random() * 0xffffffff) >>> 0;
+})();
 
 type RoughBorderProps = {
   children: ReactNode;
@@ -10,6 +33,12 @@ type RoughBorderProps = {
   className?: string;
   isAnimatingWhenHovered?: boolean;
   animFrame?: number;
+  hoverColor?: string;
+  backgroundCanvas?: string;
+  fill?: string;
+  canvasZIndex?: number;
+  contentZIndex?: number;
+  roughOptions?: Record<string, unknown>;
   onHover?: () => void;
 };
 
@@ -20,7 +49,13 @@ function RoughBorder({
     roughness = 1,
     className = "",
     isAnimatingWhenHovered = false,
-    animFrame = 300,
+    animFrame = 400,
+    hoverColor = stroke,
+    backgroundCanvas = "transparent",
+    fill = "transparent",
+    canvasZIndex = 0,
+    contentZIndex = 1,
+    roughOptions,
     onHover,
   }: RoughBorderProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -49,15 +84,19 @@ function RoughBorder({
     if (!el) return;
 
     const onEnter = () => {
+      if (!isAnimatingWhenHovered) return;
+
       setIsHovered(true);
       if (onHover) onHover();
-      if (isAnimatingWhenHovered && intervalRef.current == null) {
+      if (intervalRef.current == null) {
         const frame = Math.max(30, Math.round(animFrame));
         intervalRef.current = window.setInterval(() => setTick((t) => t + 1), frame);
       }
     };
 
     const onLeave = () => {
+      if (!isAnimatingWhenHovered) return;
+
       setIsHovered(false);
       if (intervalRef.current != null) {
         clearInterval(intervalRef.current);
@@ -76,10 +115,11 @@ function RoughBorder({
       }
     };
   }, [isAnimatingWhenHovered, animFrame, onHover]);
-
+  
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas && size.width && size.height) {
+    (async () => {
+      const canvas = canvasRef.current;
+      if (!(canvas && size.width && size.height)) return;
       const dpr = window.devicePixelRatio || 1;
 
       canvas.width = (size.width + pad * 2) * dpr;
@@ -95,22 +135,52 @@ function RoughBorder({
       // clear previous drawing
       ctx.clearRect(0, 0, (size.width + pad * 2) * dpr, (size.height + pad * 2) * dpr);
 
-      const rc = rough.canvas(canvas);
+      // ensure rough is loaded (lazy-imported)
+      await ensureRough();
+      // rough is now non-null
+      const rc = rough!.canvas(canvas);
+
+      const opts: Record<string, unknown> = {
+        ...(roughOptions || {}),
+        stroke: isHovered ? hoverColor : stroke,
+        strokeWidth,
+        roughness,
+        fill,
+      };
+
+      // deterministic seed helper (djb2)
+      const makeSeedFrom = (s: string) => {
+        let h = 5381;
+        for (let i = 0; i < s.length; i++) {
+          h = ((h << 5) + h) + s.charCodeAt(i);
+          h |= 0;
+        }
+        return h >>> 0;
+      };
+
+          try {
+            const base = `${size.width}x${size.height}-${stroke}-${strokeWidth}-${roughness}-${fill}`;
+            const effectiveBase = `${PAGE_RANDOM_SEED}-${base}`;
+            opts.seed = isAnimatingWhenHovered ? makeSeedFrom(effectiveBase + '-' + tick) : makeSeedFrom(effectiveBase);
+          } catch {
+            // ignore; roughjs will fallback
+          }
+
       rc.rectangle(
         pad + strokeWidth / 2,
         pad + strokeWidth / 2,
         size.width - strokeWidth,
         size.height - strokeWidth,
-        { stroke: isHovered ? "black" : stroke, strokeWidth, roughness }
+        opts as Record<string, unknown>
       );
-    }
-  }, [size, stroke, strokeWidth, roughness, pad, isHovered, tick]);
+    })();
+  }, [size, stroke, strokeWidth, roughness, pad, isHovered, isAnimatingWhenHovered, hoverColor, fill, tick, roughOptions]);
 
   return (
     <div
       ref={wrapperRef}
       className={`relative ${className}`}
-      style={{ display: "block", margin: 0, padding: 0 }}
+      style={{ display: "block", margin: 0, padding: 0, zIndex: 0 }}
     >
       <canvas
         ref={canvasRef}
@@ -121,9 +191,11 @@ function RoughBorder({
           pointerEvents: "none",
           width: `${size.width + pad * 2}px`,
           height: `${size.height + pad * 2}px`,
+          backgroundColor: backgroundCanvas,
+          zIndex: canvasZIndex,
         }}
       />
-      <div style={{ position: "relative", margin: 0, padding: 0 }}>
+      <div style={{ position: "relative", margin: 0, padding: 0, zIndex: contentZIndex }}>
         {children}
       </div>
     </div>
