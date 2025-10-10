@@ -1,32 +1,44 @@
-# The Website
+# The Website, Pt. II
 
-It's literally just a shitty website bruh, nothing interesting here.
+In the days of the early knowledge of Sam, he knew what the trend was at the time,
+but instead of following it, he chose the counterpath. He decided to create a website
+with plain language, without any tools or frameworks to help him.
+He thought he knew what he was doing back then...\
+until now, when he realized why those tools were invented by the savants.\
+And, by looking at the project's result, we know that he wasn't satisfied with it.
 
-<details>
-<summary>Ignore</summary>
+So, he decided to tackle his old challenge one more time:\
+to create his very own personal website, with his very own persona and his enigmatic behaviour.
 
-Well, in case you didn't know, I already have my personal website, and it was made without any
-single framework at all.\
-Yes, I did that to push my limits, and unsurprisingly, the result looked so dreadful that even
-my poop had more visual appeal than my site's interface and UI.
+And right now, you are looking at his project.
 
-Over time (and with a few more brain cells activated), I’ve gained some knowledge and experience,
-so I decided to rebuild the damn thing, now with actual structure, better performance, and maybe
-a design that doesn’t cause eye cancer.
+So, allow me to present to you,\
+**Ladies and gentlemen,\
+Damen und Herren,\
+Mesdames et Messieurs.**
 
-This one’s still shit, but hey, it’s at least 5% less shitty than the previous version.\
-Enjoy, and don’t forget to poop while smoking a cigar, it’s a heavenly combo.
-</details>
+This, is the project of **The Website of Sam**.
 
 ## Libraries Used
 
+> These are the personnels that helped him compose this opus:
+
 - [React](https://react.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
 - [Rough.js](https://roughjs.com/)
 - [Font Awesome](https://fontawesome.com/)
 - [Overlay Scrollbars](https://kingsora.github.io/OverlayScrollbars/)
 
 ## Website References and Inspirations
 
+> These are the artists who helped shape his genre:
+
 - [Nathaniel Barlam](https://nathanielbarlam.com/)
 - [Goodgis](https://goodgis.fun/)
 - [MySketchBooth](https://mysketchbooth.com/)
+
+This website is not made to be perfect.\
+It is made to be **_him_**.
+
+And for the end, you know,\
+**You Never Blow Yr Trip Forever.**
