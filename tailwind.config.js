@@ -12,9 +12,9 @@ export default {
       },
       colors: {
         bgLight: '#f8f7f3',
-        bgDark: '#242424',
-        textLight: '#242424',
-        textDark: 'rgba(255, 255, 255, 0.87)',
+        bgDark: '#272727',
+        textDark: '#dbdbdb',
+        textLight: 'rgba(255, 255, 255, 0.87)',
       },
     },
   },
