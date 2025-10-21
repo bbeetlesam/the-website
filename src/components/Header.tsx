@@ -31,13 +31,21 @@ const Header: FC = () => {
   ];
 
   return (
-    <header className="z-10 w-full px-10 py-0 mt-7 mb-7 text-[#323237]">
+    <header 
+      className="z-10 w-full py-0 text-[#323237]"
+      style={{
+        paddingLeft: 'clamp(1.5rem, 5vw, 2.5rem)',
+        paddingRight: 'clamp(1.5rem, 5vw, 2.5rem)',
+        marginTop: 'clamp(1.5rem, 3vw, 1.75rem)',
+        marginBottom: 'clamp(1.5rem, 3vw, 1.75rem)',
+      }}
+    >
       <div className="flex justify-between items-center text-2xl">
         {/* left section (hamburger on mobile, icon+nav on desktop) */}
         <div className="flex items-center gap-4">
           {/* hamburger button on mobile */}
           <button className="md:hidden p-2 rounded" aria-label="Open menu">
-            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+            <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#323237" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
               <line x1="0" y1="5" x2="24" y2="5" />
               <line x1="0" y1="12" x2="24" y2="12" />
               <line x1="0" y1="19" x2="24" y2="19" />
@@ -84,7 +92,7 @@ const Header: FC = () => {
             <RoughBorder strokeWidth={2.5} isAnimatingWhenHovered={true} animFrame={250}
               fill="rgba(50,39,39,0.02)" hoverColor="black" roughOptions={{ bowing: 1.5 }}
             >
-              <img src={headerIcon} alt="bbeetlesam" className="h-10 w-10"/>
+              <img src={headerIcon} alt="bbeetlesam" className="h-11 w-11"/>
             </RoughBorder>
           </NavLink>
         </div>
