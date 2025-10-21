@@ -18,9 +18,9 @@ function Footer(){
 
   return (
     <footer className="w-full px-10 py-5">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4">
         {/* left part */}
-        <div className="text-left">
+        <div className="text-center md:text-left">
           <p>&copy; bbeetlesam 2025.</p>
           <p>Keep in weird time and stay progressive.</p>
         </div>
