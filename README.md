@@ -19,9 +19,9 @@ Mesdames et Messieurs.**
 
 This, is the project of **The Website of Sam**.
 
-## Libraries Used
+## Frameworks and Libraries
 
-> These are the personnels that helped him compose this opus:
+> These are the instruments that are used in this opus:
 
 - [React](https://react.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
