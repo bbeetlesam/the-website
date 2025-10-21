@@ -26,7 +26,7 @@ function Footer(){
         </div>
         
         {/* right part */}
-        <div className="flex items-center gap-3 text-2xl">
+        <div className="flex items-center gap-2 text-2xl">
           {socialLinks.map((link: SocialLink) => (
             <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" title={link.title}>
               <i className={`${link.icon} hover:text-black`}></i>
