@@ -9,9 +9,7 @@
   }
 
   html, body {
-    @apply m-0 p-0 bg-[#f8f7f3] text-[#272727] font-winky font-medium overflow-x-hidden;
-    /*min-width: 100vw;*/
-    /*place-items: center;*/
+    @apply m-0 p-0 bg-bgLight text-[#272727] font-winky font-medium overflow-x-hidden;
   }
 
   /* custom scrollbar styling */
@@ -19,27 +17,13 @@
     scrollbar-width: thin;
     scrollbar-color: #272727 transparent;
   }
+
+  h2 {
+    @apply text-4xl;
+  }
 }
 
 @layer components {
-  .header {
-    @apply leading-tight text-5xl;
-  }
-
-  .logo {
-    @apply h-40 p-6 transition filter will-change-auto;
-    transition-duration: 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em rgba(0, 14, 255, 0.67));
-  }
-  .logo.react:hover {
-    filter: drop-shadow(0 0 2em rgba(0, 35, 44, 0.67));
-  }
-
-  .read-the-docs {
-    @apply text-gray-500; /* optional color #888 */
-  }
 }
 
 @layer utilities {
@@ -47,3 +31,20 @@
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><path d='M0 0H50V50H0z' fill='none' stroke='%23dbdbdb' stroke-width='2' stroke-linecap='square'/></svg>") repeat fixed;
   }
 }
+
+/* overlay scrollbar theme */
+.os-theme-site .os-scrollbar > .os-scrollbar-track { background: transparent; }
+.os-theme-site .os-scrollbar > .os-scrollbar-handle {
+  background: rgba(0,0,0,0.55);
+  border-radius: 999px;
+  /* fade via opacity so the scroll auto-hide can visually disappear */
+  transition: opacity 300ms ease, background-color 160ms ease;
+  opacity: 1;
+}
+.os-theme-site .os-scrollbar:not(:hover) .os-scrollbar-handle { opacity: 1; }
+.os-theme-site .os-scrollbar:hover .os-scrollbar-handle {
+  background: rgba(0,0,0,0.8); /* on hover */
+  opacity: 1;
+}
+.os-theme-site .os-scrollbar.os-scrollbar-horizontal { height: 10px; }
+.os-theme-site .os-scrollbar.os-scrollbar-vertical { width: 10px; }
