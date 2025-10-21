@@ -7,13 +7,13 @@ type SocialLink = {
 
 function Footer(){
   const socialLinks: SocialLink[] = [
-    { href: "mailto:your-email@example.com", title: "Email me.", icon: "fa-solid fa-envelope" },
+    { href: "mailto:bbeetlesam1968@gmail.com", title: "Email me.", icon: "fa-solid fa-envelope" },
     { href: "https://github.com/bbeetlesam", title: "My chaos GitHub.", icon: "fa-brands fa-github" },
     { href: "https://bbeetlesam.itch.io", title: "My weird games.", icon: "fa-brands fa-itch-io" },
-    { href: "https://www.linkedin.com/in/yourprofile", title: "My LinkedIn.", icon: "fa-brands fa-linkedin" },
+    { href: "https://www.linkedin.com/in/samudra-azriel-pradana-b48491321", title: "Looking for a job.", icon: "fa-brands fa-linkedin" },
     { href: "https://instagram.com/jstsams", title: "My unpopular Instagram.", icon: "fa-brands fa-instagram" },
-    { href: "https://twitter.com/yourhandle", title: "My Twitter/X.", icon: "fa-brands fa-x-twitter" },
-    { href: "https://bsky.app/profile/yourhandle.bsky.social", title: "My Bluesky.", icon: "fa-brands fa-bluesky" },
+    { href: "https://twitter.com/bbeetlesam", title: "My normal Twitter/X.", icon: "fa-brands fa-x-twitter" },
+    { href: "https://bbeetlesam.bsky.social", title: "My Bluesky.", icon: "fa-brands fa-bluesky" },
   ];
 
   return (
