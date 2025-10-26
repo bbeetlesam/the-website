@@ -6,7 +6,7 @@ import Footer from "./components/Footer.tsx";
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-grid">
+      <div className="h-screen flex flex-col bg-grid overflow-hidden">
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
