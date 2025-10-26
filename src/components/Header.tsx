@@ -1,6 +1,5 @@
 // header component
 import { NavLink } from "react-router-dom";
-import type { FC } from "react";
 import RoughBorder from "../libraries/RoughBorder.tsx";
 import headerIcon from "../assets/header-icon.png";
 
@@ -16,9 +15,10 @@ type SocialLink = {
   icon: string;
 };
 
-const Header: FC = () => {
+function Header() {
   const routes: RouteItem[] = [
     { path: "/games", label: "Games", title: "Explore my games!" },
+    { path: "/oddworks", label: "Oddworks", title: "My other projects!" },
     { path: "/arts", label: "Arts", title: "Pieces of my arts!" },
     { path: "/blogs", label: "Blogs", title: "Read my thoughts!" },
     { path: "/bio", label: "Bio", title: "Who am I really?" },
@@ -53,7 +53,7 @@ const Header: FC = () => {
           </button>
 
           {/* desktop icon (hidden on mobile) */}
-          <NavLink to="/" className="hidden md:block">
+          <NavLink to="/" className="hidden md:block" title="Um, Sam?">
             <RoughBorder strokeWidth={2.5} isAnimatingWhenHovered={true} animFrame={250}
               fill="rgba(50,39,39,0.02)" hoverColor="black" roughOptions={{ bowing: 1.5 }}
             >
