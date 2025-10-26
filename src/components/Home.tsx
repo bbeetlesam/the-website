@@ -1,5 +1,6 @@
 // home component
 import { useEffect } from "react";
+import RoughBorder from "../libraries/RoughBorder";
 
 function Home(){
   useEffect(() => {
@@ -7,12 +8,12 @@ function Home(){
   }, []);
 
   return (
-    <main className="w-full flex-1 flex items-center justify-center">
-      <div className="flex flex-col items-center gap-1">
+    <RoughBorder className="flex-1 flex items-center justify-center" strokeWidth={3} roughness={2}>
+      <div className="flex flex-col items-center justify-center gap-1">
         <p>hello darkness, my old friend</p>
         <p>ive come to talk with you again</p>
       </div>
-    </main>
+    </RoughBorder>
   )
 }
 

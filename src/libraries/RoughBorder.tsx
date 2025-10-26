@@ -173,7 +173,7 @@ function RoughBorder({
     <div
       ref={wrapperRef}
       className={`relative ${className}`}
-      style={{ display: "block", margin: 0, padding: 0, zIndex: 0 }}
+      style={{ margin: 0, padding: 0, zIndex: 0 }}
     >
       <canvas
         ref={canvasRef}
