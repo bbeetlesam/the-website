@@ -13,7 +13,7 @@ export default {
       colors: {
         bgLight: '#f8f7f3',
         bgDark: '#272727',
-        textDark: '#dbdbdb',
+        textDark: '#222222',
         textLight: 'rgba(255, 255, 255, 0.87)',
       },
     },
