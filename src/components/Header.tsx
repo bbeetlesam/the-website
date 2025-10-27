@@ -54,8 +54,15 @@ function Header() {
 
           {/* desktop icon (hidden on mobile) */}
           <NavLink to="/" className="hidden md:block" title="Um, Sam?">
-            <RoughBorder strokeWidth={2.5} isAnimatingWhenHovered={true} animFrame={250}
-              fill="rgba(50,39,39,0.02)" hoverColor="black" roughOptions={{ bowing: 1.5 }}
+            <RoughBorder 
+              refreshOnHover={true} 
+              refreshSpeed={250}
+              roughOptions={{ 
+                strokeWidth: 2.5,
+                bowing: 1.5,
+                stroke: "#323237"
+              }}
+              whenHovered={{ stroke: "black" }}
             >
               <img src={headerIcon} alt="bbeetlesam" className="h-12 w-12"/>
             </RoughBorder>
@@ -89,8 +96,16 @@ function Header() {
 
           {/* mobile icon on the right (hidden on desktop) */}
           <NavLink to="/" className="md:hidden">
-            <RoughBorder strokeWidth={2.5} isAnimatingWhenHovered={true} animFrame={250}
-              fill="rgba(50,39,39,0.02)" hoverColor="black" roughOptions={{ bowing: 1.5 }}
+            <RoughBorder 
+              refreshOnHover={true} 
+              refreshSpeed={250}
+              roughOptions={{ 
+                strokeWidth: 2.5,
+                fill: "rgba(50,39,39,0.02)",
+                bowing: 1.5,
+                stroke: "#323237"
+              }}
+              whenHovered={{ stroke: "black" }}
             >
               <img src={headerIcon} alt="bbeetlesam" className="h-11 w-11"/>
             </RoughBorder>

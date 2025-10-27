@@ -8,7 +8,11 @@ function Home(){
   }, []);
 
   return (
-    <RoughBorder className="flex-1 flex items-center justify-center" strokeWidth={3} roughness={2}>
+    <RoughBorder 
+      className="flex-1 flex items-center justify-center" 
+      roughOptions={{ stroke: "#222222", strokeWidth: 3, roughness: 2 }}
+      canvasScale={0.95}
+    >
       <div className="flex flex-col items-center justify-center gap-1">
         <p>hello darkness, my old friend</p>
         <p>ive come to talk with you again</p>
