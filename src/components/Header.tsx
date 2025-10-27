@@ -95,7 +95,7 @@ function Header() {
           </button>
 
           {/* desktop icon (hidden on mobile) */}
-          <NavLink to="/" className="hidden md:block" title="Um, Sam?">
+          <NavLink to="/" className="hidden md:block" title="Um, Sam?" onClick={() => setIsMobileMenuOpen(false)}>
             <RoughBorder 
               refreshOnHover={true} 
               refreshSpeed={250}
@@ -137,7 +137,7 @@ function Header() {
           </div>
 
           {/* mobile icon on the right (hidden on desktop) */}
-          <NavLink to="/" className="md:hidden">
+          <NavLink to="/" className="md:hidden" onClick={() => setIsMobileMenuOpen(false)}>
             <RoughBorder 
               refreshOnHover={true} 
               refreshSpeed={250}
