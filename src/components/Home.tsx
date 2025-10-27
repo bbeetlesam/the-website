@@ -4,7 +4,7 @@ import RoughBorder from "../libraries/RoughBorder";
 
 function Home(){
   useEffect(() => {
-    document.title = "bbeetlesam | Home";
+    document.title = "bbeetlesam";
   }, []);
 
   return (
