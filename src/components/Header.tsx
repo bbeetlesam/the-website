@@ -20,18 +20,24 @@ function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
-  // xpose header height as CSS variable
+  // expose header height and bottom as css variables
   useEffect(() => {
-    const updateHeaderHeight = () => {
-      if (headerRef.current) {
-        const height = headerRef.current.offsetHeight;
-        document.documentElement.style.setProperty('--header-height', `${height}px`);
-      }
+    const updateHeaderMetrics = () => {
+      const el = headerRef.current;
+      if (!el) return;
+      const height = el.offsetHeight;
+      const rect = el.getBoundingClientRect();
+      document.documentElement.style.setProperty('--header-height', `${height}px`);
+      document.documentElement.style.setProperty('--header-bottom', `${rect.bottom}px`);
     };
 
-    updateHeaderHeight();
-    window.addEventListener('resize', updateHeaderHeight);
-    return () => window.removeEventListener('resize', updateHeaderHeight);
+    updateHeaderMetrics();
+    window.addEventListener('resize', updateHeaderMetrics);
+    window.addEventListener('scroll', updateHeaderMetrics, { passive: true });
+    return () => {
+      window.removeEventListener('resize', updateHeaderMetrics);
+      window.removeEventListener('scroll', updateHeaderMetrics);
+    };
   }, []);
 
   const routes: RouteItem[] = [
@@ -149,72 +155,67 @@ function Header() {
         </div>
       </div>
 
-      {/* mobile dropdown menu - absolute positioned below header */}
-      <div 
-        className={`
-          md:hidden absolute left-0 right-0 bg-bgLight shadow-lg z-40
-          transition-all duration-300 ease-in-out
-          ${isMobileMenuOpen 
-            ? 'top-full opacity-100' 
-            : '-top-96 opacity-0 pointer-events-none'
-          }
-        `}
-        style={{
-          paddingLeft: 'clamp(1.5rem, 5vw, 2.5rem)',
-          paddingRight: 'clamp(1.5rem, 5vw, 2.5rem)',
-        }}
-      >
-        <div className="py-6">
-          {/* nav links */}
-          <nav className="flex flex-col gap-3 mb-6">
-            {routes.map((route: RouteItem) => (
-              <NavLink
-                key={route.path}
-                to={route.path}
-                title={route.title}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={({ isActive }) =>
-                  [
-                    "text-xl px-3 py-2 rounded-md transition-colors cursor-pointer",
-                    "hover:bg-black/10 hover:text-black",
-                    "focus:bg-black/20 focus:text-black",
-                    "active:bg-black/20 active:text-black",
-                    isActive ? "bg-black/20 text-black font-bold" : "text-[#323237]",
-                  ].join(" ")
-                }
-              >
-                {route.label}
-              </NavLink>
-            ))}
-          </nav>
-
-          {/* social links */}
-          <div className="flex items-center gap-4 text-3xl px-2">
-            {socialLinks.map((link: SocialLink) => (
-              <a 
-                key={link.href} 
-                href={link.href} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                title={link.title}
-                className="hover:text-black transition-colors"
-              >
-                <i className={link.icon}></i>
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
     </header>
 
-    {/* backdrop overlay - positioned outside header as sibling */}
-    {isMobileMenuOpen && (
-      <div 
-        className="md:hidden fixed left-0 right-0 bottom-0 bg-black/20 z-30"
-        style={{ top: 'var(--header-height, 0)' }}
-        onClick={() => setIsMobileMenuOpen(false)}
-      />
-    )}
+    {/* mobile dropdown menu - moved outside header so header stays above */}
+    <div 
+      className={`
+        md:hidden fixed left-0 right-0 bottom-0 bg-bgLight z-40
+        transition-all duration-300 ease-in-out
+        ${isMobileMenuOpen 
+          ? 'opacity-100 translate-y-0' 
+          : 'opacity-0 -translate-y-4 pointer-events-none'
+        }
+      `}
+      style={{
+        top: 0,
+        height: '100vh',
+        overflowY: 'auto',
+        paddingLeft: 'clamp(1.5rem, 5vw, 2.5rem)',
+        paddingRight: 'clamp(1.5rem, 5vw, 2.5rem)',
+      }}
+    >
+      <div className="pb-6" style={{ paddingTop: 'var(--header-bottom, var(--header-height, 0px))' }}>
+        {/* nav links */}
+          <nav className="flex flex-col gap-3 pt-6 mb-6">
+          {routes.map((route: RouteItem) => (
+            <NavLink
+              key={route.path}
+              to={route.path}
+              title={route.title}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={({ isActive }) =>
+                [
+                  "text-xl px-3 py-2 rounded-md transition-colors cursor-pointer",
+                  "hover:bg-black/10 hover:text-black",
+                  "focus:bg-black/20 focus:text-black",
+                  "active:bg-black/20 active:text-black",
+                  isActive ? "bg-black/20 text-black font-bold" : "text-[#323237]",
+                ].join(" ")
+              }
+            >
+              {route.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* social links */}
+        <div className="flex items-center gap-4 text-3xl px-3">
+          {socialLinks.map((link: SocialLink) => (
+            <a 
+              key={link.href} 
+              href={link.href} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              title={link.title}
+              className="hover:text-black transition-colors"
+            >
+              <i className={link.icon}></i>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
     </>
   );
 }
