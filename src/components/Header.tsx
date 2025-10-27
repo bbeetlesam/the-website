@@ -1,5 +1,6 @@
 // header component
 import { NavLink } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import RoughBorder from "../libraries/RoughBorder.tsx";
 import headerIcon from "../assets/header-icon.png";
 
@@ -16,6 +17,23 @@ type SocialLink = {
 };
 
 function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  // xpose header height as CSS variable
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.offsetHeight;
+        document.documentElement.style.setProperty('--header-height', `${height}px`);
+      }
+    };
+
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+    return () => window.removeEventListener('resize', updateHeaderHeight);
+  }, []);
+
   const routes: RouteItem[] = [
     { path: "/games", label: "Games", title: "Explore my games!" },
     { path: "/oddworks", label: "Oddworks", title: "My other projects!" },
@@ -31,9 +49,11 @@ function Header() {
   ];
 
   return (
-    <header 
-      className="z-10 w-full py-0 text-[#323237]"
-      style={{
+    <>
+      <header 
+        ref={headerRef}
+        className="relative z-50 w-full py-0 text-[#323237]"
+        style={{
         paddingLeft: 'clamp(1.5rem, 5vw, 2.5rem)',
         paddingRight: 'clamp(1.5rem, 5vw, 2.5rem)',
         marginTop: 'clamp(1.5rem, 3vw, 1.75rem)',
@@ -44,12 +64,28 @@ function Header() {
         {/* left section (hamburger on mobile, icon+nav on desktop) */}
         <div className="flex items-center gap-4">
           {/* hamburger button on mobile */}
-          <button className="md:hidden p-2 rounded" aria-label="Open menu">
-            <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#323237" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-              <line x1="0" y1="5" x2="24" y2="5" />
-              <line x1="0" y1="12" x2="24" y2="12" />
-              <line x1="0" y1="19" x2="24" y2="19" />
-            </svg>
+          <button 
+            className="md:hidden p-2 rounded relative z-50" 
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <div className="w-6 h-6 relative flex items-center justify-center">
+              <span 
+                className={`absolute h-0.5 w-6 bg-[#323237] transition-all duration-300 ease-out ${
+                  isMobileMenuOpen ? 'rotate-45' : '-translate-y-2'
+                }`}
+              />
+              <span 
+                className={`absolute h-0.5 w-6 bg-[#323237] transition-all duration-300 ease-out ${
+                  isMobileMenuOpen ? 'opacity-0' : ''
+                }`}
+              />
+              <span 
+                className={`absolute h-0.5 w-6 bg-[#323237] transition-all duration-300 ease-out ${
+                  isMobileMenuOpen ? '-rotate-45' : 'translate-y-2'
+                }`}
+              />
+            </div>
           </button>
 
           {/* desktop icon (hidden on mobile) */}
@@ -112,7 +148,74 @@ function Header() {
           </NavLink>
         </div>
       </div>
+
+      {/* mobile dropdown menu - absolute positioned below header */}
+      <div 
+        className={`
+          md:hidden absolute left-0 right-0 bg-bgLight shadow-lg z-40
+          transition-all duration-300 ease-in-out
+          ${isMobileMenuOpen 
+            ? 'top-full opacity-100' 
+            : '-top-96 opacity-0 pointer-events-none'
+          }
+        `}
+        style={{
+          paddingLeft: 'clamp(1.5rem, 5vw, 2.5rem)',
+          paddingRight: 'clamp(1.5rem, 5vw, 2.5rem)',
+        }}
+      >
+        <div className="py-6">
+          {/* nav links */}
+          <nav className="flex flex-col gap-3 mb-6">
+            {routes.map((route: RouteItem) => (
+              <NavLink
+                key={route.path}
+                to={route.path}
+                title={route.title}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  [
+                    "text-xl px-3 py-2 rounded-md transition-colors cursor-pointer",
+                    "hover:bg-black/10 hover:text-black",
+                    "focus:bg-black/20 focus:text-black",
+                    "active:bg-black/20 active:text-black",
+                    isActive ? "bg-black/20 text-black font-bold" : "text-[#323237]",
+                  ].join(" ")
+                }
+              >
+                {route.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          {/* social links */}
+          <div className="flex items-center gap-4 text-3xl px-2">
+            {socialLinks.map((link: SocialLink) => (
+              <a 
+                key={link.href} 
+                href={link.href} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                title={link.title}
+                className="hover:text-black transition-colors"
+              >
+                <i className={link.icon}></i>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
     </header>
+
+    {/* backdrop overlay - positioned outside header as sibling */}
+    {isMobileMenuOpen && (
+      <div 
+        className="md:hidden fixed left-0 right-0 bottom-0 bg-black/20 z-30"
+        style={{ top: 'var(--header-height, 0)' }}
+        onClick={() => setIsMobileMenuOpen(false)}
+      />
+    )}
+    </>
   );
 }
 
