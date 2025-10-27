@@ -200,7 +200,7 @@ function Header() {
         </nav>
 
         {/* social links */}
-        <div className="flex items-center gap-4 text-3xl px-3">
+        <div className="flex items-center gap-4 text-3xl px-2">
           {socialLinks.map((link: SocialLink) => (
             <a 
               key={link.href} 
@@ -213,6 +213,12 @@ function Header() {
               <i className={link.icon}></i>
             </a>
           ))}
+        </div>
+
+        {/* footer text at end of dropdown */}
+        <div className="mt-8 px-3 pt-5 text-left text-xs text-[#323237]">
+          <p>&copy; bbeetlesam 2025.</p>
+          <p>Keep in weird time and stay progressive.</p>
         </div>
       </div>
     </div>
