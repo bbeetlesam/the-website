@@ -1,9 +1,9 @@
 // header component
 import { NavLink } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import RoughBorder from "../libraries/RoughBorder.tsx";
-import MobileDropdown from "./MobileDropdown";
-import headerIcon from "../assets/header-icon.png";
+import RoughBorder from "../../libraries/RoughBorder.tsx";
+import MobileDropdown from "./MobileDropdown.tsx";
+import headerIcon from "../../assets/header-icon.png";
 
 type RouteItem = {
   path: string;
