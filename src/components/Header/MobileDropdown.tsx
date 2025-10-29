@@ -46,7 +46,7 @@ export default function MobileDropdown({ isOpen, routes, socialLinks, onClose }:
               onClick={onClose}
               className={({ isActive }) =>
                 [
-                  'text-xl px-3 py-2 rounded-md transition-colors cursor-pointer',
+                  'group text-xl px-3 py-2 rounded-md transition-colors cursor-pointer',
                   'hover:bg-black/10 hover:text-black',
                   'focus:bg-black/20 focus:text-black',
                   'active:bg-black/20 active:text-black',
@@ -54,7 +54,14 @@ export default function MobileDropdown({ isOpen, routes, socialLinks, onClose }:
                 ].join(' ')
               }
             >
-              {route.label}
+              {({ isActive }) => (
+                <>
+                  {route.label}
+                  {route.title && (
+                    <span className={isActive ? 'inline' : 'hidden group-hover:inline'}> — {route.title}</span>
+                  )}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
