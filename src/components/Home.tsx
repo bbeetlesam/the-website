@@ -27,7 +27,11 @@ function Home(){
             <div
               key={item.path}
               className="absolute"
-              style={{ top: `${topPercent}%`, left: `${leftPercent}%` }}
+              style={{ 
+                top: `${topPercent}%`, 
+                left: `${leftPercent}%`,
+                transform: 'translate(-50%, -50%)' // set the origin to 0.5,0.5 (center)
+              }}
             >
               <NavLink
                 to={item.path}
