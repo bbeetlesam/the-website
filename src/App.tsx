@@ -8,13 +8,13 @@ function App() {
   const isOverflowAllowed = location.pathname === "/"; // home path only, currently
 
   return (
-    <div className={`min-h-screen flex flex-col bg-grid`}>
+    <div className={`min-h-screen grid grid-rows-[auto_1fr_auto] bg-grid`}>
       <Header />
-      <div className={`flex-1 min-h-0 flex flex-col ${isOverflowAllowed ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+      <main className={`${isOverflowAllowed ? 'overflow-hidden' : 'overflow-y-auto'} min-h-0`}>
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
-      </div>
+      </main>
       <Footer />
     </div>
   );
