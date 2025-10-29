@@ -59,7 +59,7 @@ function Header() {
     <>
       <header 
         ref={headerRef}
-        className="relative z-50 w-full py-0 text-[#323237]"
+        className="relative z-50 w-full py-0 text-inherit"
         style={{
         paddingLeft: 'clamp(1.5rem, 5vw, 2.5rem)',
         paddingRight: 'clamp(1.5rem, 5vw, 2.5rem)',

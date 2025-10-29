@@ -50,7 +50,7 @@ export default function MobileDropdown({ isOpen, routes, socialLinks, onClose }:
                   'hover:bg-black/10 hover:text-black',
                   'focus:bg-black/20 focus:text-black',
                   'active:bg-black/20 active:text-black',
-                  isActive ? 'bg-black/20 text-black' : 'text-[#323237]',
+                  isActive ? 'bg-black/20 text-black' : 'text-inherit',
                 ].join(' ')
               }
             >
@@ -76,7 +76,7 @@ export default function MobileDropdown({ isOpen, routes, socialLinks, onClose }:
         </div>
 
         {/* footer text at end of dropdown */}
-        <div className="mt-6 px-3 text-left text-xs text-[#323237]">
+        <div className="mt-6 px-3 text-left text-xs text-inherit">
           <p>&copy; bbeetlesam 2025.</p>
           <p>Keep in weird time and stay progressive.</p>
         </div>
