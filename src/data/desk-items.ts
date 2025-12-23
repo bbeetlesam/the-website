@@ -1,5 +1,6 @@
-import placeholderImg from "../assets/header-icon.png";
-// import gamepadImg from "../assets/gamepad.png";
+// used for Home's desk items
+// import placeholderImg from "../assets/header-icon.png";
+import placeholderImg from "../assets/gamepad.png";
 // import oddworksImg from "../assets/oddworks.png";
 // import artsImg from "../assets/arts.png";
 // import blogsImg from "../assets/blogs.png";
@@ -24,7 +25,7 @@ export const deskItems: DeskItem[] = [
     label: "Games",
     title: "Explore my games!",
     image: placeholderImg,
-    position: { top: 0, left: 0 },
+    position: { top: 20, left: 20 },
     rotation: 0,
     size: 150,
   },
