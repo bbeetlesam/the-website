@@ -105,8 +105,8 @@ function RoughBorder({
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     const rc = rough.canvas(canvas);
-    
-    const options = isHovered 
+
+    const options = isHovered
       ? { ...roughOptions, ...whenHovered }
       : { ...roughOptions };
 
