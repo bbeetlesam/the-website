@@ -1,5 +1,4 @@
 // used for Home's desk items
-// import placeholderImg from "../assets/header-icon.png";
 import placeholderImg from "../assets/gamepad.png";
 // import oddworksImg from "../assets/oddworks.png";
 // import artsImg from "../assets/arts.png";
