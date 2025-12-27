@@ -21,10 +21,10 @@ function BubbleLabel({
   className = "",
   offsetX = 0,
   offsetY = 0,
-  bubbleColor = "black",
-  textColor = "white",
+  bubbleColor = "#fdfbf6",
+  textColor = "#32312e",
   outlineSize = 0,
-  outlineColor = "black",
+  outlineColor = "#32312e",
   borderRadius = "12px",
   shadow,
 }: BubbleLabelProps) {
@@ -43,7 +43,7 @@ function BubbleLabel({
   const innerTriangleSize = triangleSize;
 
   const defaultShadow = "2px 10px 12px rgba(0, 0, 0, 0.4)";
-  
+
   const buildBoxShadow = () => {
     const dropShadow = shadow || defaultShadow;
     if (outlineSize > 0) {
@@ -64,7 +64,7 @@ function BubbleLabel({
       <div
         className={`
           absolute left-1/2 top-full
-          px-2.5 py-1 text-sm whitespace-nowrap
+          px-2.5 py-1 whitespace-nowrap
           pointer-events-none transition-all duration-200 z-50
           ${isHovered ? "opacity-100" : "opacity-0"}
         `}
@@ -86,7 +86,7 @@ function BubbleLabel({
               borderLeft: `${outerTriangleSize}px solid transparent`,
               borderRight: `${outerTriangleSize}px solid transparent`,
               borderBottom: `${outerTriangleSize}px solid ${outlineColor}`,
-              transform: `translateX(calc(-50% - ${offsetX}px))`,
+              transform: `translate(calc(-50% - ${offsetX}px), -0.3px)`,
             }}
           />
         )}
@@ -98,7 +98,7 @@ function BubbleLabel({
             borderLeft: `${innerTriangleSize}px solid transparent`,
             borderRight: `${innerTriangleSize}px solid transparent`,
             borderBottom: `${innerTriangleSize}px solid ${bubbleColor}`,
-            transform: `translateX(calc(-50% - ${offsetX}px))`,
+            transform: `translate(calc(-50% - ${offsetX}px), 0.5px)`,
           }}
         />
       </div>
