@@ -32,7 +32,7 @@ function Header() {
   }, []);
 
   const routes: RouteItem[] = NAV_ROUTES;
-  const socialLinks: SocialLink[] = SOCIAL_LINKS;
+  const socialLinks: SocialLink[] = SOCIAL_LINKS.filter(link => link.featuredInHeader);
 
   return (
     <>
