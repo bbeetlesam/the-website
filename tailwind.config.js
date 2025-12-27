@@ -11,9 +11,9 @@ export default {
         winky: ["Winky Sans", 'sans-writing']
       },
       colors: {
-        bgLight: '#f8f7f3',
+        bgLight: '#fdfbf6',
         bgDark: '#272727',
-        textDark: '#222222',
+        textDark: '#32312e',
         textLight: 'rgba(255, 255, 255, 0.87)',
       },
     },

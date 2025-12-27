@@ -23,30 +23,30 @@ jobs:
         env:
           ITCH_API_KEY: ${{ secrets.ITCH_API_KEY }}
         run: |
-          mkdir -p data
+          mkdir -p public/data
           mkdir -p .dump
           curl -H "Authorization: Bearer $ITCH_API_KEY" \
             "https://itch.io/api/1/key/my-games" \
-            -o .dump/itch_games_all.json
+            -o .dump/itch-games-all.json
 
           # status log
-          echo "fetched from itch.io and saved to .dump/itch_games_all.json"
+          echo "fetched from itch.io and saved raw to .dump/itch-games-all.json"
 
       - name: filter (published only) and prettify json output
         run: |
-          jq '.games |= map(select(.published == true))' .dump/itch_games_all.json > data/itch_games.json
+          jq '.games |= map(select(.published == true))' .dump/itch-games-all.json > public/data/itch-games.json
 
-          jq --sort-keys '.' data/itch_games.json > data/itch_games_pretty.json
-          mv data/itch_games_pretty.json data/itch_games.json
+          jq --sort-keys '.' public/data/itch-games.json > public/data/itch-games-pretty.json
+          mv public/data/itch-games-pretty.json public/data/itch-games.json
 
           # status log
-          echo "filtered and prettified, saved to data/itch_games.json"
+          echo "filtered and prettified, saved to public/data/itch-games.json"
 
       - name: commit and push updated data
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add data/itch_games.json
+          git add public/data/itch-games.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
