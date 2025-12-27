@@ -1,11 +1,5 @@
 import { FOOTER_TEXT } from "../data/text-contents";
-
-// footer component
-type SocialLink = {
-  href: string;
-  title?: string;
-  icon: string;
-};
+import type { SocialLink } from "../types/common";
 
 function Footer() {
   const socialLinks: SocialLink[] = [

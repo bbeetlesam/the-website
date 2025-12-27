@@ -5,18 +5,7 @@ import RoughBorder from "../../libraries/RoughBorder.tsx";
 import MobileDropdown from "./MobileDropdown.tsx";
 import headerIcon from "../../assets/header-icon.png";
 import { NAV_ROUTES, SOCIAL_LINKS } from "../../data/text-contents.ts";
-
-type RouteItem = {
-  path: string;
-  label: string;
-  title?: string;
-};
-
-type SocialLink = {
-  href: string;
-  title?: string;
-  icon: string;
-};
+import type { RouteItem, SocialLink } from "../../types/common.ts";
 
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
