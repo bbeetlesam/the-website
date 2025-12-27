@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import RoughBorder from "../../libraries/RoughBorder.tsx";
 import MobileDropdown from "./MobileDropdown.tsx";
 import headerIcon from "../../assets/header-icon.png";
+import { NAV_ROUTES, SOCIAL_LINKS } from "../../data/text-contents.ts";
 
 type RouteItem = {
   path: string;
@@ -41,19 +42,8 @@ function Header() {
     };
   }, []);
 
-  const routes: RouteItem[] = [
-    { path: "/games", label: "Games", title: "Explore my games!" },
-    { path: "/oddworks", label: "Oddworks", title: "My other projects!" },
-    { path: "/arts", label: "Arts", title: "Pieces of my arts!" },
-    { path: "/blogs", label: "Blogs", title: "Read my thoughts!" },
-    { path: "/bio", label: "Bio", title: "Who am I really?" },
-  ];
-
-  const socialLinks: SocialLink[] = [
-    { href: "https://bbeetlesam.itch.io", title: "My weird games.", icon: "fa-brands fa-itch-io" },
-    { href: "https://github.com/bbeetlesam", title: "My chaos GitHub.", icon: "fa-brands fa-github" },
-    { href: "https://instagram.com/jstsams", title: "My unpopular Instagram.", icon: "fa-brands fa-instagram" },
-  ];
+  const routes: RouteItem[] = NAV_ROUTES;
+  const socialLinks: SocialLink[] = SOCIAL_LINKS;
 
   return (
     <>

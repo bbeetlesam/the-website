@@ -1,3 +1,5 @@
+import { FOOTER_TEXT } from "../data/text-contents";
+
 // footer component
 type SocialLink = {
   href: string;
@@ -5,7 +7,7 @@ type SocialLink = {
   icon: string;
 };
 
-function Footer(){
+function Footer() {
   const socialLinks: SocialLink[] = [
     { href: "mailto:bbeetlesam1968@gmail.com", title: "Email me.", icon: "fa-solid fa-envelope" },
     { href: "https://github.com/bbeetlesam", title: "My chaos GitHub.", icon: "fa-brands fa-github" },
@@ -21,10 +23,10 @@ function Footer(){
       <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4">
         {/* left part */}
         <div className="text-center md:text-left">
-          <p>&copy; bbeetlesam 2025.</p>
-          <p>Keep in weird time and stay progressive.</p>
+          <p>&copy; {FOOTER_TEXT.copyright}</p>
+          <p>{FOOTER_TEXT.tagline}</p>
         </div>
-        
+
         {/* right part */}
         <div className="flex items-center gap-2 text-2xl">
           {socialLinks.map((link: SocialLink) => (
