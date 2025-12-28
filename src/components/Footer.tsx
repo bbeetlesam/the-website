@@ -10,7 +10,7 @@ function Footer() {
         {/* left part */}
         <div className="text-center md:text-left">
           <p>&copy; {FOOTER_TEXT.copyright}</p>
-          <p>{FOOTER_TEXT.tagline}</p>
+          <p className="hidden sm:block">{FOOTER_TEXT.tagline}</p>
         </div>
 
         {/* right part */}
