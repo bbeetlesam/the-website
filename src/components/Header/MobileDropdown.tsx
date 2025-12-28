@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { FOOTER_TEXT } from "../../data/text-contents";
 
 type RouteItem = {
   path: string;
@@ -84,8 +85,8 @@ export default function MobileDropdown({ isOpen, routes, socialLinks, onClose }:
 
         {/* footer text at end of dropdown */}
         <div className="mt-6 px-3 text-left text-xs text-inherit">
-          <p>&copy; bbeetlesam 2025.</p>
-          <p>Keep in weird time and stay progressive.</p>
+          <p>&copy; {FOOTER_TEXT.copyright}</p>
+          <p>{FOOTER_TEXT.tagline}</p>
         </div>
       </div>
     </div>
