@@ -10,7 +10,7 @@ function App() {
   return (
     <div className={`min-h-screen grid grid-rows-[auto_1fr_auto] bg-grid`}>
       <Header />
-      <main className={`${isOverflowAllowed ? 'overflow-hidden' : 'overflow-y-auto'} min-h-0`}>
+      <main className={`${isOverflowAllowed ? 'overflow-hidden' : 'overflow-y-auto'} min-h-0 py-2`}>
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
