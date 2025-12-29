@@ -10,55 +10,55 @@ function Home() {
     document.title = "bbeetlesam";
   }, []);
 
-  const deskSizeScale = 0.95;
-
   return (
-    <RoughBorder
-      className="h-full flex"
-      roughOptions={{ stroke: "#22222200", strokeWidth: 3, roughness: 2 }}
-      canvasScale={deskSizeScale}
-    >
-      <div className="relative w-full h-full">
-        {/* desk items */}
-        {deskItems.map((item) => {
-          const topPercent = item.position.top;
-          const leftPercent = item.position.left;
+    <div className="h-full px-5 md:px-10">
+      <RoughBorder
+        className="h-full flex"
+        refreshOnHover={true}
+        roughOptions={{ stroke: "#22222200", strokeWidth: 3, roughness: 2, bowing: 0.5 }}
+      >
+        <div className="relative w-full h-full">
+          {/* desk items */}
+          {deskItems.map((item) => {
+            const topPercent = item.position.top;
+            const leftPercent = item.position.left;
 
-          return (
-            <div
-              key={item.path}
-              className="absolute"
-              style={{
-                top: `${topPercent}%`,
-                left: `${leftPercent}%`,
-                transform: 'translate(-50%, -50%)' // set the origin to 0.5,0.5 (center)
-              }}
-            >
-              <BubbleLabel
-                label={item.title || item.label}
-                offsetY={-20}
-                textColor="#1a1a1a"
-                outlineSize={2}
-                shadow="2px 10px 12px rgba(0, 0, 0, 0.4)"
+            return (
+              <div
+                key={item.path}
+                className="absolute"
+                style={{
+                  top: `${topPercent}%`,
+                  left: `${leftPercent}%`,
+                  transform: 'translate(-50%, -50%)' // set the origin to 0.5,0.5 (center)
+                }}
               >
-                <NavLink
-                  to={item.path}
-                  className="block hover:z-10"
-                  style={{ willChange: 'transform' }}
+                <BubbleLabel
+                  label={item.title || item.label}
+                  offsetY={-20}
+                  textColor="#1a1a1a"
+                  outlineSize={2}
+                  shadow="2px 10px 12px rgba(0, 0, 0, 0.4)"
                 >
-                  <img
-                    src={item.image}
-                    alt={item.label}
-                    style={{ width: `${item.size}px`, height: `${item.size}px`, transform: `rotate(${item.rotation || 0}deg)` }}
-                    className="object-cover"
-                  />
-                </NavLink>
-              </BubbleLabel>
-            </div>
-          );
-        })}
-      </div>
-    </RoughBorder>
+                  <NavLink
+                    to={item.path}
+                    className="block hover:z-10"
+                    style={{ willChange: 'transform' }}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.label}
+                      style={{ width: `${item.size}px`, height: `${item.size}px`, transform: `rotate(${item.rotation || 0}deg)` }}
+                      className="object-cover"
+                    />
+                  </NavLink>
+                </BubbleLabel>
+              </div>
+            );
+          })}
+        </div>
+      </RoughBorder>
+    </div>
   )
 }
 
