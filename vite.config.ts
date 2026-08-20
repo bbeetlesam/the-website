@@ -17,5 +17,10 @@ export default defineConfig({
 			preprocess: [mdsvex({ extensions: ['.svx', '.md'] })],
 			extensions: ['.svelte', '.svx', '.md']
 		})
-	]
+	],
+	server: {
+		host: true,
+		allowedHosts: ['.ngrok-free.app'],
+		port: 5173
+	}
 });
