@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@import '../styles/fonts.css';
+
+@theme {
+	--color-paper: #fdfbf6;
+	--color-fg-dark: #2e2e2e;
+
+	--font-winkysans: 'Winky Sans', sans-serif;
+}
+
+/* FOR DEBUGGING */
+* {
+	/*outline: 1px solid red;*/
+}
+
+html,
+body {
+	margin: 0;
+	min-height: 100dvh;
+	font-family: var(--font-winkysans);
+	font-size: 1.2rem;
+	color: var(--color-fg-dark);
+}
+
+/* Set the 'grid' background pattern and colour */
+body {
+	background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><path d='M0 0H50V50H0z' fill='none' stroke='%23dbdbdb' stroke-width='2' stroke-linecap='square'/></svg>")
+		repeat fixed;
+	background-color: var(--color-paper);
+}
