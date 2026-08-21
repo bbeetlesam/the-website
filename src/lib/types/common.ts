@@ -1,12 +1,12 @@
 type RouteItem = {
 	path: string;
 	label: string;
-	title?: string;
+	title: string;
 };
 
 type SocialLink = {
 	href: string;
-	title?: string;
+	title: string;
 	icon: string;
 	featured?: boolean;
 };
