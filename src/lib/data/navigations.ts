@@ -1,11 +1,16 @@
-import type { RouteItem } from '$lib/types';
+import type { RouteItem, RouteKey } from '$lib/types';
 
-const NAV_ROUTES: RouteItem[] = [
-	{ path: '/games', label: 'Games', title: 'Strange, arcade oddities.' },
-	{ path: '/oddworks', label: 'Oddworks', title: 'Other strange projects.' },
-	{ path: '/arts', label: 'Arts', title: 'Pieces of my arts.' },
-	{ path: '/blogs', label: 'Blogs', title: 'The signs of my mind.' },
-	{ path: '/bio', label: 'Bio', title: 'Who am I really?' }
-];
+/** 
+ * The navigation routes for the website (hardcoded).
+ * 
+ * Available routes: `games`, `oddworks`, `arts`, `blogs`, `bio`.
+ */
+const NAV_ROUTES: Record<RouteKey, RouteItem> = {
+	games: { path: '/games', title: 'Games', desc: 'Strange, arcade oddities.' },
+	oddworks: { path: '/oddworks', title: 'Oddworks', desc: 'Other strange projects.' },
+	arts: { path: '/arts', title: 'Arts', desc: 'Pieces of my arts.' },
+	blogs: { path: '/blogs', title: 'Blogs', desc: 'The signs of my mind.' },
+	bio: { path: '/bio', title: 'Bio', desc: 'Who am I really?' }
+};
 
 export { NAV_ROUTES };
