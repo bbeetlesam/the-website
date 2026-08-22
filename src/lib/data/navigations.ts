@@ -1,8 +1,8 @@
 import type { RouteItem, RouteKey } from '$lib/types';
 
-/** 
+/**
  * The navigation routes for the website (hardcoded).
- * 
+ *
  * Available routes: `games`, `oddworks`, `arts`, `blogs`, `bio`.
  */
 const NAV_ROUTES: Record<RouteKey, RouteItem> = {
