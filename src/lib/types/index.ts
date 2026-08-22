@@ -1,1 +1,2 @@
-export type { RouteItem, SocialLink } from './common';
+export type { RouteItem, RouteKey } from './routes';
+export type { SocialLink } from './social';
