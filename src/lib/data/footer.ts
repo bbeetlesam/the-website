@@ -1,4 +1,4 @@
-import { pickRandomItem } from '$lib/utils/random';
+import { pickRandomItem } from '$lib/utils';
 
 const FOOTER_TAGLINES = [
 	'The crux of the biscuit is the creator.',
