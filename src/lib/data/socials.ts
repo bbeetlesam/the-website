@@ -4,20 +4,17 @@ const SOCIAL_LINKS: SocialLink[] = [
 	{
 		href: 'mailto:bbeetlesam1968@gmail.com',
 		title: 'Email me (what for?).',
-		icon: 'fa-solid fa-envelope',
-		featured: true
+		icon: 'fa-solid fa-envelope'
 	},
 	{
 		href: 'https://github.com/bbeetlesam',
 		title: 'My git-coded GitHub.',
-		icon: 'fa-brands fa-github',
-		featured: true
+		icon: 'fa-brands fa-github'
 	},
 	{
 		href: 'https://bbeetlesam.itch.io',
 		title: 'Them weird games.',
-		icon: 'fa-brands fa-itch-io',
-		featured: true
+		icon: 'fa-brands fa-itch-io'
 	},
 	{
 		href: 'https://www.linkedin.com/in/samudra-azriel-pradana-b48491321',
@@ -27,8 +24,7 @@ const SOCIAL_LINKS: SocialLink[] = [
 	{
 		href: 'https://instagram.com/jstsams',
 		title: 'My boring Instagram.',
-		icon: 'fa-brands fa-instagram',
-		featured: true
+		icon: 'fa-brands fa-instagram'
 	},
 	{
 		href: 'https://twitter.com/bbeetlesam',
