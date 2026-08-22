@@ -10,6 +10,7 @@ type DeskRatio = 'ratio1280x720'; // more ratio coming soon
 type DeskItem = {
 	id: string;
 	image: string;
+	imageAlt: string;
 	x: number;
 	y: number;
 	rotation: number;
