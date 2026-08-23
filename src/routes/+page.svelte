@@ -7,7 +7,7 @@
 
 	// currently hardcoded
 	// will implement the desk selection later
-	let desk = $state(DESKS.ratio1280x720);
+	let desk = $state(DESKS.size1280x720);
 	let deskScale = $state(1);
 
 	function updateScale() {
