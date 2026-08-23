@@ -10,6 +10,20 @@
 	--font-winkysans: 'Winky Sans', sans-serif;
 }
 
+@utility desk {
+	position: absolute;
+	width: var(--desk-width);
+	height: var(--desk-height);
+
+	transform: scale(var(--desk-scale));
+	transform-origin: center;
+}
+
+@utility desk-item {
+	position: absolute;
+	transform: translate(-50%, -50%);
+}
+
 /* FOR DEBUGGING */
 * {
 	/*outline: 1px solid red;*/
