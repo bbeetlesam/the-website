@@ -8,7 +8,6 @@ type DeskItem = {
 	y: number;
 	rotation: number;
 	size: number;
-	isRouteItem?: boolean;
 	route?: RouteItem;
 };
 

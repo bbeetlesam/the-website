@@ -17,8 +17,7 @@ const DESK_1280x720: DeskConfig = {
 			x: 320,
 			y: 180,
 			rotation: 0,
-			size: 200,
-			isRouteItem: true,
+			size: 350,
 			route: NAV_ROUTES['games']
 		},
 		{
