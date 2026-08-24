@@ -5,13 +5,32 @@
 
 	let deskArea: HTMLDivElement;
 
-	// currently hardcoded
-	// will implement the desk selection later
 	let desk = $state(DESKS.size1280x720);
 	let deskScale = $state(1);
 
-	function updateScale() {
+	/**
+	 * Finds the closest desk to the given width/height ratio.
+	 *
+	 * It may not be the best algorithm so may change this later
+	 */
+	function findClosestDesk(width: number, height: number) {
+		const targetRatio = width / height;
+
+		return Object.values(DESKS).reduce((closest, candidate) => {
+			const candidateRatio = candidate.size.width / candidate.size.height;
+			const closestRatio = closest.size.width / closest.size.height;
+
+			const currentDistance = Math.abs(candidateRatio - targetRatio);
+			const closestDistance = Math.abs(closestRatio - targetRatio);
+
+			return currentDistance < closestDistance ? candidate : closest;
+		});
+	}
+
+	function updateDesk() {
 		const { width, height } = deskArea.getBoundingClientRect();
+
+		desk = findClosestDesk(width, height);
 
 		const parentWidth = width;
 		const parentHeight = height;
@@ -27,10 +46,10 @@
 	}
 
 	onMount(() => {
-		const observer = new ResizeObserver(updateScale);
+		const observer = new ResizeObserver(updateDesk);
 
 		observer.observe(deskArea);
-		updateScale();
+		updateDesk();
 
 		return () => observer.disconnect();
 	});
@@ -39,7 +58,7 @@
 <!-- The holy desk of Homepage -->
 <div bind:this={deskArea} class="relative flex flex-1 items-center justify-center">
 	<div
-		class="desk"
+		class="desk outline-2 outline-red-500"
 		style={`--desk-width: ${desk.size.width}px; --desk-height: ${desk.size.height}px; --desk-scale: ${deskScale};`}
 	>
 		{#each desk.items as item (item.id)}
