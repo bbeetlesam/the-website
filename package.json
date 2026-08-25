@@ -35,5 +35,8 @@
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.67.0",
 		"vite": "^8.2.2"
+	},
+	"dependencies": {
+		"roughjs": "^4.6.6"
 	}
 }
