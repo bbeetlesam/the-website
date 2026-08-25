@@ -1,0 +1,15 @@
+/* For Desk, including desk areas and desk items */
+
+@utility desk {
+	position: absolute;
+	width: var(--desk-width);
+	height: var(--desk-height);
+
+	transform: scale(var(--desk-scale));
+	transform-origin: center;
+}
+
+@utility desk-item {
+	position: absolute;
+	transform: translate(-50%, -50%);
+}

@@ -2,26 +2,13 @@
 @plugin '@tailwindcss/typography';
 
 @import '../styles/fonts.css';
+@import '../styles/desk.css';
 
 @theme {
 	--color-paper: #fdfbf6;
 	--color-fg-dark: #2e2e2e;
 
 	--font-winkysans: 'Winky Sans', sans-serif;
-}
-
-@utility desk {
-	position: absolute;
-	width: var(--desk-width);
-	height: var(--desk-height);
-
-	transform: scale(var(--desk-scale));
-	transform-origin: center;
-}
-
-@utility desk-item {
-	position: absolute;
-	transform: translate(-50%, -50%);
 }
 
 /* FOR DEBUGGING */
