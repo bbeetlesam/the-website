@@ -8,7 +8,7 @@
 
 	let deskArea: HTMLDivElement;
 
-	let desk: Desk = $state(DESKS.size1280x720);
+	let desk: Desk = $state(DESKS[0]);
 	let deskScale = $state(1);
 
 	/**
