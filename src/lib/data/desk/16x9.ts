@@ -1,9 +1,10 @@
-import type { DeskConfig } from '$lib/types';
-import { NAV_ROUTES } from '../navigations';
-import placeholderImg from '$lib/assets/gamepad.png'; // other design soon created
+import type { Desk } from '$lib/types';
+import { NAV_ITEMS } from '../navigations';
+import placeholderImg from '$lib/assets/gamepad.png';
 
-// 16:9 ratio
-const DESK_1280x720: DeskConfig = {
+// Aspect ratio: 16:9
+// Logical size: 1280x720
+const DESK_16x9: Desk = {
 	size: {
 		width: 1280,
 		height: 720
@@ -16,9 +17,14 @@ const DESK_1280x720: DeskConfig = {
 			imageAlt: 'Gamepad',
 			x: 320,
 			y: 180,
-			rotation: 0,
-			size: 350,
-			route: NAV_ROUTES['games']
+			size: 200,
+			rotation: 3,
+			focusFrame: {
+				size: 100,
+				cornerSize: 30,
+				cornerThickness: 3
+			},
+			navigation: NAV_ITEMS['/games']
 		},
 		{
 			id: '2',
@@ -27,7 +33,8 @@ const DESK_1280x720: DeskConfig = {
 			x: 960,
 			y: 180,
 			rotation: 12,
-			size: 120
+			size: 120,
+			navigation: NAV_ITEMS['/games']
 		},
 		{
 			id: '3',
@@ -59,4 +66,7 @@ const DESK_1280x720: DeskConfig = {
 	]
 };
 
-export default DESK_1280x720;
+// this is just a mockup desk, everything is not real
+// i mean everything is just a placeholder
+// will change later
+export default DESK_16x9;

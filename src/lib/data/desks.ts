@@ -1,6 +1,6 @@
 import type { Desk } from '$lib/types';
 
-import DESK_1280x720 from './desk/1280x720';
+import DESK_16x9 from './desk/16x9';
 
 /**
  * Entries of available desks in various size (e.g. `1280x720`)
@@ -10,5 +10,5 @@ import DESK_1280x720 from './desk/1280x720';
  * as a simple collection pool of desks.
  */
 export const DESKS: Desk[] = [
-  DESK_1280x720,
+  DESK_16x9,
 ];
