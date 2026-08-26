@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import rough from 'roughjs';
+	import type { Options as RoughOptions } from 'roughjs/bin/core';
+	import type { RoughCanvas } from 'roughjs/bin/canvas';
+
 	import { DESKS } from '$lib/data';
 	import { scaleToFit } from '$lib/utils';
+	import type { DeskItem } from '$lib/types';
 
 	let deskArea: HTMLDivElement;
 
@@ -45,6 +50,49 @@
 		// console.log({ parentWidth, parentHeight, deskWidth, deskHeight });
 	}
 
+	function roughFocus(canvas: HTMLCanvasElement, item: DeskItem) {
+		const focusSize = item.focusFrame?.size ?? 100;
+		const cornerSize = item.focusFrame?.cornerSize ?? 20;
+		const cornerThickness = item.focusFrame?.cornerThickness ?? 3;
+
+		// Logical size of the canvas
+		const size = item.size * (focusSize / 100);
+
+		// Canvas drawing resolution
+		canvas.width = size;
+		canvas.height = size;
+
+		// Let CSS determine its visual size
+		canvas.style.width = `${focusSize}%`;
+		canvas.style.height = `${focusSize}%`;
+
+		const rc: RoughCanvas = rough.canvas(canvas);
+
+		const options: RoughOptions = {
+			strokeWidth: cornerThickness,
+			stroke: '#1e1e1e',
+			roughness: 0.85
+		};
+
+		const offset = cornerThickness + 2;
+
+		// Top-left
+		rc.line(offset, cornerSize + offset, offset, offset, options);
+		rc.line(offset, offset, cornerSize + offset, offset, options);
+
+		// Top-right
+		rc.line(size - cornerSize - offset, offset, size - offset, offset, options);
+		rc.line(size - offset, offset, size - offset, cornerSize + offset, options);
+
+		// Bottom-left
+		rc.line(offset, size - cornerSize - offset, offset, size - offset, options);
+		rc.line(offset, size - offset, cornerSize + offset, size - offset, options);
+
+		// Bottom-right
+		rc.line(size - cornerSize - offset, size - offset, size - offset, size - offset, options);
+		rc.line(size - offset, size - offset, size - offset, size - cornerSize - offset, options);
+	}
+
 	onMount(() => {
 		const observer = new ResizeObserver(updateDesk);
 
@@ -58,19 +106,27 @@
 <!-- The holy desk of Homepage -->
 <div bind:this={deskArea} class="relative flex flex-1 items-center justify-center">
 	<div
-		class="desk outline-2 outline-red-500"
+		class="desk"
 		style={`--desk-width: ${desk.size.width}px; --desk-height: ${desk.size.height}px; --desk-scale: ${deskScale};`}
 	>
 		{#each desk.items as item (item.id)}
 			<div
-				class="desk-item"
+				class="group/desk-item desk-item"
 				style={`
   				left: ${item.x}px;
   				top: ${item.y}px;
-  				width: ${item.size}px;
-			`}
+          width: ${item.size}px;
+          height: ${item.size}px;
+        `}
 			>
 				{#if item.route}
+					<!-- Focus frame canvas -->
+					<canvas
+						use:roughFocus={item}
+						class="item-focus-frame opacity-0 group-hover/desk-item:opacity-100"
+						aria-hidden="true"
+					></canvas>
+
 					<a href={item.route.path}>
 						<img
 							src={item.image}
