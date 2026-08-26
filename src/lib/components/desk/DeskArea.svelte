@@ -1,4 +1,4 @@
-<!-- 
+<!--
 @component A container for the desk items.
 
 @prop desk: Desk - The desk to display.
@@ -16,10 +16,14 @@
 
 	// Component props
 	const { desk, deskScale }: { desk: Desk; deskScale: number } = $props();
+
+	// A debug flag that is true in development mode (for DeskArea)
+	// idk what im doing bruh
+	const debug: boolean = import.meta.env.DEV;
 </script>
 
 <div
-	class="desk"
+	class="desk {debug ? 'outline-2 outline-orange-700' : ''}"
 	style={`--desk-width: ${desk.size.width}px; --desk-height: ${desk.size.height}px; --desk-scale: ${deskScale};`}
 >
 	{#each desk.items as item (item.id)}
