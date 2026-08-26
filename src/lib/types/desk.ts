@@ -1,4 +1,4 @@
-import type { RouteItem } from './routes';
+import type { NavItem } from './navigation';
 
 type DeskItem = {
 	id: string;
@@ -8,8 +8,8 @@ type DeskItem = {
 	y: number;
 	rotation: number;
 	size: number;
-	route?: RouteItem;
-	/** The focus frame configuration for the item (only on route items). */
+	navigation?: NavItem;
+	/** The focus frame configuration for the item (only on navigable items). */
 	focusFrame?: {
 		/** The size of the focus frame as a percentage of the item's size. */
 		size?: number;

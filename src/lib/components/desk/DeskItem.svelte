@@ -5,6 +5,7 @@
 -->
 
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { default as ItemFocusFrame } from './ItemFocusFrame.svelte';
 	import type { DeskItem } from '$lib/types';
 
@@ -21,14 +22,14 @@
     height: ${item.size}px;
   `}
 >
-	{#if item.route}
+	{#if item.navigation}
 		<!-- Focus frame canvas -->
 		<ItemFocusFrame {item} />
 
-		<a href={item.route.path}>
+		<a href={resolve(item.navigation.route)}>
 			<img
 				src={item.image}
-				alt={item.route.title}
+				alt={item.navigation.title}
 				style={`
 				  width: ${item.size}px;
   				transform: rotate(${item.rotation}deg);

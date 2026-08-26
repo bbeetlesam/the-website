@@ -1,16 +1,16 @@
-import type { RouteItem, RouteKey } from '$lib/types';
+import type { RouteId } from '$app/types';
+import type { NavItem } from '$lib/types';
 
 /**
- * The navigation routes for the website (hardcoded).
+ * The navigation metadata for the website routes (hardcoded).
+ * Available routes are defined by Svelte's RouteId.
  *
- * Available routes: `games`, `oddworks`, `arts`, `blogs`, `bio`.
+ * Currently available routes: `/`, `/games`.
  */
-const NAV_ROUTES: Record<RouteKey, RouteItem> = {
-	games: { path: '/games', title: 'Games', desc: 'Strange, arcade oddities.' },
-	oddworks: { path: '/oddworks', title: 'Oddworks', desc: 'Other strange projects.' },
-	arts: { path: '/arts', title: 'Arts', desc: 'Pieces of my arts.' },
-	blogs: { path: '/blogs', title: 'Blogs', desc: 'The signs of my mind.' },
-	bio: { path: '/bio', title: 'Bio', desc: 'Who am I really?' }
+export const NAV_ITEMS: Partial<Record<RouteId, NavItem>> = {
+	'/games': { route: '/games', title: 'Games', desc: 'Strange, arcade oddities.' },
+	// '/oddworks': { route: '/oddworks', title: 'Oddworks', desc: 'Other strange projects.' },
+	// '/arts': { route: '/arts', title: 'Arts', desc: 'Pieces of my arts.' },
+	// '/blogs': { route: '/blogs', title: 'Blogs', desc: 'The signs of my mind.' },
+	// '/bio': { route: '/bio', title: 'Bio', desc: 'Who am I really?' }
 };
-
-export { NAV_ROUTES };
