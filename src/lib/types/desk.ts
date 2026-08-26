@@ -27,9 +27,9 @@ type DeskSize = {
 	height: number;
 };
 
-type DeskConfig = {
+type Desk = {
 	size: DeskSize;
 	items: DeskItem[];
 };
 
-export type { DeskItem, DeskSize, DeskConfig };
+export type { DeskItem, DeskSize, Desk };
