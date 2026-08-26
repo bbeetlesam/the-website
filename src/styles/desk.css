@@ -7,9 +7,26 @@
 
 	transform: scale(var(--desk-scale));
 	transform-origin: center;
+
+	/*user-select: none;*/
 }
 
 @utility desk-item {
 	position: absolute;
 	transform: translate(-50%, -50%);
+}
+
+/* Focus frame class only for desk items */
+.desk-item .item-focus-frame {
+	position: absolute;
+	pointer-events: none;
+
+	width: var(--focus-frame-size);
+	height: var(--focus-frame-size);
+
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	transition: opacity 250ms ease;
 }
