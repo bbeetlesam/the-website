@@ -17,6 +17,8 @@ type DeskItem = {
 		cornerSize?: number;
 		/** The thickness of the focus frame's corner. */
 		cornerThickness?: number;
+		/** The offset of the focus drawing from the canvas edge of the item. */
+		edgeOffset?: number;
 	};
 };
 
