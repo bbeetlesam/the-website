@@ -8,7 +8,7 @@
 
 	let deskArea: HTMLDivElement;
 
-	let desk: Desk = $state(DESKS[0]);
+	let desk = $state<Desk>(DESKS[0]);
 	let deskScale = $state(1);
 
 	/**
