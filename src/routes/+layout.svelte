@@ -7,6 +7,7 @@
 </script>
 
 <svelte:head>
+	<!-- Default page title for untitled page, if any -->
 	<title>bbeetlesam</title>
 	<link rel="icon" href={favicon} />
 </svelte:head>

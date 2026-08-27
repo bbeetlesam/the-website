@@ -58,6 +58,16 @@
 	});
 </script>
 
+<!-- Home page's head data -->
+<!-- Moved from ./+layout.svelte for page (Home) specific head data -->
+<svelte:head>
+	<title>bbeetlesam</title>
+	<meta
+		name="description"
+		content="Get ready to watch bbeetlesam's desk view on the web. It contains everything he has ever done."
+	/>
+</svelte:head>
+
 <!-- The holy desk of Homepage -->
 <div bind:this={deskArea} class="relative flex flex-1 items-center justify-center">
 	<DeskArea {desk} {deskScale} />
