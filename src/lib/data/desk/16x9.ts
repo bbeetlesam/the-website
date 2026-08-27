@@ -34,7 +34,7 @@ const DESK_16x9: Desk = {
 			y: 180,
 			rotation: 12,
 			size: 120,
-			navigation: NAV_ITEMS['/games']
+			navigation: NAV_ITEMS['/bio']
 		},
 		{
 			id: '3',
@@ -43,7 +43,8 @@ const DESK_16x9: Desk = {
 			x: 320,
 			y: 540,
 			rotation: -5,
-			size: 150
+			size: 150,
+			navigation: NAV_ITEMS['/blogs']
 		},
 		{
 			id: '4',
@@ -52,7 +53,8 @@ const DESK_16x9: Desk = {
 			x: 960,
 			y: 540,
 			rotation: 15,
-			size: 95
+			size: 95,
+			navigation: NAV_ITEMS['/arts']
 		},
 		{
 			id: '5',
@@ -61,7 +63,8 @@ const DESK_16x9: Desk = {
 			x: 640,
 			y: 360,
 			rotation: -10,
-			size: 105
+			size: 105,
+			navigation: NAV_ITEMS['/oddworks']
 		}
 	]
 };
