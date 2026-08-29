@@ -1,8 +1,7 @@
 # The Website, Pt. II
 
-In the early knowledge days, Sam knew what the trend was at the time,
-but instead of following it, he chose the counterpath. He decided to create a website
-with plain language, without any tools or frameworks to help him.
+In the early days, Sam chose the counterpath, to create a personal website
+plainly, without any libraries to help him.
 However, as the time went on, he realised why those tools were invented by the savants.\
 And, by looking at the project's [result](https://github.com/bbeetlesam/bbeetlesam.github.io),
 we know that he wasn't satisfied with it.
@@ -25,9 +24,9 @@ This, is the project of **The Website of Sam**.
 
 - [Svelte](https://svelte.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
+- [Rough.js](https://roughjs.com/)
 - [mdsvex](https://mdsvex.pngwn.io/)
 
-<!--- [Rough.js](https://roughjs.com/)-->
 <!--- [Font Awesome](https://fontawesome.com/)-->
 <!--- [Overlay Scrollbars](https://kingsora.github.io/OverlayScrollbars/)-->
 
