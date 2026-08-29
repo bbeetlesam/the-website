@@ -2,7 +2,8 @@
 	import rough from 'roughjs';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 
-	const centreName = 'Header';
+	// Component props
+	const { centreName = 'Header' }: { centreName?: string } = $props();
 
 	const strokeColor = '#1e1e1e';
 	const strokeWidth = 2;
