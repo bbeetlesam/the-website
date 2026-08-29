@@ -8,6 +8,8 @@ type NavItem = {
 	title: string;
 	/** The description of the navigation item (technically the 'longer' title). */
 	desc: string;
+	/** The icon of the navigation item. */
+	icon?: string;
 };
 
 export type { NavItem };
