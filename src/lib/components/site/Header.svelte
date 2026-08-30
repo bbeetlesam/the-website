@@ -9,6 +9,7 @@
 	const strokeWidth = 2;
 	const roughness = 0.85;
 	const paperColor = '#fdfbf6';
+	const paperHoverColor = '#ebeaeb';
 	const menuCanvasOffset = 6;
 	const roughRefreshMs = 300;
 	const safeOffset = strokeWidth + 2;
@@ -40,11 +41,13 @@
 		};
 	}
 
-	function createRoughAction(drawShape: (canvas: ReturnType<typeof setupCanvas>) => void) {
+	function createRoughAction(
+		drawShape: (canvas: ReturnType<typeof setupCanvas>, active: boolean) => void
+	) {
 		return (canvas: HTMLCanvasElement, active = false) => {
 			let intervalId: ReturnType<typeof setInterval> | null = null;
 
-			const draw = () => drawShape(setupCanvas(canvas));
+			const draw = () => drawShape(setupCanvas(canvas), active);
 
 			const syncRefresh = () => {
 				if (intervalId) clearInterval(intervalId);
@@ -71,14 +74,11 @@
 		};
 	}
 
-	const roughButtonOutline = createRoughAction(({ width, height, rc }) => {
-		rc.rectangle(
-			safeOffset,
-			safeOffset,
-			width - safeOffset * 2,
-			height - safeOffset * 2,
-			roughOptions
-		);
+	const roughButtonOutline = createRoughAction(({ width, height, rc }, active) => {
+		rc.rectangle(safeOffset, safeOffset, width - safeOffset * 2, height - safeOffset * 2, {
+			...roughOptions,
+			fill: active ? paperHoverColor : paperColor
+		});
 	});
 
 	const roughTitleOutline = createRoughAction(({ width, height, rc }) => {
@@ -101,6 +101,7 @@
 
 <header class="sticky top-4 z-999 px-4">
 	<div class="relative flex items-center justify-center">
+		<!-- Hamburger nav menu -->
 		<div class="absolute left-0">
 			<div
 				class="relative inline-flex"
@@ -144,8 +145,9 @@
 			</div>
 		</div>
 
+		<!-- Centre page label -->
 		<div
-			class="relative inline-flex cursor-default px-5 py-1 text-center text-fg-dark"
+			class="relative inline-flex cursor-default px-5 py-1 text-center text-fg-dark select-none"
 			role="presentation"
 			onmouseenter={() => (isTitleHovered = true)}
 			onmouseleave={() => (isTitleHovered = false)}
