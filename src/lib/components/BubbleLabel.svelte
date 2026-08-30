@@ -13,6 +13,7 @@
 @prop outlineSize: number - Size of the bubble outline.
 @prop outlineColor: string - Colour of the bubble outline.
 @prop borderRadius: number - Radius of the bubble corners.
+@prop shadow: string - Shadow of the bubble.
 
 @example
 ```svelte
@@ -38,6 +39,7 @@
 		outlineSize?: number;
 		outlineColor?: string;
 		borderRadius?: number;
+		shadow?: string;
 	};
 
 	// Component props
@@ -53,7 +55,8 @@
 		textColor = 'var(--color-fg-dark)',
 		outlineSize = 2.5,
 		outlineColor = 'var(--color-fg-dark)',
-		borderRadius = 12
+		borderRadius = 12,
+		shadow = '2px 8px 12px rgba(0, 0, 0, 0.35)'
 	}: Props = $props();
 
 	const baseOffset = '0.5rem';
@@ -85,6 +88,7 @@
 			color: ${textColor};
 			border: ${outlineSize}px solid ${outlineColor};
 			border-radius: ${borderRadius}px;
+			box-shadow: ${shadow};
 			--bubble-x: ${transformX};
 			--bubble-y-rest: ${restTransformY};
 			--bubble-y-hover: ${hoverTransformY};
