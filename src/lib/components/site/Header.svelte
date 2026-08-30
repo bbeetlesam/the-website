@@ -29,8 +29,6 @@
 
 		canvas.width = Math.max(1, Math.round(rect.width * dpr));
 		canvas.height = Math.max(1, Math.round(rect.height * dpr));
-		canvas.style.width = `${rect.width}px`;
-		canvas.style.height = `${rect.height}px`;
 
 		const context = canvas.getContext('2d');
 		context?.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -53,9 +51,11 @@
 				intervalId = active ? setInterval(draw, roughRefreshMs) : null;
 			};
 
+			const resizeObserver = new ResizeObserver(draw);
+
+			resizeObserver.observe(canvas);
 			draw();
 			syncRefresh();
-			window.addEventListener('resize', draw);
 
 			return {
 				update(nextActive = false) {
@@ -65,7 +65,7 @@
 				},
 				destroy() {
 					if (intervalId) clearInterval(intervalId);
-					window.removeEventListener('resize', draw);
+					resizeObserver.disconnect();
 				}
 			};
 		};
