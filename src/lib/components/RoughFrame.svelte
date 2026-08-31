@@ -14,6 +14,8 @@ like:
 @props children: Snippet - The content to be drawn inside the frame.
 @props options: RoughOptions - The options for the rough.js drawing.
 @props size: number - The size of the frame as a relative percentage of its children.
+@props changeOnHover: boolean - Whether the frame should be repeatedly redrawn while hovered.
+@props refreshRate: number - The interval in milliseconds between redraws while hovered.
 @props class: string - The CSS class to apply to the frame's outer wrapper.
 -->
 
@@ -26,11 +28,28 @@ like:
 		children: Snippet;
 		options?: RoughOptions;
 		size?: number;
+		changeOnHover?: boolean;
+		refreshRate?: number;
 		class?: string;
 	};
 
+	type RoughFrameParams = {
+		size: number;
+		options: RoughOptions;
+		changeOnHover: boolean;
+		refreshRate: number;
+		active: boolean;
+	};
+
 	// Component props
-	const { children, options = {}, size = 100, class: className = '' }: Props = $props();
+	const {
+		children,
+		options = {},
+		size = 100,
+		changeOnHover = false,
+		refreshRate = 300,
+		class: className = ''
+	}: Props = $props();
 
 	const defaultOptions: RoughOptions = {
 		strokeWidth: 2,
@@ -42,16 +61,26 @@ like:
 		...options
 	});
 
-	function createRoughFrame(canvas: HTMLCanvasElement) {
+	let isHovered = $state(false);
+
+	function createRoughFrame(canvas: HTMLCanvasElement, params: RoughFrameParams) {
 		const parent = canvas.parentElement;
 
 		if (!parent) return;
 
+		let currentSize = params.size;
+		let currentOptions = params.options;
+		let currentChangeOnHover = params.changeOnHover;
+		let currentRefreshRate = params.refreshRate;
+		let active = params.active;
+
+		let intervalId: ReturnType<typeof setInterval> | null = null;
+
 		const draw = () => {
 			const { width, height } = parent.getBoundingClientRect();
 
-			const canvasWidth = width * (size / 100);
-			const canvasHeight = height * (size / 100);
+			const canvasWidth = width * (currentSize / 100);
+			const canvasHeight = height * (currentSize / 100);
 
 			const dpr = window.devicePixelRatio || 1;
 
@@ -69,7 +98,7 @@ like:
 
 			const rc = rough.canvas(canvas);
 
-			const strokeWidth = mergedOptions.strokeWidth ?? 2;
+			const strokeWidth = currentOptions.strokeWidth ?? 2;
 			const offset = strokeWidth + 2;
 
 			rc.rectangle(
@@ -77,35 +106,62 @@ like:
 				offset,
 				canvasWidth - offset * 2,
 				canvasHeight - offset * 2,
-				mergedOptions
+				currentOptions
 			);
 		};
+
+		const syncRefresh = () => {
+			if (intervalId) clearInterval(intervalId);
+
+			intervalId = currentChangeOnHover && active ? setInterval(draw, currentRefreshRate) : null;
+		};
+
+		draw();
+		syncRefresh();
 
 		const resizeObserver = new ResizeObserver(draw);
 
 		resizeObserver.observe(parent);
 
-		draw();
-
 		return {
-			update() {
+			update(newParams: RoughFrameParams) {
+				currentSize = newParams.size;
+				currentOptions = newParams.options;
+				currentChangeOnHover = newParams.changeOnHover;
+				currentRefreshRate = newParams.refreshRate;
+				active = newParams.active;
+
 				draw();
+				syncRefresh();
 			},
 
 			destroy() {
+				if (intervalId) clearInterval(intervalId);
+
 				resizeObserver.disconnect();
 			}
 		};
 	}
 </script>
 
-<div class={`relative inline-block ${className}`}>
+<div
+	class={`relative inline-block ${className}`}
+	onmouseenter={() => (isHovered = true)}
+	onmouseleave={() => (isHovered = false)}
+	role="presentation"
+>
 	<div class="relative z-10">
 		{@render children()}
 	</div>
 
 	<canvas
-		use:createRoughFrame
+		use:createRoughFrame={{
+			size,
+			options: mergedOptions,
+			changeOnHover,
+			refreshRate,
+			active: isHovered
+		}}
 		class="pointer-events-none absolute top-1/2 left-1/2 z-0"
 		style="transform: translate(-50%, -50%);"
 		aria-hidden="true"
