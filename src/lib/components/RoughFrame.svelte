@@ -145,7 +145,7 @@ like:
 </script>
 
 <div
-	class={`relative inline-block ${className}`}
+	class={`relative w-fit ${className}`}
 	onmouseenter={() => (isHovered = true)}
 	onmouseleave={() => (isHovered = false)}
 	role="presentation"
