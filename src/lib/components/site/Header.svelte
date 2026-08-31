@@ -1,6 +1,7 @@
 <script lang="ts">
 	import rough from 'roughjs';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
+	import RoughFrame from '../RoughFrame.svelte';
 
 	// Component props
 	const { centreName = 'Header' }: { centreName?: string } = $props();
@@ -9,8 +10,6 @@
 	const strokeWidth = 2;
 	const roughness = 0.85;
 	const paperColor = '#fdfbf6';
-	const paperHoverColor = '#ebeaeb';
-	const menuCanvasOffset = 6;
 	const roughRefreshMs = 300;
 	const safeOffset = strokeWidth + 2;
 	const roughOptions: RoughOptions = {
@@ -21,7 +20,6 @@
 		fillStyle: 'solid'
 	};
 
-	let isMenuHovered = $state(false);
 	let isTitleHovered = $state(false);
 
 	function setupCanvas(canvas: HTMLCanvasElement) {
@@ -74,13 +72,6 @@
 		};
 	}
 
-	const roughButtonOutline = createRoughAction(({ width, height, rc }, active) => {
-		rc.rectangle(safeOffset, safeOffset, width - safeOffset * 2, height - safeOffset * 2, {
-			...roughOptions,
-			fill: active ? paperHoverColor : paperColor
-		});
-	});
-
 	const roughTitleOutline = createRoughAction(({ width, height, rc }) => {
 		const centerY = height / 2;
 		const pointDepth = Math.min(18, width * 0.12);
@@ -103,31 +94,14 @@
 	<div class="relative flex items-center justify-center">
 		<!-- Hamburger nav menu -->
 		<div class="absolute left-0">
-			<div
-				class="relative inline-flex"
-				role="presentation"
-				style={`--menu-canvas-offset: ${menuCanvasOffset}px;`}
-				onmouseenter={() => (isMenuHovered = true)}
-				onmouseleave={() => (isMenuHovered = false)}
-			>
-				<canvas
-					use:roughButtonOutline={isMenuHovered}
-					class="pointer-events-none absolute top-1/2 left-1/2"
-					style="
-						width: calc(100% + var(--menu-canvas-offset) * 2);
-						height: calc(100% + var(--menu-canvas-offset) * 2);
-						transform: translate(-50%, -50%);
-					"
-					aria-hidden="true"
-				></canvas>
-
+			<RoughFrame options={roughOptions} size={130} changeOnHover refreshRate={roughRefreshMs}>
 				<button
 					type="button"
 					aria-label="Navigation Menu"
 					class="
-					  relative z-10 flex cursor-pointer items-center justify-center p-1 text-fg-dark
-					  transition-transform duration-150
-					"
+  				  relative z-10 flex cursor-pointer items-center justify-center p-1 text-fg-dark
+  				  transition-transform duration-150
+  				"
 				>
 					<svg
 						viewBox="0 0 24 24"
@@ -142,7 +116,7 @@
 						<path d="M4 18h16" />
 					</svg>
 				</button>
-			</div>
+			</RoughFrame>
 		</div>
 
 		<!-- Centre page label -->
