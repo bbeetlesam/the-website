@@ -8,6 +8,7 @@
 	import { resolve } from '$app/paths';
 	import { default as ItemFocusFrame } from './ItemFocusFrame.svelte';
 	import type { DeskItem } from '$lib/types';
+	import BubbleLabel from '../BubbleLabel.svelte';
 
 	// Component props
 	const { item }: { item: DeskItem } = $props();
@@ -24,18 +25,25 @@
 >
 	{#if item.navigation}
 		<!-- Focus frame canvas -->
-		<ItemFocusFrame {item} />
+		<BubbleLabel
+			label={item.navigation.desc}
+			bubbleOffsetX={0}
+			tipOffsetY={0}
+			class="text-xs font-semibold"
+		>
+			<ItemFocusFrame {item} />
 
-		<a href={resolve(item.navigation.route)}>
-			<img
-				src={item.image}
-				alt={item.navigation.title}
-				style={`
-				  width: ${item.size}px;
-  				transform: rotate(${item.rotation}deg);
-				`}
-			/>
-		</a>
+			<a href={resolve(item.navigation.route)}>
+				<img
+					src={item.image}
+					alt={item.navigation.title}
+					style={`
+						width: ${item.size}px;
+						transform: rotate(${item.rotation}deg);
+					`}
+				/>
+			</a>
+		</BubbleLabel>
 	{:else}
 		<img
 			src={item.image}

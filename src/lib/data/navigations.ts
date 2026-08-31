@@ -2,8 +2,11 @@ import type { NavItem } from '$lib/types';
 import placeholder from '$lib/assets/favicon.svg'; // WIP
 
 /**
- * The navigation metadata for the website routes (hardcoded).
- * Available routes are defined by Svelte's RouteId.
+ * Navigation metadata for the website's public routes.
+ *
+ * The object keys represent public URL paths, while
+ * the `route` property contains the corresponding SvelteKit RouteId
+ * used internally for route resolution.
  *
  * Currently available routes: `/`, `/games`, `/oddworks`, `/arts`, `/blogs`, `/bio`.
  */
@@ -15,31 +18,31 @@ export const NAV_ITEMS = {
 		icon: placeholder
 	},
 	'/games': {
-		route: '/games',
+		route: '/(header)/games',
 		title: 'Games',
 		desc: 'Strange, arcade oddities.',
 		icon: placeholder
 	},
 	'/oddworks': {
-		route: '/oddworks',
+		route: '/(header)/oddworks',
 		title: 'Oddworks',
 		desc: 'Other strange projects.',
 		icon: placeholder
 	},
 	'/arts': {
-		route: '/arts',
+		route: '/(header)/arts',
 		title: 'Arts',
 		desc: 'Pieces of my arts.',
 		icon: placeholder
 	},
 	'/blogs': {
-		route: '/blogs',
+		route: '/(header)/blogs',
 		title: 'Blogs',
 		desc: 'The signs of my mind.',
 		icon: placeholder
 	},
 	'/bio': {
-		route: '/bio',
+		route: '/(header)/bio',
 		title: 'Bio',
 		desc: 'Who am I really?',
 		icon: placeholder
