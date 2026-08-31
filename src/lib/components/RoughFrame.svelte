@@ -13,7 +13,9 @@ like:
 
 @props children: Snippet - The content to be drawn inside the frame.
 @props options: RoughOptions - The options for the rough.js drawing.
-@props size: number - The size of the frame as a relative percentage of its children.
+@props scale: Scale | number - The scale of the frame as a relative percentage of its children.
+A number applies the same scale to both axes, while a `Scale` object can specify x and y
+independently.
 @props changeOnHover: boolean - Whether the frame should be repeatedly redrawn while hovered.
 @props refreshRate: number - The interval in milliseconds between redraws while hovered.
 @props class: string - The CSS class to apply to the frame's outer wrapper.
@@ -24,18 +26,23 @@ like:
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 	import type { Snippet } from 'svelte';
 
+	type Scale = {
+		x?: number;
+		y?: number;
+	};
+
 	type Props = {
 		children: Snippet;
 		options?: RoughOptions;
-		size?: number;
+		scale?: Scale | number;
 		changeOnHover?: boolean;
 		refreshRate?: number;
 		class?: string;
 	};
 
 	type RoughFrameParams = {
-		size: number;
 		options: RoughOptions;
+		scale: Scale | number;
 		changeOnHover: boolean;
 		refreshRate: number;
 		active: boolean;
@@ -45,7 +52,7 @@ like:
 	const {
 		children,
 		options = {},
-		size = 100,
+		scale = 100,
 		changeOnHover = false,
 		refreshRate = 300,
 		class: className = ''
@@ -68,7 +75,7 @@ like:
 
 		if (!parent) return;
 
-		let currentSize = params.size;
+		let currentScale = params.scale;
 		let currentOptions = params.options;
 		let currentChangeOnHover = params.changeOnHover;
 		let currentRefreshRate = params.refreshRate;
@@ -79,8 +86,11 @@ like:
 		const draw = () => {
 			const { width, height } = parent.getBoundingClientRect();
 
-			const canvasWidth = width * (currentSize / 100);
-			const canvasHeight = height * (currentSize / 100);
+			const scaleX = typeof currentScale === 'number' ? currentScale : (currentScale.x ?? 100);
+			const scaleY = typeof currentScale === 'number' ? currentScale : (currentScale.y ?? 100);
+
+			const canvasWidth = width * (scaleX / 100);
+			const canvasHeight = height * (scaleY / 100);
 
 			const dpr = window.devicePixelRatio || 1;
 
@@ -125,7 +135,7 @@ like:
 
 		return {
 			update(newParams: RoughFrameParams) {
-				currentSize = newParams.size;
+				currentScale = newParams.scale;
 				currentOptions = newParams.options;
 				currentChangeOnHover = newParams.changeOnHover;
 				currentRefreshRate = newParams.refreshRate;
@@ -156,8 +166,8 @@ like:
 
 	<canvas
 		use:createRoughFrame={{
-			size,
 			options: mergedOptions,
+			scale,
 			changeOnHover,
 			refreshRate,
 			active: isHovered
