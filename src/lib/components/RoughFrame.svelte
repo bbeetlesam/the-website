@@ -29,6 +29,11 @@ like:
 		class?: string;
 	};
 
+	type RoughFrameParams = {
+		size: number;
+		options: RoughOptions;
+	};
+
 	// Component props
 	const { children, options = {}, size = 100, class: className = '' }: Props = $props();
 
@@ -42,16 +47,19 @@ like:
 		...options
 	});
 
-	function createRoughFrame(canvas: HTMLCanvasElement) {
+	function createRoughFrame(canvas: HTMLCanvasElement, params: RoughFrameParams) {
 		const parent = canvas.parentElement;
 
 		if (!parent) return;
 
+		let currentSize = params.size;
+		let currentOptions = params.options;
+
 		const draw = () => {
 			const { width, height } = parent.getBoundingClientRect();
 
-			const canvasWidth = width * (size / 100);
-			const canvasHeight = height * (size / 100);
+			const canvasWidth = width * (currentSize / 100);
+			const canvasHeight = height * (currentSize / 100);
 
 			const dpr = window.devicePixelRatio || 1;
 
@@ -69,7 +77,7 @@ like:
 
 			const rc = rough.canvas(canvas);
 
-			const strokeWidth = mergedOptions.strokeWidth ?? 2;
+			const strokeWidth = currentOptions.strokeWidth ?? 2;
 			const offset = strokeWidth + 2;
 
 			rc.rectangle(
@@ -77,7 +85,7 @@ like:
 				offset,
 				canvasWidth - offset * 2,
 				canvasHeight - offset * 2,
-				mergedOptions
+				currentOptions
 			);
 		};
 
@@ -88,7 +96,10 @@ like:
 		draw();
 
 		return {
-			update() {
+			update(newParams: RoughFrameParams) {
+				currentSize = newParams.size;
+				currentOptions = newParams.options;
+
 				draw();
 			},
 
@@ -105,7 +116,7 @@ like:
 	</div>
 
 	<canvas
-		use:createRoughFrame
+		use:createRoughFrame={{ size, options: mergedOptions }}
 		class="pointer-events-none absolute top-1/2 left-1/2 z-0"
 		style="transform: translate(-50%, -50%);"
 		aria-hidden="true"
