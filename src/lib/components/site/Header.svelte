@@ -13,6 +13,7 @@
 	const strokeWidth = 2;
 	const roughness = 0.85;
 	const paperColor = '#fdfbf6';
+	const paperColorHover = '#f5f3ef';
 	const roughRefreshMs = 300;
 	const safeOffset = strokeWidth + 2;
 	const roughOptions: RoughOptions = {
@@ -34,6 +35,7 @@
 
 	let isMenuOpened = $state(false);
 	let isTitleHovered = $state(false);
+	let hoveredNavItem = $state<string | null>(null);
 
 	function setupCanvas(canvas: HTMLCanvasElement) {
 		const rect = canvas.getBoundingClientRect();
@@ -150,21 +152,33 @@
 			<!-- Nav dock -->
 			{#if isMenuOpened}
 				<nav class="absolute top-full left-0">
-					<RoughFrame scale={{x: 107, y: 103}} options={roughOptions}>
+					<RoughFrame scale={{ x: 107, y: 103 }} options={roughOptions}>
 						<ul class="w-max">
 							{#each Object.values(NAV_ITEMS) as item (item.route)}
-								<li>
-									<a
-										href={resolve(item.route)}
-										class="
-                      flex items-center gap-1.5 py-2 pr-6 pl-2.5 text-sm font-semibold
-                      -outline-offset-1 outline-transparent transition-all duration-100
-                      hover:bg-[#ebeaeb] hover:outline-3 hover:outline-current
-                    "
+								<li
+									onmouseenter={() => (hoveredNavItem = item.route)}
+									onmouseleave={() => (hoveredNavItem = null)}
+								>
+									<RoughFrame
+										class="w-full"
+										scale={{ x: 103, y: 107 }}
+										options={{
+											...roughOptions,
+											stroke: 'transparent',
+											fill: hoveredNavItem === item.route ? paperColorHover : 'transparent'
+										}}
 									>
-										<img src={item.icon} alt="" class="h-auto w-5.5 object-contain" />
-										<span>{item.title}</span>
-									</a>
+										<a
+											href={resolve(item.route)}
+											class="
+                        flex items-center gap-1.5 py-2.5 pr-5 pl-2.5
+                        text-sm font-semibold
+                      "
+										>
+											<img src={item.icon} alt="" class="h-auto w-5.5 object-contain" />
+											<span>{item.title}</span>
+										</a>
+									</RoughFrame>
 								</li>
 							{/each}
 						</ul>
@@ -175,7 +189,7 @@
 
 		<!-- Centre page label -->
 		<div
-			class="relative inline-flex cursor-default px-5 py-1 text-center text-fg-dark select-none"
+			class="relative w-fit px-5 py-1 text-center text-fg-dark select-none"
 			role="presentation"
 			onmouseenter={() => (isTitleHovered = true)}
 			onmouseleave={() => (isTitleHovered = false)}
