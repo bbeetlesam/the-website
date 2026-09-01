@@ -1,6 +1,10 @@
 <script lang="ts">
 	import rough from 'roughjs';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
+	import type { SVGAttributes } from 'svelte/elements';
+	import RoughFrame from '../RoughFrame.svelte';
+	import { NAV_ITEMS } from '$lib/data';
+	import { resolve } from '$app/paths';
 
 	// Component props
 	const { centreName = 'Header' }: { centreName?: string } = $props();
@@ -9,7 +13,6 @@
 	const strokeWidth = 2;
 	const roughness = 0.85;
 	const paperColor = '#fdfbf6';
-	const menuCanvasOffset = 6;
 	const roughRefreshMs = 300;
 	const safeOffset = strokeWidth + 2;
 	const roughOptions: RoughOptions = {
@@ -20,7 +23,16 @@
 		fillStyle: 'solid'
 	};
 
-	let isMenuHovered = $state(false);
+	// SVG icon props (used in the navigation menu button)
+	const iconProps: SVGAttributes<SVGSVGElement> = {
+		viewBox: '0 0 24 24',
+		fill: 'none',
+		stroke: 'currentColor',
+		'stroke-width': '3.5',
+		'stroke-linecap': 'round'
+	};
+
+	let isMenuOpened = $state(false);
 	let isTitleHovered = $state(false);
 
 	function setupCanvas(canvas: HTMLCanvasElement) {
@@ -29,8 +41,6 @@
 
 		canvas.width = Math.max(1, Math.round(rect.width * dpr));
 		canvas.height = Math.max(1, Math.round(rect.height * dpr));
-		canvas.style.width = `${rect.width}px`;
-		canvas.style.height = `${rect.height}px`;
 
 		const context = canvas.getContext('2d');
 		context?.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -42,20 +52,24 @@
 		};
 	}
 
-	function createRoughAction(drawShape: (canvas: ReturnType<typeof setupCanvas>) => void) {
+	function createRoughAction(
+		drawShape: (canvas: ReturnType<typeof setupCanvas>, active: boolean) => void
+	) {
 		return (canvas: HTMLCanvasElement, active = false) => {
 			let intervalId: ReturnType<typeof setInterval> | null = null;
 
-			const draw = () => drawShape(setupCanvas(canvas));
+			const draw = () => drawShape(setupCanvas(canvas), active);
 
 			const syncRefresh = () => {
 				if (intervalId) clearInterval(intervalId);
 				intervalId = active ? setInterval(draw, roughRefreshMs) : null;
 			};
 
+			const resizeObserver = new ResizeObserver(draw);
+
+			resizeObserver.observe(canvas);
 			draw();
 			syncRefresh();
-			window.addEventListener('resize', draw);
 
 			return {
 				update(nextActive = false) {
@@ -65,21 +79,11 @@
 				},
 				destroy() {
 					if (intervalId) clearInterval(intervalId);
-					window.removeEventListener('resize', draw);
+					resizeObserver.disconnect();
 				}
 			};
 		};
 	}
-
-	const roughButtonOutline = createRoughAction(({ width, height, rc }) => {
-		rc.rectangle(
-			safeOffset,
-			safeOffset,
-			width - safeOffset * 2,
-			height - safeOffset * 2,
-			roughOptions
-		);
-	});
 
 	const roughTitleOutline = createRoughAction(({ width, height, rc }) => {
 		const centerY = height / 2;
@@ -101,51 +105,77 @@
 
 <header class="sticky top-4 z-999 px-4">
 	<div class="relative flex items-center justify-center">
+		<!-- Hamburger nav menu -->
 		<div class="absolute left-0">
-			<div
-				class="relative inline-flex"
-				role="presentation"
-				style={`--menu-canvas-offset: ${menuCanvasOffset}px;`}
-				onmouseenter={() => (isMenuHovered = true)}
-				onmouseleave={() => (isMenuHovered = false)}
-			>
-				<canvas
-					use:roughButtonOutline={isMenuHovered}
-					class="pointer-events-none absolute top-1/2 left-1/2"
-					style="
-						width: calc(100% + var(--menu-canvas-offset) * 2);
-						height: calc(100% + var(--menu-canvas-offset) * 2);
-						transform: translate(-50%, -50%);
-					"
-					aria-hidden="true"
-				></canvas>
-
+			<RoughFrame options={roughOptions} size={130} changeOnHover refreshRate={roughRefreshMs}>
 				<button
 					type="button"
-					aria-label="Navigation Menu"
+					aria-label={isMenuOpened ? 'Close navigation menu' : 'Open navigation menu'}
+					aria-expanded={isMenuOpened}
+					onclick={() => (isMenuOpened = !isMenuOpened)}
 					class="
-					  relative z-10 flex cursor-pointer items-center justify-center p-1 text-fg-dark
-					  transition-transform duration-150
-					"
+  				  relative z-10 flex cursor-pointer items-center justify-center p-1 text-fg-dark
+  				  transition-transform duration-150
+  				"
 				>
-					<svg
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="3.5"
-						stroke-linecap="round"
-						class="h-4 w-4"
-					>
-						<path d="M4 6h16" />
-						<path d="M4 12h16" />
-						<path d="M4 18h16" />
-					</svg>
+					<span class="relative block h-4 w-4">
+						<!-- Hamburger icon -->
+						<svg
+							{...iconProps}
+							class={`absolute inset-0 h-4 w-4 transition-all duration-250 ${
+								isMenuOpened ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'
+							}`}
+							aria-hidden="true"
+						>
+							<path d="M4 6h16" />
+							<path d="M4 12h16" />
+							<path d="M4 18h16" />
+						</svg>
+
+						<!-- Close/X icon -->
+						<svg
+							{...iconProps}
+							class={`absolute inset-0 h-4 w-4 transition-all duration-250 ${
+								isMenuOpened ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'
+							}`}
+							aria-hidden="true"
+						>
+							<path d="M5 5l14 14" />
+							<path d="M19 5L5 19" />
+						</svg>
+					</span>
 				</button>
-			</div>
+			</RoughFrame>
+
+			<!-- Nav dock -->
+			{#if isMenuOpened}
+				<nav class="absolute top-full left-0">
+					<RoughFrame size={103} options={roughOptions}>
+						<ul class="w-max">
+							{#each Object.values(NAV_ITEMS) as item (item.route)}
+								<li>
+									<a
+										href={resolve(item.route)}
+										class="
+                      flex items-center gap-1.5 py-2 pr-6 pl-2.5 text-sm font-semibold
+                      -outline-offset-1 outline-transparent transition-all duration-100
+                      hover:bg-[#ebeaeb] hover:outline-3 hover:outline-current
+                    "
+									>
+										<img src={item.icon} alt="" class="h-auto w-5.5 object-contain" />
+										<span>{item.title}</span>
+									</a>
+								</li>
+							{/each}
+						</ul>
+					</RoughFrame>
+				</nav>
+			{/if}
 		</div>
 
+		<!-- Centre page label -->
 		<div
-			class="relative inline-flex cursor-default px-5 py-1 text-center text-fg-dark"
+			class="relative inline-flex cursor-default px-5 py-1 text-center text-fg-dark select-none"
 			role="presentation"
 			onmouseenter={() => (isTitleHovered = true)}
 			onmouseleave={() => (isTitleHovered = false)}
