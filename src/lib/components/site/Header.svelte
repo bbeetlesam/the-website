@@ -1,6 +1,7 @@
 <script lang="ts">
 	import rough from 'roughjs';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
+	import type { SVGAttributes } from 'svelte/elements';
 	import RoughFrame from '../RoughFrame.svelte';
 
 	// Component props
@@ -20,6 +21,16 @@
 		fillStyle: 'solid'
 	};
 
+	// SVG icon props (used in the navigation menu button)
+	const iconProps: SVGAttributes<SVGSVGElement> = {
+		viewBox: '0 0 24 24',
+		fill: 'none',
+		stroke: 'currentColor',
+		'stroke-width': '3.5',
+		'stroke-linecap': 'round'
+	};
+
+	let isMenuOpened = $state(false);
 	let isTitleHovered = $state(false);
 
 	function setupCanvas(canvas: HTMLCanvasElement) {
@@ -97,24 +108,40 @@
 			<RoughFrame options={roughOptions} size={130} changeOnHover refreshRate={roughRefreshMs}>
 				<button
 					type="button"
-					aria-label="Navigation Menu"
+					aria-label={isMenuOpened ? 'Close navigation menu' : 'Open navigation menu'}
+					aria-expanded={isMenuOpened}
+					onclick={() => (isMenuOpened = !isMenuOpened)}
 					class="
   				  relative z-10 flex cursor-pointer items-center justify-center p-1 text-fg-dark
   				  transition-transform duration-150
   				"
 				>
-					<svg
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="3.5"
-						stroke-linecap="round"
-						class="h-4 w-4"
-					>
-						<path d="M4 6h16" />
-						<path d="M4 12h16" />
-						<path d="M4 18h16" />
-					</svg>
+					<span class="relative block h-4 w-4">
+						<!-- Hamburger icon -->
+						<svg
+							{...iconProps}
+							class={`absolute inset-0 h-4 w-4 transition-all duration-250 ${
+								isMenuOpened ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'
+							}`}
+							aria-hidden="true"
+						>
+							<path d="M4 6h16" />
+							<path d="M4 12h16" />
+							<path d="M4 18h16" />
+						</svg>
+
+						<!-- Close/X icon -->
+						<svg
+							{...iconProps}
+							class={`absolute inset-0 h-4 w-4 transition-all duration-250 ${
+								isMenuOpened ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'
+							}`}
+							aria-hidden="true"
+						>
+							<path d="M5 5l14 14" />
+							<path d="M19 5L5 19" />
+						</svg>
+					</span>
 				</button>
 			</RoughFrame>
 		</div>
