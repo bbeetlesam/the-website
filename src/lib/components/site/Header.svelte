@@ -3,6 +3,8 @@
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 	import type { SVGAttributes } from 'svelte/elements';
 	import RoughFrame from '../RoughFrame.svelte';
+	import { NAV_ITEMS } from '$lib/data';
+	import { resolve } from '$app/paths';
 
 	// Component props
 	const { centreName = 'Header' }: { centreName?: string } = $props();
@@ -144,6 +146,31 @@
 					</span>
 				</button>
 			</RoughFrame>
+
+			<!-- Nav dock -->
+			{#if isMenuOpened}
+				<nav class="absolute top-full left-0">
+					<RoughFrame size={103} options={roughOptions}>
+						<ul class="w-max">
+							{#each Object.values(NAV_ITEMS) as item (item.route)}
+								<li>
+									<a
+										href={resolve(item.route)}
+										class="
+                      flex items-center gap-1.5 py-2 pr-6 pl-2.5 text-sm font-semibold
+                      -outline-offset-1 outline-transparent transition-all duration-100
+                      hover:bg-[#ebeaeb] hover:outline-3 hover:outline-current
+                    "
+									>
+										<img src={item.icon} alt="" class="h-auto w-5.5 object-contain" />
+										<span>{item.title}</span>
+									</a>
+								</li>
+							{/each}
+						</ul>
+					</RoughFrame>
+				</nav>
+			{/if}
 		</div>
 
 		<!-- Centre page label -->
