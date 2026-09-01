@@ -107,7 +107,7 @@
 	<div class="relative flex items-center justify-center">
 		<!-- Hamburger nav menu -->
 		<div class="absolute left-0">
-			<RoughFrame options={roughOptions} size={130} changeOnHover refreshRate={roughRefreshMs}>
+			<RoughFrame options={roughOptions} scale={130} changeOnHover refreshRate={roughRefreshMs}>
 				<button
 					type="button"
 					aria-label={isMenuOpened ? 'Close navigation menu' : 'Open navigation menu'}
@@ -150,7 +150,7 @@
 			<!-- Nav dock -->
 			{#if isMenuOpened}
 				<nav class="absolute top-full left-0">
-					<RoughFrame size={103} options={roughOptions}>
+					<RoughFrame scale={{x: 107, y: 103}} options={roughOptions}>
 						<ul class="w-max">
 							{#each Object.values(NAV_ITEMS) as item (item.route)}
 								<li>
