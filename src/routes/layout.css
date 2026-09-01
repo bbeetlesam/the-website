@@ -12,8 +12,10 @@
 }
 
 /* FOR DEBUGGING */
-* {
-	/*outline: 1px solid red;*/
+@utility debug-outline {
+	* {
+		outline: 1px solid red;
+	}
 }
 
 html,
