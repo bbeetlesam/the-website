@@ -11,7 +11,12 @@ type NavItem = {
 	/** The description of the navigation item (technically the 'longer' title). */
 	desc: string;
 	/** The icon of the navigation item. */
-	icon?: string;
+	icon?: {
+		/** The white version of the icon of the navigation item. */
+		white?: string;
+		/** The black version of the icon of the navigation item. */
+		black?: string;
+	};
 };
 
 export type { NavItem };

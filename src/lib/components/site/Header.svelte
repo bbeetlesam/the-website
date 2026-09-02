@@ -176,7 +176,7 @@
                         text-sm font-semibold
                       "
 										>
-											<img src={item.icon} alt="" class="h-auto w-5.5 object-contain" />
+											<img src={item.icon.white} alt="" class="h-auto w-5 object-contain" />
 											<span>{item.title}</span>
 										</a>
 									</RoughFrame>
