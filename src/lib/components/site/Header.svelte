@@ -5,6 +5,7 @@
 	import RoughFrame from '../RoughFrame.svelte';
 	import { NAV_ITEMS } from '$lib/data';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
 	import { slide } from 'svelte/transition';
 
 	// Component props
@@ -26,7 +27,7 @@
 	};
 
 	// SVG icon props (used in the navigation menu button)
-	const iconProps: SVGAttributes<SVGSVGElement> = {
+	const iconSvgProps: SVGAttributes<SVGSVGElement> = {
 		viewBox: '0 0 24 24',
 		fill: 'none',
 		stroke: 'currentColor',
@@ -34,9 +35,15 @@
 		'stroke-linecap': 'round'
 	};
 
+	// Image icon props (used in the navigation menu button)
+	// For transitioning opacity on change
+	const iconImgProps =
+		'absolute inset-0 h-full w-full object-contain transition-opacity duration-300';
+
 	let isMenuOpened = $state(false);
 	let isTitleHovered = $state(false);
 	let hoveredNavItem = $state<string | null>(null);
+	let currentPath = $derived(page.url.pathname);
 
 	function setupCanvas(canvas: HTMLCanvasElement) {
 		const rect = canvas.getBoundingClientRect();
@@ -124,7 +131,7 @@
 					<span class="relative block h-4 w-4">
 						<!-- Hamburger icon -->
 						<svg
-							{...iconProps}
+							{...iconSvgProps}
 							class={`absolute inset-0 h-4 w-4 transition-all duration-250 ${
 								isMenuOpened ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'
 							}`}
@@ -137,7 +144,7 @@
 
 						<!-- Close/X icon -->
 						<svg
-							{...iconProps}
+							{...iconSvgProps}
 							class={`absolute inset-0 h-4 w-4 transition-all duration-250 ${
 								isMenuOpened ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'
 							}`}
@@ -156,6 +163,9 @@
 					<RoughFrame scale={{ x: 107, y: 103 }} options={roughOptions}>
 						<ul class="w-max">
 							{#each Object.values(NAV_ITEMS) as item (item.route)}
+								{@const itemPath = resolve(item.route)}
+								{@const isCurrentPage = currentPath === itemPath}
+
 								<li
 									onmouseenter={() => (hoveredNavItem = item.route)}
 									onmouseleave={() => (hoveredNavItem = null)}
@@ -172,11 +182,23 @@
 										<a
 											href={resolve(item.route)}
 											class="
-                        flex items-center gap-1.5 py-2.5 pr-5 pl-2.5
+                        flex items-center gap-2 py-2.5 pr-6 pl-3
                         text-sm font-semibold
                       "
 										>
-											<img src={item.icon.white} alt="" class="h-auto w-5 object-contain" />
+											<span class="relative block h-6 w-6">
+												<img
+													src={item.icon.black}
+													alt=""
+													class={`${iconImgProps} ${isCurrentPage ? 'opacity-100' : 'opacity-0'}`}
+												/>
+
+												<img
+													src={item.icon.white}
+													alt=""
+													class={`${iconImgProps} ${isCurrentPage ? 'opacity-0' : 'opacity-100'}`}
+												/>
+											</span>
 											<span>{item.title}</span>
 										</a>
 									</RoughFrame>
