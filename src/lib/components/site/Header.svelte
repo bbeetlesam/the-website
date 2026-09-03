@@ -159,7 +159,7 @@
 
 			<!-- Nav dock -->
 			{#if isMenuOpened}
-				<nav class="absolute top-full left-0" transition:slide={{ duration: 175 }}>
+				<nav transition:slide={{ duration: 200 }} class="absolute top-full left-0 outline-2">
 					<RoughFrame scale={{ x: 107, y: 103 }} options={roughOptions}>
 						<ul class="w-max">
 							{#each Object.values(NAV_ITEMS) as item (item.route)}
