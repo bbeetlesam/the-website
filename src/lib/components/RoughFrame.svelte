@@ -25,6 +25,7 @@ independently.
 	import rough from 'roughjs';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 	import type { Snippet } from 'svelte';
+	import tokens from '$lib/styles/tokens';
 
 	type Scale = {
 		x?: number;
@@ -60,7 +61,7 @@ independently.
 
 	const defaultOptions: RoughOptions = {
 		strokeWidth: 2,
-		stroke: '#2e2e2e'
+		stroke: tokens.color.fgDark
 	};
 
 	const mergedOptions: RoughOptions = $derived({

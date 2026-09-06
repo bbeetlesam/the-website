@@ -25,6 +25,7 @@
 
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import tokens from '$lib/styles/tokens';
 
 	type Props = {
 		label?: string;
@@ -51,10 +52,10 @@
 		tipOffsetX = 0,
 		tipOffsetY = 0,
 		bubbleOffsetX = 0,
-		bubbleColor = 'var(--color-paper)',
-		textColor = 'var(--color-fg-dark)',
+		bubbleColor = tokens.color.paper,
+		textColor = tokens.color.fgDark,
 		outlineSize = 2.5,
-		outlineColor = 'var(--color-fg-dark)',
+		outlineColor = tokens.color.fgDark,
 		borderRadius = 12,
 		shadow = '2px 8px 12px rgba(0, 0, 0, 0.35)'
 	}: Props = $props();

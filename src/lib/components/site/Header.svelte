@@ -7,14 +7,15 @@
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { slide } from 'svelte/transition';
+	import tokens from '$lib/styles/tokens';
 
 	// Component props
 	const { centreName = 'Header' }: { centreName?: string } = $props();
 
-	const strokeColor = '#1e1e1e';
+	const strokeColor = tokens.color.roughDark;
 	const strokeWidth = 2;
 	const roughness = 0.85;
-	const paperColor = '#fdfbf6';
+	const paperColor = tokens.color.paper;
 	const paperColorHover = '#f5f3ef';
 	const roughRefreshMs = 300;
 	const safeOffset = strokeWidth + 2;

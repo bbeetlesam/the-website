@@ -12,9 +12,16 @@ The canvas is used to draw the focus lines around the item using roughjs
 	import type { RoughCanvas } from 'roughjs/bin/canvas';
 
 	import type { DeskItem } from '$lib/types';
+	import tokens from '$lib/styles/tokens';
 
 	// Component props
-	const { item, strokeColor = '#1e1e1e' }: { item: DeskItem; strokeColor?: string } = $props();
+	const {
+		item,
+		strokeColor = tokens.color.roughDark
+	}: {
+		item: DeskItem;
+		strokeColor?: string;
+	} = $props();
 
 	function roughFocus(canvas: HTMLCanvasElement, item: DeskItem) {
 		const focusSize = item.focusFrame?.size ?? 100;
