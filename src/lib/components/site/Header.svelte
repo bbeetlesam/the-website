@@ -1,13 +1,17 @@
 <script lang="ts">
 	import rough from 'roughjs';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
-	import type { SVGAttributes } from 'svelte/elements';
-	import RoughFrame from '../RoughFrame.svelte';
-	import { NAV_ITEMS } from '$lib/data';
+
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
+	import type { SVGAttributes } from 'svelte/elements';
 	import { slide } from 'svelte/transition';
+
+	import { NAV_ITEMS } from '$lib/data';
 	import tokens from '$lib/styles/tokens';
+	import type { NavItem } from '$lib/types';
+
+	import RoughFrame from '../RoughFrame.svelte';
 
 	// Component props
 	const { centreName = 'Header' }: { centreName?: string } = $props();
@@ -27,7 +31,7 @@
 		fillStyle: 'solid'
 	};
 
-	// SVG icon props (used in the navigation menu button)
+	/** SVG icon props (used in the navigation menu button) */
 	const iconSvgProps: SVGAttributes<SVGSVGElement> = {
 		viewBox: '0 0 24 24',
 		fill: 'none',
@@ -36,10 +40,17 @@
 		'stroke-linecap': 'round'
 	};
 
-	// Image icon props (used in the navigation menu button)
-	// For transitioning opacity on change
-	const iconImgProps =
-		'absolute inset-0 h-full w-full object-contain transition-opacity duration-300';
+	/** Derived nav items with path and current page state */
+	const navItems = $derived(
+		Object.values(NAV_ITEMS).map((item) => {
+			const path = resolve(item.route);
+			return {
+				...item,
+				path,
+				isCurrentPage: currentPath === path
+			};
+		})
+	);
 
 	let isMenuOpened = $state(false);
 	let isTitleHovered = $state(false);
@@ -114,7 +125,29 @@
 	});
 </script>
 
-<header class="sticky top-4 z-999 px-4">
+<!-- Nav icon snippet used in the header's nav dock -->
+{#snippet navIcon(item: NavItem, isCurrentPage: boolean, alt: string = '')}
+	{@const iconImgProps = `
+    absolute inset-0 h-full w-full object-contain transition-opacity duration-300
+  `}
+
+	<span class="relative block h-6 w-6 select-none">
+		<img
+			src={item.icon?.black}
+			{alt}
+			class={`${iconImgProps} ${isCurrentPage ? 'opacity-100' : 'opacity-0'}`}
+		/>
+
+		<img
+			src={item.icon?.white}
+			{alt}
+			class={`${iconImgProps} ${isCurrentPage ? 'opacity-0' : 'opacity-100'}`}
+		/>
+	</span>
+{/snippet}
+
+<!-- Desktop header -->
+<header class="sticky top-4 z-999 hidden sm:px-4 md:block">
 	<div class="relative flex items-center justify-center">
 		<!-- Hamburger nav menu -->
 		<div class="absolute left-0">
@@ -163,10 +196,7 @@
 				<nav transition:slide={{ duration: 200 }} class="absolute top-full left-0 outline-2">
 					<RoughFrame scale={{ x: 107, y: 103 }} options={roughOptions}>
 						<ul class="w-max">
-							{#each Object.values(NAV_ITEMS) as item (item.route)}
-								{@const itemPath = resolve(item.route)}
-								{@const isCurrentPage = currentPath === itemPath}
-
+							{#each navItems as item (item.route)}
 								<li
 									onmouseenter={() => (hoveredNavItem = item.route)}
 									onmouseleave={() => (hoveredNavItem = null)}
@@ -181,25 +211,13 @@
 										}}
 									>
 										<a
-											href={resolve(item.route)}
+											href={item.path}
 											class="
                         flex items-center gap-2 py-2.5 pr-6 pl-3
                         text-sm font-semibold
                       "
 										>
-											<span class="relative block h-6 w-6">
-												<img
-													src={item.icon.black}
-													alt=""
-													class={`${iconImgProps} ${isCurrentPage ? 'opacity-100' : 'opacity-0'}`}
-												/>
-
-												<img
-													src={item.icon.white}
-													alt=""
-													class={`${iconImgProps} ${isCurrentPage ? 'opacity-0' : 'opacity-100'}`}
-												/>
-											</span>
+											{@render navIcon(item, item.isCurrentPage)}
 											<span>{item.title}</span>
 										</a>
 									</RoughFrame>
@@ -227,4 +245,19 @@
 			<p class="relative font-semibold">{centreName}</p>
 		</div>
 	</div>
+</header>
+
+<!-- Mobile header -->
+<header class="fixed right-0 bottom-0 left-0 z-999 px-8 sm:px-16 md:hidden">
+	<nav class="rounded-t-lg bg-paper py-2 outline-3 outline-fg-dark">
+		<ul class="flex justify-evenly gap-0">
+			{#each navItems as item (item.route)}
+				<li>
+					<a href={item.path} aria-label={item.title}>
+						{@render navIcon(item, item.isCurrentPage, item.title)}
+					</a>
+				</li>
+			{/each}
+		</ul>
+	</nav>
 </header>
