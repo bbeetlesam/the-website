@@ -1,3 +1,4 @@
-export type { NavItem } from './navigation';
-export type { SocialLink } from './social';
-export type { DeskItem, DeskSize, Desk } from './desk';
+export type * from './navigation';
+export type * from './social';
+export type * from './desk';
+export type * from './sanity';
