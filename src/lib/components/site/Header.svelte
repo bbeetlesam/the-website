@@ -52,7 +52,7 @@
 		})
 	);
 
-	let isNavDockOpened = $state(true);
+	let isNavDockOpened = $state(false);
 	let isTitleHovered = $state(false);
 	let hoveredNavItem = $state<string | null>(null);
 	let currentPath = $derived(page.url.pathname);
