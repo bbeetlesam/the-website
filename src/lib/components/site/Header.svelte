@@ -52,7 +52,7 @@
 		})
 	);
 
-	let isMenuOpened = $state(false);
+	let isNavDockOpened = $state(true);
 	let isTitleHovered = $state(false);
 	let hoveredNavItem = $state<string | null>(null);
 	let currentPath = $derived(page.url.pathname);
@@ -131,7 +131,7 @@
     absolute inset-0 h-full w-full object-contain transition-opacity duration-300
   `}
 
-	<span class="relative block h-6 w-6 select-none">
+	<span class="relative block h-7 w-7 select-none md:h-6 md:w-6">
 		<img
 			src={item.icon?.black}
 			{alt}
@@ -154,9 +154,9 @@
 			<RoughFrame options={roughOptions} scale={130} changeOnHover refreshRate={roughRefreshMs}>
 				<button
 					type="button"
-					aria-label={isMenuOpened ? 'Close navigation menu' : 'Open navigation menu'}
-					aria-expanded={isMenuOpened}
-					onclick={() => (isMenuOpened = !isMenuOpened)}
+					aria-label={isNavDockOpened ? 'Close navigation menu' : 'Open navigation menu'}
+					aria-expanded={isNavDockOpened}
+					onclick={() => (isNavDockOpened = !isNavDockOpened)}
 					class="
   				  relative z-10 flex cursor-pointer items-center justify-center p-1 text-fg-dark
   				  transition-transform duration-150
@@ -167,7 +167,7 @@
 						<svg
 							{...iconSvgProps}
 							class={`absolute inset-0 h-4 w-4 transition-all duration-250 ${
-								isMenuOpened ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'
+								isNavDockOpened ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'
 							}`}
 							aria-hidden="true"
 						>
@@ -180,7 +180,7 @@
 						<svg
 							{...iconSvgProps}
 							class={`absolute inset-0 h-4 w-4 transition-all duration-250 ${
-								isMenuOpened ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'
+								isNavDockOpened ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'
 							}`}
 							aria-hidden="true"
 						>
@@ -192,7 +192,7 @@
 			</RoughFrame>
 
 			<!-- Nav dock -->
-			{#if isMenuOpened}
+			{#if isNavDockOpened}
 				<nav transition:slide={{ duration: 200 }} class="absolute top-full left-0 outline-2">
 					<RoughFrame scale={{ x: 107, y: 103 }} options={roughOptions}>
 						<ul class="w-max">
