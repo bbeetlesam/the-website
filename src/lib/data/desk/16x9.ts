@@ -1,9 +1,19 @@
 import type { Desk } from '$lib/types';
-import { NAV_ITEMS } from '../navigations';
 import placeholderImg from '$lib/assets/gamepad.png';
+import gameWhite from '$lib/assets/images/nav-icons/game-white.svg';
+import gameBlack from '$lib/assets/images/nav-icons/game-black.svg';
+import bioWhite from '$lib/assets/images/nav-icons/bio-white.svg';
+import bioBlack from '$lib/assets/images/nav-icons/bio-black.svg';
+import blogsWhite from '$lib/assets/images/nav-icons/blogs-white.svg';
+import blogsBlack from '$lib/assets/images/nav-icons/blogs-black.svg';
+import artsWhite from '$lib/assets/images/nav-icons/arts-white.svg';
+import artsBlack from '$lib/assets/images/nav-icons/arts-black.svg';
+import oddworksWhite from '$lib/assets/images/nav-icons/oddworks-white.svg';
+import oddworksBlack from '$lib/assets/images/nav-icons/oddworks-black.svg';
 
 // Aspect ratio: 16:9
 // Logical size: 1280x720
+// NOTE: Mockup data — will be migrated to Sanity
 const DESK_16x9: Desk = {
 	size: {
 		width: 1280,
@@ -19,12 +29,13 @@ const DESK_16x9: Desk = {
 			y: 180,
 			size: 200,
 			rotation: 3,
-			focusFrame: {
-				size: 100,
-				cornerSize: 30,
-				cornerThickness: 3
-			},
-			navigation: NAV_ITEMS['/games']
+			focusFrame: { size: 100, cornerSize: 30, cornerThickness: 3 },
+			navigation: {
+				route: '/(header)/games',
+				title: 'Games',
+				desc: 'Strange, arcade oddities.',
+				icon: { white: gameWhite, black: gameBlack }
+			}
 		},
 		{
 			id: '2',
@@ -34,7 +45,12 @@ const DESK_16x9: Desk = {
 			y: 180,
 			rotation: 12,
 			size: 120,
-			navigation: NAV_ITEMS['/bio']
+			navigation: {
+				route: '/(header)/bio',
+				title: 'Bio',
+				desc: 'Who am I really?',
+				icon: { white: bioWhite, black: bioBlack }
+			}
 		},
 		{
 			id: '3',
@@ -44,7 +60,12 @@ const DESK_16x9: Desk = {
 			y: 540,
 			rotation: -5,
 			size: 150,
-			navigation: NAV_ITEMS['/blogs']
+			navigation: {
+				route: '/(header)/blogs',
+				title: 'Blogs',
+				desc: 'The signs of my mind.',
+				icon: { white: blogsWhite, black: blogsBlack }
+			}
 		},
 		{
 			id: '4',
@@ -54,7 +75,12 @@ const DESK_16x9: Desk = {
 			y: 540,
 			rotation: 15,
 			size: 95,
-			navigation: NAV_ITEMS['/arts']
+			navigation: {
+				route: '/(header)/arts',
+				title: 'Arts',
+				desc: 'Pieces of my arts.',
+				icon: { white: artsWhite, black: artsBlack }
+			}
 		},
 		{
 			id: '5',
@@ -64,12 +90,14 @@ const DESK_16x9: Desk = {
 			y: 360,
 			rotation: -10,
 			size: 105,
-			navigation: NAV_ITEMS['/oddworks']
+			navigation: {
+				route: '/(header)/oddworks',
+				title: 'Oddworks',
+				desc: 'Other strange projects.',
+				icon: { white: oddworksWhite, black: oddworksBlack }
+			}
 		}
 	]
 };
 
-// this is just a mockup desk, everything is not real
-// i mean everything is just a placeholder
-// will change later
 export default DESK_16x9;

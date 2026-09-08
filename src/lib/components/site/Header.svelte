@@ -7,14 +7,19 @@
 	import type { SVGAttributes } from 'svelte/elements';
 	import { slide } from 'svelte/transition';
 
-	import { NAV_ITEMS } from '$lib/data';
 	import tokens from '$lib/styles/tokens';
 	import type { NavItem } from '$lib/types';
 
 	import RoughFrame from '../RoughFrame.svelte';
 
 	// Component props
-	const { centreName = 'Header' }: { centreName?: string } = $props();
+	const {
+		centreName = 'Header',
+		navItems = []
+	}: {
+		centreName?: string;
+		navItems?: NavItem[];
+	} = $props();
 
 	const strokeColor = tokens.color.roughDark;
 	const strokeWidth = 2;
@@ -40,15 +45,11 @@
 		'stroke-linecap': 'round'
 	};
 
-	/** Derived nav items with path and current page state */
-	const navItems = $derived(
-		Object.values(NAV_ITEMS).map((item) => {
+	/** Nav items with resolved path and current page state */
+	const resolvedNavItems = $derived(
+		navItems.map((item) => {
 			const path = resolve(item.route);
-			return {
-				...item,
-				path,
-				isCurrentPage: currentPath === path
-			};
+			return { ...item, path, isCurrentPage: currentPath === path };
 		})
 	);
 
@@ -196,7 +197,7 @@
 				<nav transition:slide={{ duration: 200 }} class="absolute top-full left-0 outline-2">
 					<RoughFrame scale={{ x: 107, y: 103 }} options={roughOptions}>
 						<ul class="w-max">
-							{#each navItems as item (item.route)}
+							{#each resolvedNavItems as item (item.route)}
 								<li
 									onmouseenter={() => (hoveredNavItem = item.route)}
 									onmouseleave={() => (hoveredNavItem = null)}
@@ -257,7 +258,7 @@
 				transition:slide={{ duration: 250 }}
 			>
 				<ul class="flex justify-evenly">
-					{#each navItems as item (item.route)}
+					{#each resolvedNavItems as item (item.route)}
 						<li>
 							<a href={item.path} aria-label={item.title}>
 								{@render navIcon(item, item.isCurrentPage, item.title)}
