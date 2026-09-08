@@ -248,16 +248,59 @@
 </header>
 
 <!-- Mobile header -->
-<header class="fixed right-0 bottom-0 left-0 z-999 px-8 sm:px-16 md:hidden">
-	<nav class="rounded-t-lg bg-paper py-2 outline-3 outline-fg-dark">
-		<ul class="flex justify-evenly gap-0">
-			{#each navItems as item (item.route)}
-				<li>
-					<a href={item.path} aria-label={item.title}>
-						{@render navIcon(item, item.isCurrentPage, item.title)}
-					</a>
-				</li>
-			{/each}
-		</ul>
-	</nav>
+<header class="debug-outlin fixed top-0 right-0 left-0 z-999 px-6 sm:px-12 md:hidden">
+	<div class="flex flex-col items-start">
+		<!-- Nav dock -->
+		{#if isNavDockOpened}
+			<nav
+				class="z-10 w-full rounded-br-lg bg-paper py-2 outline-3 outline-fg-dark"
+				transition:slide={{ duration: 250 }}
+			>
+				<ul class="flex justify-evenly">
+					{#each navItems as item (item.route)}
+						<li>
+							<a href={item.path} aria-label={item.title}>
+								{@render navIcon(item, item.isCurrentPage, item.title)}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		{/if}
+
+		<div class="flex w-full gap-2">
+			<button
+				type="button"
+				aria-label={isNavDockOpened ? 'Close navigation menu' : 'Open navigation menu'}
+				aria-expanded={isNavDockOpened}
+				class="z-0 cursor-pointer rounded-b-md bg-paper px-1 py-1.5 outline-3 outline-fg-dark"
+				onclick={() => (isNavDockOpened = !isNavDockOpened)}
+			>
+				<svg
+					{...iconSvgProps}
+					class={`h-5 w-5 transition-transform duration-250 ${
+						isNavDockOpened ? 'rotate-180' : 'rotate-0'
+					}`}
+					aria-hidden="true"
+				>
+					<path d="M5 15l7-7 7 7" />
+				</svg>
+			</button>
+
+			<!-- WIP -->
+			<!-- <a
+  			class="cursor-pointer rounded-b-md bg-paper px-1.5 py-1 z-0 outline-3 outline-fg-dark"
+  			aria-label="a"
+  			href="as"
+  		>
+  			<svg
+  				{...iconSvgProps}
+  				class="h-4 w-4 transition-transform duration-250"
+  				aria-hidden="true"
+  			>
+  				<path d="M5 15l7-7 7 7" />
+  			</svg>
+  		</a> -->
+		</div>
+	</div>
 </header>
