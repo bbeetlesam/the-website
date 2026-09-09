@@ -2,7 +2,7 @@
 
 /** GROQ query for fetching `nav-item` documents */
 export const NAV_ITEMS_QUERY = `
-	*[_type == "nav-item"] | order(_createdAt asc) {
+	*[_type == "nav-item"] | order(navOrder asc) {
 		id,
 		title,
 		desc,
