@@ -13,9 +13,9 @@ import type { SanityNavItem } from '$lib/types/sanity';
  * Items whose `id` doesn't match any key in `NAV_ROUTES` are silently skipped.
  */
 export async function load(): Promise<{ navItems: NavItem[] }> {
-	const sanityItems = await client.fetch<SanityNavItem[]>(NAV_ITEMS_QUERY);
+	const sanityNavItems = await client.fetch<SanityNavItem[]>(NAV_ITEMS_QUERY);
 
-	const navItems: NavItem[] = sanityItems.flatMap((item) => {
+	const navItems: NavItem[] = sanityNavItems.flatMap((item) => {
 		const route = NAV_ROUTES[item.id];
 		if (!route) return [];
 
