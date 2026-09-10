@@ -12,6 +12,10 @@
 
 	// Component props
 	const { item }: { item: DeskItem } = $props();
+
+	let size = $derived(item.size ? item.size : 100);
+	let rotation = $derived(item.rotation ? item.rotation : 0);
+	let imageAlt = $derived(item.imageAlt ? item.imageAlt : 'Desk Image');
 </script>
 
 <div
@@ -19,8 +23,8 @@
 	style={`
   	left: ${item.x}px;
   	top: ${item.y}px;
-    width: ${item.size}px;
-    height: ${item.size}px;
+    width: ${size}px;
+    height: ${size}px;
   `}
 >
 	{#if item.navigation}
@@ -38,8 +42,8 @@
 					src={item.image}
 					alt={item.navigation.title}
 					style={`
-						width: ${item.size}px;
-						transform: rotate(${item.rotation}deg);
+						width: ${size}px;
+						transform: rotate(${rotation}deg);
 					`}
 				/>
 			</a>
@@ -47,10 +51,10 @@
 	{:else}
 		<img
 			src={item.image}
-			alt={item.imageAlt}
+			alt={imageAlt}
 			style={`
-			  width: ${item.size}px;
-				transform: rotate(${item.rotation}deg);
+			  width: ${size}px;
+				transform: rotate(${rotation}deg);
 			`}
 		/>
 	{/if}

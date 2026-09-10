@@ -1,4 +1,4 @@
-<!-- 
+<!--
 @component A focus frame canvas for a *routed* desk item.
 The canvas is used to draw the focus lines around the item using roughjs
 
@@ -27,6 +27,7 @@ The canvas is used to draw the focus lines around the item using roughjs
 		const focusSize = item.focusFrame?.size ?? 100;
 		const cornerSize = item.focusFrame?.cornerSize ?? 20;
 		const cornerThickness = item.focusFrame?.cornerThickness ?? 3;
+		const edgeOffset = 2 + (item.focusFrame?.edgeOffset ?? 0);
 
 		// Logical size of the canvas
 		const size = item.size * (focusSize / 100);
@@ -43,7 +44,7 @@ The canvas is used to draw the focus lines around the item using roughjs
 			roughness: 0.85
 		};
 
-		const offset = cornerThickness + 2;
+		const offset = cornerThickness + edgeOffset;
 
 		// Top-left
 		rc.line(offset, cornerSize + offset, offset, offset, options);
