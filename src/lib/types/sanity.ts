@@ -1,3 +1,4 @@
+import type { Desk, DeskItem } from './desk';
 import type { NavItem } from './navigation';
 
 /**
@@ -6,4 +7,20 @@ import type { NavItem } from './navigation';
  */
 type SanityNavItem = Omit<NavItem, 'route'> & { id: string };
 
-export type { SanityNavItem };
+/**
+ * Raw `desk-item` object from Sanity.
+ * Like {@link DeskItem}, but with `navigationId` instead of `navigation`.
+ */
+type SanityDeskItem = Omit<DeskItem, 'navigation'> & {
+	navigationId?: string;
+};
+
+/**
+ * Raw `desk` document from Sanity.
+ * Like {@link Desk}, but with `items` of type {@link SanityDeskItem}.
+ */
+type SanityDesk = Omit<Desk, 'items'> & {
+	items: SanityDeskItem[];
+};
+
+export type { SanityNavItem, SanityDeskItem, SanityDesk };
