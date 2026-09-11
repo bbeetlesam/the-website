@@ -8,6 +8,7 @@ type DeskItem = {
 	y: number;
 	rotation: number;
 	size: number;
+	/** The navigation item associated with this item (if navigable). */
 	navigation?: NavItem;
 	/** The focus frame configuration for the item (only on navigable items). */
 	focusFrame?: {
@@ -23,12 +24,17 @@ type DeskItem = {
 };
 
 type DeskSize = {
+	/** The width of the Desk in pixels. */
 	width: number;
+	/** The height of the Desk in pixels. */
 	height: number;
 };
 
 type Desk = {
+	id: string;
+	/** The size of the Desk. */
 	size: DeskSize;
+	/** The items on the Desk. */
 	items: DeskItem[];
 };
 

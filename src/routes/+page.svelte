@@ -1,14 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import type { PageProps } from './$types';
 
 	import type { Desk } from '$lib/types';
 	import { DeskArea } from '$lib/components';
-	import { DESKS } from '$lib/data';
 	import { scaleToFit } from '$lib/utils';
+
+	// Page props (retrieved from +layout.server.ts)
+	let { data }: PageProps = $props();
 
 	let deskArea: HTMLDivElement;
 
-	let desk = $state<Desk>(DESKS[0]);
+	let desk = $derived<Desk>(data.desks[0]);
 	let deskScale = $state(1);
 
 	/**
@@ -16,10 +19,10 @@
 	 *
 	 * It may not be the best algorithm so may change this later
 	 */
-	function findClosestDesk(width: number, height: number) {
+	function findClosestDesk(width: number, height: number): Desk {
 		const targetRatio = width / height;
 
-		return Object.values(DESKS).reduce((closest, candidate) => {
+		return data.desks.reduce((closest, candidate) => {
 			const candidateRatio = candidate.size.width / candidate.size.height;
 			const closestRatio = closest.size.width / closest.size.height;
 
@@ -30,7 +33,7 @@
 		});
 	}
 
-	function updateDesk() {
+	function updateDesk(): void {
 		const { width, height } = deskArea.getBoundingClientRect();
 
 		desk = findClosestDesk(width, height);
