@@ -43,7 +43,10 @@ const SOCIAL_LINKS_QUERY: string = `
     id,
     href,
     title,
-    "icon": icon.asset->url,
+    "icon": {
+      "white": icon.white.asset->url,
+      "black": icon.black.asset->url
+    },
     order
   }
 `;

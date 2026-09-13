@@ -9,7 +9,12 @@ type SocialLink = {
 	/** The representing title for the link. */
 	title: string;
 	/** The image icon of the link. */
-	icon: string;
+	icon: {
+		/** The white version of the icon of the link. */
+		white?: string;
+		/** The black version of the icon of the link. */
+		black?: string;
+	};
 	/** The order of the link in the list of social links. */
 	order: number;
 };
