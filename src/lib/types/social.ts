@@ -1,3 +1,5 @@
+import type { Icon } from './image';
+
 /**
  * Represents a social link.
  */
@@ -9,12 +11,7 @@ type SocialLink = {
 	/** The representing title for the link. */
 	title: string;
 	/** The image icon of the link. */
-	icon: {
-		/** The white version of the icon of the link. */
-		white?: string;
-		/** The black version of the icon of the link. */
-		black?: string;
-	};
+	icon: Icon;
 	/** The order of the link in the list of social links. */
 	order: number;
 };
