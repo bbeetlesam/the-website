@@ -3,15 +3,13 @@
 In the early days, Sam chose the counterpath, to create a personal website
 plainly, without any libraries to help him.
 However, as the time went on, he realised why those tools were invented by the savants.\
-And, by looking at the project's [result](https://github.com/bbeetlesam/bbeetlesam.github.io),
+And, by looking at the site's [result](https://github.com/bbeetlesam/bbeetlesam.github.io),
 we know that he wasn't satisfied with it.
 
-So, he decided to tackle his old challenge one more time:\
+So, he decided to tackle his old challenge one more time —\
 to create his very own personal website, with his very own persona and his enigmatic behaviour.
 
-And right now, you are looking at his project.
-
-So, allow us to present to you,\
+Therefore, allow us to present to you,\
 **Ladies and gentlemen,\
 Damen und Herren,\
 Mesdames et Messieurs.**
@@ -22,10 +20,10 @@ This, is the project of **The Website of Sam**.
 
 > These are the instruments that are used in this opus:
 
-- [Svelte](https://svelte.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Rough.js](https://roughjs.com/)
-- [mdsvex](https://mdsvex.pngwn.io/)
+- [Svelte](https://svelte.dev/) — The main JavaScript framework.
+- [Tailwind CSS](https://tailwindcss.com/) — The utility-first CSS framework.
+- [Sanity](https://sanity.io/) — The headless CMS for content management.
+- [Rough.js](https://roughjs.com/) — The library used for drawing rough sketches.
 
 <!--- [Font Awesome](https://fontawesome.com/)-->
 <!--- [Overlay Scrollbars](https://kingsora.github.io/OverlayScrollbars/)-->
@@ -39,8 +37,8 @@ This, is the project of **The Website of Sam**.
 
 <!--- [MySketchBooth](https://mysketchbooth.com/)-->
 
-Nothing is perfect, and neither is it.\
+Nothing is perfect, and neither is this.\
 It is made to be **_him_**.
 
-For the wrap, you know,\
+For the wrap,\
 **You Never Blow Yr Trip Forever.**
