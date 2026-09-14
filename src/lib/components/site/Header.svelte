@@ -280,7 +280,7 @@
 				<svg
 					{...iconSvgProps}
 					class={`h-5 w-5 transition-transform duration-250 ${
-						isNavDockOpened ? 'rotate-180' : 'rotate-0'
+						isNavDockOpened ? 'rotate-0' : 'rotate-180'
 					}`}
 					aria-hidden="true"
 				>
