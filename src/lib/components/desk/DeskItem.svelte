@@ -39,7 +39,7 @@
 
 			<a href={resolve(item.navigation.route)}>
 				<img
-					src={item.image}
+					src={item.icon.default}
 					alt={item.navigation.title}
 					style={`
 						width: ${size}px;
@@ -50,7 +50,7 @@
 		</BubbleLabel>
 	{:else}
 		<img
-			src={item.image}
+			src={item.icon.default}
 			alt={imageAlt}
 			style={`
 			  width: ${size}px;

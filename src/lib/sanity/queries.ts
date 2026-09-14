@@ -21,7 +21,10 @@ const DESKS_QUERY: string = `
 
 		"items": deskItems[] {
 			"id": id,
-			"image": icon.asset->url,
+			"icon": {
+				"default": icon.default.asset->url,
+				"active": icon.active.asset->url
+			},
 			"imageAlt": imageAlt,
 
 			"x": position.x,

@@ -1,8 +1,9 @@
 import type { NavItem } from './navigation';
+import type { Icon } from './image';
 
 type DeskItem = {
 	id: string;
-	image: string;
+	icon: Icon;
 	imageAlt: string;
 	x: number;
 	y: number;
