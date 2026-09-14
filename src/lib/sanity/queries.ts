@@ -7,8 +7,8 @@ const NAV_ITEMS_QUERY: string = `
 		title,
 		desc,
 		"icon": {
-			"white": icon.white.asset->url,
-			"black": icon.black.asset->url
+			"default": icon.default.asset->url,
+			"active": icon.active.asset->url
 		}
 	}
 `;

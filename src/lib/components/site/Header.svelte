@@ -134,13 +134,13 @@
 
 	<span class="relative block h-7 w-7 select-none md:h-6 md:w-6">
 		<img
-			src={item.icon?.black}
+			src={item.icon?.active}
 			{alt}
 			class={`${iconImgProps} ${isCurrentPage ? 'opacity-100' : 'opacity-0'}`}
 		/>
 
 		<img
-			src={item.icon?.white}
+			src={item.icon?.default}
 			{alt}
 			class={`${iconImgProps} ${isCurrentPage ? 'opacity-0' : 'opacity-100'}`}
 		/>
