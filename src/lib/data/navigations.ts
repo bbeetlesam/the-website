@@ -9,6 +9,7 @@ import type { RouteId } from '$app/types';
  *
  * @example
  * NAV_ROUTES['games'] // → '/(header)/games'
+ * NAV_ROUTES.games    // → '/(header)/games'
  */
 const NAV_ROUTES: Record<string, RouteId> = {
 	home: '/',
