@@ -1,7 +1,7 @@
 // Sanity GROQ queries
 
 /** GROQ query for fetching `nav-item` documents */
-const NAV_ITEMS_QUERY = `
+const NAV_ITEMS_QUERY: string = `
 	*[_type == "nav-item"] | order(navOrder asc) {
 		id,
 		title,
@@ -14,7 +14,7 @@ const NAV_ITEMS_QUERY = `
 `;
 
 /** GROQ query for fetching `desk` documents */
-const DESKS_QUERY = `
+const DESKS_QUERY: string = `
   *[_type == "desk"] {
 		"id": id,
 		"size": size,
@@ -37,4 +37,18 @@ const DESKS_QUERY = `
 	}
 `;
 
-export { NAV_ITEMS_QUERY, DESKS_QUERY };
+/** GROQ query for fetching `social-link` documents */
+const SOCIAL_LINKS_QUERY: string = `
+  *[_type == "social-link"] {
+    id,
+    href,
+    title,
+    "icon": {
+      "default": icon.default.asset->url,
+      "active": icon.active.asset->url
+    },
+    order
+  }
+`;
+
+export { NAV_ITEMS_QUERY, DESKS_QUERY, SOCIAL_LINKS_QUERY };
