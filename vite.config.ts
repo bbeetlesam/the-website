@@ -1,4 +1,3 @@
-import { mdsvex } from 'mdsvex';
 import tailwindcss from '@tailwindcss/vite';
 import adapter from '@sveltejs/adapter-netlify';
 import { sveltekit } from '@sveltejs/kit/vite';
@@ -14,7 +13,7 @@ export default defineConfig({
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 			adapter: adapter(),
-			preprocess: [mdsvex({ extensions: ['.svx', '.md'] })],
+			preprocess: [],
 			extensions: ['.svelte', '.svx', '.md']
 		})
 	],
