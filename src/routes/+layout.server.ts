@@ -46,8 +46,9 @@ export async function load() {
 		...desk,
 
 		items: desk.items.map((item) => {
-			const { navigationId, ...deskItem } = item;
+			const { navigationId, interactionEffect, ...deskItem } = item;
 
+			// If no navigationId, return the Desk Item as-is (non-navigable)
 			if (!navigationId) {
 				return deskItem;
 			}
@@ -60,6 +61,7 @@ export async function load() {
 
 			return {
 				...deskItem,
+				interactionEffect: interactionEffect ?? 'none',
 				navigation
 			};
 		})

@@ -18,6 +18,18 @@
 	let imageAlt = $derived(item.imageAlt ? item.imageAlt : 'Desk Image');
 </script>
 
+<!-- Reusable Desk Item's image snippet -->
+{#snippet deskImage(item: DeskItem, alt: string)}
+	<img
+		src={item.icon.default}
+		{alt}
+		style={`
+     	width: ${size}px;
+     	transform: rotate(${rotation}deg);
+    `}
+	/>
+{/snippet}
+
 <div
 	class="group/desk-item desk-item"
 	style={`
@@ -28,34 +40,27 @@
   `}
 >
 	{#if item.navigation}
-		<!-- Focus frame canvas -->
-		<BubbleLabel
-			label={item.navigation.desc}
-			bubbleOffsetX={0}
-			tipOffsetY={0}
-			class="text-xs font-semibold"
-		>
-			<ItemFocusFrame {item} />
-
+		{#if item.interactionEffect === 'none'}
+			<!-- No effect -->
 			<a href={resolve(item.navigation.route)}>
-				<img
-					src={item.icon.default}
-					alt={item.navigation.title}
-					style={`
-						width: ${size}px;
-						transform: rotate(${rotation}deg);
-					`}
-				/>
+				{@render deskImage(item, item.navigation.title)}
 			</a>
-		</BubbleLabel>
+		{:else if item.interactionEffect === 'focus-frame'}
+			<!-- Focus frame -->
+			<BubbleLabel
+				label={item.navigation.desc}
+				bubbleOffsetX={0}
+				tipOffsetY={0}
+				class="text-xs font-semibold"
+			>
+				<ItemFocusFrame {item} />
+
+				<a href={resolve(item.navigation.route)}>
+					{@render deskImage(item, item.navigation.title)}
+				</a>
+			</BubbleLabel>
+		{/if}
 	{:else}
-		<img
-			src={item.icon.default}
-			alt={imageAlt}
-			style={`
-			  width: ${size}px;
-				transform: rotate(${rotation}deg);
-			`}
-		/>
+		{@render deskImage(item, imageAlt)}
 	{/if}
 </div>

@@ -29,13 +29,14 @@ const HOME_DESKS_QUERY: string = `
 
 			"x": position.x,
 			"y": position.y,
-
 			"size": size,
 			"rotation": rotation,
 
+			"navigationId": navigation->id,
+
+			"interactionEffect": interactionEffect,
 			"focusFrame": focusFrame,
 
-			"navigationId": navigation->id
 		}
 	}
 `;
