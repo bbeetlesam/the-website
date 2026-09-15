@@ -1,5 +1,5 @@
 import { client } from '$lib/sanity/client';
-import { NAV_ITEMS_QUERY, DESKS_QUERY } from '$lib/sanity/queries';
+import { NAV_ITEMS_QUERY, HOME_DESKS_QUERY } from '$lib/sanity/queries';
 import { NAV_ROUTES } from '$lib/data';
 
 import type { RouteId } from '$app/types';
@@ -23,7 +23,7 @@ export async function load() {
 	// Fetch `nav-item` and `desk` documents from Sanity
 	const [sanityNavItems, sanityDesks] = await Promise.all([
 		client.fetch<SanityNavItem[]>(NAV_ITEMS_QUERY),
-		client.fetch<SanityDesk[]>(DESKS_QUERY)
+		client.fetch<SanityDesk[]>(HOME_DESKS_QUERY)
 	]);
 
 	// Convert `sanityNavItems` to `NavItem` objects, assigning a `route` based on `NAV_ROUTES`

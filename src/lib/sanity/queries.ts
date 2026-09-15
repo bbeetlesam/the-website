@@ -13,9 +13,9 @@ const NAV_ITEMS_QUERY: string = `
 	}
 `;
 
-/** GROQ query for fetching `desk` documents */
-const DESKS_QUERY: string = `
-  *[_type == "desk"] {
+/** GROQ query for fetching Home `desk` documents */
+const HOME_DESKS_QUERY: string = `
+  *[_type == "desk" && string::startsWith(id, "h")] {
 		"id": id,
 		"size": size,
 
@@ -54,4 +54,4 @@ const SOCIAL_LINKS_QUERY: string = `
   }
 `;
 
-export { NAV_ITEMS_QUERY, DESKS_QUERY, SOCIAL_LINKS_QUERY };
+export { NAV_ITEMS_QUERY, HOME_DESKS_QUERY, SOCIAL_LINKS_QUERY };
