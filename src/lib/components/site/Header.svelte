@@ -152,7 +152,12 @@
 	<div class="relative flex items-center justify-center">
 		<!-- Hamburger nav menu -->
 		<div class="absolute left-0">
-			<RoughFrame options={roughOptions} scale={130} changeOnHover refreshRate={roughRefreshMs}>
+			<RoughFrame
+				options={roughOptions}
+				scale={130}
+				changeOnHover
+				refreshRate={roughRefreshMs}
+			>
 				<button
 					type="button"
 					aria-label={isNavDockOpened ? 'Close navigation menu' : 'Open navigation menu'}
@@ -194,7 +199,10 @@
 
 			<!-- Nav dock -->
 			{#if isNavDockOpened}
-				<nav transition:slide={{ duration: 200 }} class="absolute top-full left-0 outline-2">
+				<nav
+					transition:slide={{ duration: 200 }}
+					class="absolute top-full left-0 outline-2"
+				>
 					<RoughFrame scale={{ x: 107, y: 103 }} options={roughOptions}>
 						<ul class="w-max">
 							{#each resolvedPageLinks as item (item.route)}
@@ -208,7 +216,8 @@
 										options={{
 											...roughOptions,
 											stroke: 'transparent',
-											fill: hoveredNavItem === item.route ? paperColorHover : 'transparent'
+											fill:
+												hoveredNavItem === item.route ? paperColorHover : 'transparent'
 										}}
 									>
 										<a

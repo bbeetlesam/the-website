@@ -45,7 +45,12 @@
 			item.navigation.type === 'social-link' ? item.navigation.title : ''
 		}
 
-		<BubbleLabel label={bubbleLabel} bubbleOffsetX={0} tipOffsetY={0} class="text-xs font-semibold">
+		<BubbleLabel
+			label={bubbleLabel}
+			bubbleOffsetX={0}
+			tipOffsetY={0}
+			class="text-xs font-semibold"
+		>
 			{#if item.interactionEffect === 'none'}
 				<!-- No effect -->
 				{#if item.navigation?.type === 'nav-item'}

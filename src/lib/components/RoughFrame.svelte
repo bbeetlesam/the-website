@@ -87,8 +87,10 @@ independently.
 		const draw = () => {
 			const { width, height } = parent.getBoundingClientRect();
 
-			const scaleX = typeof currentScale === 'number' ? currentScale : (currentScale.x ?? 100);
-			const scaleY = typeof currentScale === 'number' ? currentScale : (currentScale.y ?? 100);
+			const scaleX =
+				typeof currentScale === 'number' ? currentScale : (currentScale.x ?? 100);
+			const scaleY =
+				typeof currentScale === 'number' ? currentScale : (currentScale.y ?? 100);
 
 			const canvasWidth = width * (scaleX / 100);
 			const canvasHeight = height * (scaleY / 100);
@@ -124,7 +126,8 @@ independently.
 		const syncRefresh = () => {
 			if (intervalId) clearInterval(intervalId);
 
-			intervalId = currentChangeOnHover && active ? setInterval(draw, currentRefreshRate) : null;
+			intervalId =
+				currentChangeOnHover && active ? setInterval(draw, currentRefreshRate) : null;
 		};
 
 		draw();

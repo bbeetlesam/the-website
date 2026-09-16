@@ -59,8 +59,20 @@ The canvas is used to draw the focus lines around the item using roughjs
 		rc.line(offset, size - offset, cornerSize + offset, size - offset, options);
 
 		// Bottom-right
-		rc.line(size - cornerSize - offset, size - offset, size - offset, size - offset, options);
-		rc.line(size - offset, size - offset, size - offset, size - cornerSize - offset, options);
+		rc.line(
+			size - cornerSize - offset,
+			size - offset,
+			size - offset,
+			size - offset,
+			options
+		);
+		rc.line(
+			size - offset,
+			size - offset,
+			size - offset,
+			size - cornerSize - offset,
+			options
+		);
 	}
 </script>
 

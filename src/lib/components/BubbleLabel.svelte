@@ -67,7 +67,9 @@
 	// Bubble position relative to the parent
 	const transformX = $derived(`calc(-50% + ${tipOffsetX + bubbleOffsetX}px)`);
 
-	const restTransformY = $derived(`calc(${baseOffset} + ${tipOffsetY}px + ${slideUpOffset})`);
+	const restTransformY = $derived(
+		`calc(${baseOffset} + ${tipOffsetY}px + ${slideUpOffset})`
+	);
 
 	const hoverTransformY = $derived(`calc(${baseOffset} + ${tipOffsetY}px)`);
 

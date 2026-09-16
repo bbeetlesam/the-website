@@ -65,7 +65,9 @@ export async function load() {
 				const route = NAV_ROUTES[navigation.id];
 
 				if (!route) {
-					throw new Error(`Nav item "${navigation.id}" has no route defined in NAV_ROUTES.`);
+					throw new Error(
+						`Nav item "${navigation.id}" has no route defined in NAV_ROUTES.`
+					);
 				}
 
 				return {
@@ -93,6 +95,8 @@ export async function load() {
 			);
 		})
 	}));
+
+	console.dir(desks, { depth: null });
 
 	return {
 		pageLinks,
