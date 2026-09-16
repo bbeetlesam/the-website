@@ -8,17 +8,17 @@
 	import { slide } from 'svelte/transition';
 
 	import tokens from '$lib/styles/tokens';
-	import type { NavItem } from '$lib/types';
+	import type { PageLink } from '$lib/types';
 
 	import RoughFrame from '../RoughFrame.svelte';
 
 	// Component props
 	const {
 		centreName = 'Header',
-		navItems = []
+		pageLinks = []
 	}: {
 		centreName?: string;
-		navItems?: NavItem[];
+		pageLinks?: PageLink[];
 	} = $props();
 
 	const strokeColor = tokens.color.roughDark;
@@ -45,9 +45,9 @@
 		'stroke-linecap': 'round'
 	};
 
-	/** Nav items with resolved path and current page state */
-	const resolvedNavItems = $derived(
-		navItems.map((item) => {
+	/** PageLinks with resolved path and current page state */
+	const resolvedPageLinks = $derived(
+		pageLinks.map((item) => {
 			const path = resolve(item.route);
 			return { ...item, path, isCurrentPage: currentPath === path };
 		})
@@ -127,7 +127,7 @@
 </script>
 
 <!-- Nav icon snippet used in the header's nav dock -->
-{#snippet navIcon(item: NavItem, isCurrentPage: boolean, alt: string = '')}
+{#snippet navIcon(item: PageLink, isCurrentPage: boolean, alt: string = '')}
 	{@const iconImgProps = `
     absolute inset-0 h-full w-full object-contain transition-opacity duration-300
   `}
@@ -197,7 +197,7 @@
 				<nav transition:slide={{ duration: 200 }} class="absolute top-full left-0 outline-2">
 					<RoughFrame scale={{ x: 107, y: 103 }} options={roughOptions}>
 						<ul class="w-max">
-							{#each resolvedNavItems as item (item.route)}
+							{#each resolvedPageLinks as item (item.route)}
 								<li
 									onmouseenter={() => (hoveredNavItem = item.route)}
 									onmouseleave={() => (hoveredNavItem = null)}
@@ -258,7 +258,7 @@
 				transition:slide={{ duration: 250 }}
 			>
 				<ul class="flex justify-evenly">
-					{#each resolvedNavItems as item (item.route)}
+					{#each resolvedPageLinks as item (item.route)}
 						<li>
 							<a href={item.path} aria-label={item.title}>
 								{@render navIcon(item, item.isCurrentPage, item.title)}

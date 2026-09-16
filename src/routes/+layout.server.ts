@@ -3,14 +3,14 @@ import { NAV_ITEMS_QUERY, HOME_DESKS_QUERY } from '$lib/sanity/queries';
 import { NAV_ROUTES } from '$lib/data';
 
 import type { RouteId } from '$app/types';
-import type { Desk, NavItem, SanityDesk, SanityNavItem } from '$lib/types';
+import type { Desk, PageLink, SanityDesk, SanityPageLink } from '$lib/types';
 
 /**
  * Root layout server load function.
  *
  * Fetches `nav-item` and `desk` documents from Sanity in parallel.
  *
- * `nav-item` documents are converted into {@link NavItem} objects by assigning
+ * `nav-item` documents are converted into {@link PageLink} objects by assigning
  * each entry a `route` looked up from {@link NAV_ROUTES} via `item.id`.
  *
  * Desk item `navigation` references are resolved directly by GROQ and then
@@ -21,13 +21,13 @@ import type { Desk, NavItem, SanityDesk, SanityNavItem } from '$lib/types';
  */
 export async function load() {
 	// Fetch `nav-item` and `desk` documents from Sanity
-	const [sanityNavItems, sanityDesks] = await Promise.all([
-		client.fetch<SanityNavItem[]>(NAV_ITEMS_QUERY),
+	const [sanityPageLinks, sanityDesks] = await Promise.all([
+		client.fetch<SanityPageLink[]>(NAV_ITEMS_QUERY),
 		client.fetch<SanityDesk[]>(HOME_DESKS_QUERY)
 	]);
 
-	// Convert `sanityNavItems` to `NavItem` objects, assigning a `route` based on `NAV_ROUTES`
-	const navItems: NavItem[] = sanityNavItems.map((item) => {
+	// Convert `sanityPageLinks` to `PageLink` objects, assigning a `route` based on `NAV_ROUTES`
+	const pageLinks: PageLink[] = sanityPageLinks.map((item) => {
 		const route: RouteId = NAV_ROUTES[item.id];
 
 		if (!route) {
@@ -41,7 +41,7 @@ export async function load() {
 			desc: item.desc,
 			route,
 			icon: item.icon
-		} satisfies NavItem;
+		} satisfies PageLink;
 	});
 
 	// Resolve navigation references in `sanityDesks`.
@@ -60,7 +60,7 @@ export async function load() {
 			const navType = navigation.type;
 			const effect = interactionEffect ?? 'none';
 
-			// Resolve NavItem navigation type
+			// Resolve PageLink navigation type
 			if (navType === 'nav-item') {
 				const route = NAV_ROUTES[navigation.id];
 
@@ -78,7 +78,7 @@ export async function load() {
 				};
 			}
 
-			// Resolve SocialLink navigation type
+			// Resolve ExternalLink navigation type
 			if (navType === 'social-link') {
 				return {
 					...deskItem,
@@ -95,7 +95,7 @@ export async function load() {
 	}));
 
 	return {
-		navItems,
+		pageLinks,
 		desks
 	};
 }

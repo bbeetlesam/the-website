@@ -2,49 +2,49 @@ import type { RouteId } from '$app/types';
 import type { Icon } from './image';
 
 /**
- * Represents the type of navigation item.
+ * Represents a supported navigation type.
  *
- * These are the navigation types supported by the application (also defined in Sanity).
+ * These types correspond to the navigation types defined in Sanity.
  */
 type NavigationType = 'nav-item' | 'social-link';
 
 /**
- * Represents a navigation route item for the navigation menu.
+ * Represents a link to a page within the application.
  */
-type NavItem = {
-	/** The type of the navigation item based from Sanity. */
+type PageLink = {
+	/** The navigation type returned by Sanity. */
 	type: 'nav-item';
-	/** The unique identifier of the navigation item. */
+	/** The unique identifier of the page link. */
 	id: string;
-	/** The SvelteKit RouteId used to resolve the navigation item. */
+	/** The SvelteKit RouteId used to resolve the page link. */
 	route: RouteId;
-	/** The title of the navigation item. */
+	/** The title of the page link. */
 	title: string;
-	/** The description of the navigation item (technically the 'longer' title). */
+	/** The description of the page link (technically the 'longer' title). */
 	desc: string;
-	/** The icon of the navigation item. */
+	/** The icon of the page link. */
 	icon?: Icon;
 };
 
 /**
- * Represents a social link.
+ * Represents an external link to an external resource.
  */
-type SocialLink = {
+type ExternalLink = {
 	/** The type of the link based from Sanity. */
 	type: 'social-link';
-	/** The unique identifier for the link. */
+	/** The unique identifier for the external link. */
 	id: string;
-	/** The href of the link (to somewhere else). */
+	/** The href of the external link (to somewhere else). */
 	href: string;
-	/** The representing title for the link. */
+	/** The representing title for the external link. */
 	title: string;
-	/** The image icon of the link. */
+	/** The image icon of the external link. */
 	icon: Icon;
-	/** The order of the link in the list of social links. */
+	/** The order of the external link in its list. */
 	order: number;
 };
 
-/** Represents a navigation field item. */
-type Navigation = NavItem | SocialLink;
+/** Represents a navigational link. */
+type Navigation = PageLink | ExternalLink;
 
-export type { NavItem, SocialLink, NavigationType, Navigation };
+export type { PageLink, ExternalLink, NavigationType, Navigation };

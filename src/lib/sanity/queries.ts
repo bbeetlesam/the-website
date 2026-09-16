@@ -67,7 +67,7 @@ const HOME_DESKS_QUERY: string = `
 `;
 
 /** GROQ query for fetching `social-link` documents */
-const SOCIAL_LINKS_QUERY: string = `
+const EXTERNAL_LINKS_QUERY: string = `
   *[_type == "social-link"] {
     id,
     href,
@@ -80,4 +80,4 @@ const SOCIAL_LINKS_QUERY: string = `
   }
 `;
 
-export { NAV_ITEMS_QUERY, HOME_DESKS_QUERY, SOCIAL_LINKS_QUERY };
+export { NAV_ITEMS_QUERY, HOME_DESKS_QUERY, EXTERNAL_LINKS_QUERY };
