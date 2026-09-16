@@ -32,7 +32,32 @@ const HOME_DESKS_QUERY: string = `
 			"size": size,
 			"rotation": rotation,
 
-			"navigationId": navigation->id,
+			"navigation": navigation->{
+        "type": _type,
+
+        ...select(
+          _type == "nav-item" => {
+            id,
+            title,
+            desc,
+            "icon": {
+              "default": icon.default.asset->url,
+              "active": icon.active.asset->url
+            }
+          },
+
+          _type == "social-link" => {
+            id,
+            href,
+            title,
+            "icon": {
+              "default": icon.default.asset->url,
+              "active": icon.active.asset->url
+            },
+            order
+          }
+        )
+			},
 
 			"interactionEffect": interactionEffect,
 			"focusFrame": focusFrame,

@@ -40,26 +40,38 @@
   `}
 >
 	{#if item.navigation}
-		{#if item.interactionEffect === 'none'}
-			<!-- No effect -->
-			<a href={resolve(item.navigation.route)}>
-				{@render deskImage(item, item.navigation.title)}
-			</a>
-		{:else if item.interactionEffect === 'focus-frame'}
-			<!-- Focus frame -->
-			<BubbleLabel
-				label={item.navigation.desc}
-				bubbleOffsetX={0}
-				tipOffsetY={0}
-				class="text-xs font-semibold"
-			>
+		{@const bubbleLabel =
+			item.navigation.type === 'nav-item' ? item.navigation.desc :
+			item.navigation.type === 'social-link' ? item.navigation.title : ''
+		}
+
+		<BubbleLabel label={bubbleLabel} bubbleOffsetX={0} tipOffsetY={0} class="text-xs font-semibold">
+			{#if item.interactionEffect === 'none'}
+				<!-- No effect -->
+				{#if item.navigation?.type === 'nav-item'}
+					<a href={resolve(item.navigation.route)}>
+						{@render deskImage(item, item.navigation.title)}
+					</a>
+				{:else if item.navigation?.type === 'social-link'}
+					<a href={item.navigation.href}>
+						{@render deskImage(item, item.navigation.title)}
+					</a>
+				{/if}
+			{:else if item.interactionEffect === 'focus-frame'}
+				<!-- Focus frame -->
 				<ItemFocusFrame {item} />
 
-				<a href={resolve(item.navigation.route)}>
-					{@render deskImage(item, item.navigation.title)}
-				</a>
-			</BubbleLabel>
-		{/if}
+				{#if item.navigation?.type === 'nav-item'}
+					<a href={resolve(item.navigation.route)}>
+						{@render deskImage(item, item.navigation.title)}
+					</a>
+				{:else if item.navigation?.type === 'social-link'}
+					<a href={item.navigation.href}>
+						{@render deskImage(item, item.navigation.title)}
+					</a>
+				{/if}
+			{/if}
+		</BubbleLabel>
 	{:else}
 		{@render deskImage(item, imageAlt)}
 	{/if}

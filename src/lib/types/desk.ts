@@ -1,4 +1,4 @@
-import type { NavItem } from './navigation';
+import type { Navigation } from './navigation';
 import type { Icon } from './image';
 
 type InteractionEffect = 'none' | 'focus-frame';
@@ -22,7 +22,7 @@ type DeskItem = {
 	rotation: number;
 	size: number;
 	/** The navigation item associated with this item (if navigable). */
-	navigation?: NavItem;
+	navigation?: Navigation;
 	/** The interaction effect to apply when the item is interacted with. */
 	interactionEffect?: InteractionEffect;
 	/** The focus frame configuration for the item (only on navigable items). */

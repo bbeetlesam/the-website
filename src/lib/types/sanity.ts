@@ -1,18 +1,27 @@
 import type { Desk, DeskItem } from './desk';
 import type { NavItem } from './navigation';
+import type { SocialLink } from './navigation';
 
 /**
  * Raw `nav-item` document from Sanity.
- * Like NavItem, but with `id` (matches NAV_ROUTES keys, e.g. 'games') instead of `route`.
+ * Like NavItem, but without `route`.
  */
-type SanityNavItem = Omit<NavItem, 'route'> & { id: string };
+type SanityNavItem = Omit<NavItem, 'route'>;
+
+/**
+ * Raw `social-link` document from Sanity.
+ * Similar to {@link SocialLink}.
+ */
+type SanitySocialLink = SocialLink;
+
+type SanityNavigation = SanityNavItem | SanitySocialLink;
 
 /**
  * Raw `desk-item` object from Sanity.
- * Like {@link DeskItem}, but with `navigationId` instead of `navigation`.
+ * Like {@link DeskItem}, but with `navigation` type as {@link SanityNavigation}.
  */
 type SanityDeskItem = Omit<DeskItem, 'navigation'> & {
-	navigationId?: string;
+	navigation?: SanityNavigation;
 };
 
 /**
