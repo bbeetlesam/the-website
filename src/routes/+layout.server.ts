@@ -8,12 +8,12 @@ import type { Desk, PageLink, SanityDesk, SanityPageLink } from '$lib/types';
 /**
  * Root layout server load function.
  *
- * Fetches `nav-item` and `desk` documents from Sanity in parallel.
+ * Fetches `nav-item` and Home `desk` documents from Sanity in parallel.
  *
  * `nav-item` documents are converted into {@link PageLink} objects by assigning
  * each entry a `route` looked up from {@link NAV_ROUTES} via `item.id`.
  *
- * Desk item `navigation` references are resolved directly by GROQ and then
+ * Home Desk item `navigation` references are resolved directly by GROQ and then
  * transformed here where necessary.
  *
  * Throws errors if a navigation item has no corresponding route or if a desk item
@@ -21,7 +21,7 @@ import type { Desk, PageLink, SanityDesk, SanityPageLink } from '$lib/types';
  */
 export async function load() {
 	// Fetch `nav-item` and `desk` documents from Sanity
-	const [sanityPageLinks, sanityDesks] = await Promise.all([
+	const [sanityPageLinks, sanityHomeDesks] = await Promise.all([
 		client.fetch<SanityPageLink[]>(NAV_ITEMS_QUERY),
 		client.fetch<SanityDesk[]>(HOME_DESKS_QUERY)
 	]);
@@ -44,9 +44,9 @@ export async function load() {
 		} satisfies PageLink;
 	});
 
-	// Resolve navigation references in `sanityDesks`.
+	// Resolve navigation references in `sanityHomeDesks`.
 	// The referenced document is already included by the GROQ query.
-	const desks: Desk[] = sanityDesks.map((desk) => ({
+	const homeDesks: Desk[] = sanityHomeDesks.map((desk) => ({
 		...desk,
 
 		items: desk.items.map((item) => {
@@ -65,9 +65,7 @@ export async function load() {
 				const route = NAV_ROUTES[navigation.id];
 
 				if (!route) {
-					throw new Error(
-						`Nav item "${navigation.id}" has no route defined in NAV_ROUTES.`
-					);
+					throw new Error(`Nav item "${navigation.id}" has no route defined in NAV_ROUTES.`);
 				}
 
 				return {
@@ -96,10 +94,8 @@ export async function load() {
 		})
 	}));
 
-	console.dir(desks, { depth: null });
-
 	return {
 		pageLinks,
-		desks
+		homeDesks
 	};
 }

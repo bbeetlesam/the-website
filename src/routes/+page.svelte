@@ -11,7 +11,7 @@
 
 	let deskArea: HTMLDivElement;
 
-	let desk = $derived<Desk>(data.desks[0]);
+	let desk = $derived<Desk>(data.homeDesks[0]);
 	let deskScale = $state(1);
 
 	/**
@@ -22,7 +22,7 @@
 	function findClosestDesk(width: number, height: number): Desk {
 		const targetRatio = width / height;
 
-		return data.desks.reduce((closest, candidate) => {
+		return data.homeDesks.reduce((closest, candidate) => {
 			const candidateRatio = candidate.size.width / candidate.size.height;
 			const closestRatio = closest.size.width / closest.size.height;
 
