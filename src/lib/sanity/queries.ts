@@ -13,9 +13,23 @@ const NAV_ITEMS_QUERY: string = `
 	}
 `;
 
-/** GROQ query for fetching Home `desk` documents */
-const HOME_DESKS_QUERY: string = `
-  *[_type == "desk" && string::startsWith(id, "h")] {
+/** GROQ query for fetching `social-link` documents */
+const EXTERNAL_LINKS_QUERY: string = `
+  *[_type == "social-link"] {
+    id,
+    href,
+    title,
+    "icon": {
+      "default": icon.default.asset->url,
+      "active": icon.active.asset->url
+    },
+    order
+  }
+`;
+
+type DeskPrefix = 'h' | 'g';
+const DESKS_QUERY = (prefix: DeskPrefix): string => `
+	*[_type == "desk" && string::startsWith(id, "${prefix}")] {
 		"id": id,
 		"size": size,
 
@@ -61,23 +75,14 @@ const HOME_DESKS_QUERY: string = `
 
 			"interactionEffect": interactionEffect,
 			"focusFrame": focusFrame,
-
 		}
 	}
 `;
 
-/** GROQ query for fetching `social-link` documents */
-const EXTERNAL_LINKS_QUERY: string = `
-  *[_type == "social-link"] {
-    id,
-    href,
-    title,
-    "icon": {
-      "default": icon.default.asset->url,
-      "active": icon.active.asset->url
-    },
-    order
-  }
-`;
+/** GROQ query for fetching Home `desk` documents */
+const HOME_DESKS_QUERY: string = DESKS_QUERY('h');
 
-export { NAV_ITEMS_QUERY, HOME_DESKS_QUERY, EXTERNAL_LINKS_QUERY };
+/** GROQ query for fetching Game `desk` documents */
+const GAME_DESKS_QUERY: string = DESKS_QUERY('g');
+
+export { NAV_ITEMS_QUERY, HOME_DESKS_QUERY, EXTERNAL_LINKS_QUERY, GAME_DESKS_QUERY };
