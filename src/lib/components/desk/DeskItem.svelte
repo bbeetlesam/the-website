@@ -19,7 +19,7 @@
 </script>
 
 <!-- Reusable Desk Item's image snippet -->
-{#snippet deskImage(item: DeskItem, alt: string)}
+{#snippet deskItemImage(item: DeskItem, alt: string)}
 	<img
 		src={item.icon.default}
 		{alt}
@@ -28,6 +28,19 @@
      	transform: rotate(${rotation}deg);
     `}
 	/>
+{/snippet}
+
+<!-- Reusable Desk Item snippet -->
+{#snippet deskItem(item: DeskItem)}
+	{#if item.navigation?.type === 'nav-item'}
+		<a href={resolve(item.navigation.route)}>
+			{@render deskItemImage(item, item.navigation.title)}
+		</a>
+	{:else if item.navigation?.type === 'social-link'}
+		<a href={item.navigation.href}>
+			{@render deskItemImage(item, item.navigation.title)}
+		</a>
+	{/if}
 {/snippet}
 
 <div
@@ -53,32 +66,15 @@
 		>
 			{#if item.interactionEffect === 'none'}
 				<!-- No effect -->
-				{#if item.navigation?.type === 'nav-item'}
-					<a href={resolve(item.navigation.route)}>
-						{@render deskImage(item, item.navigation.title)}
-					</a>
-				{:else if item.navigation?.type === 'social-link'}
-					<a href={item.navigation.href}>
-						{@render deskImage(item, item.navigation.title)}
-					</a>
-				{/if}
+				{@render deskItem(item)}
 			{:else if item.interactionEffect === 'focus-frame'}
 				<!-- Focus frame -->
 				<ItemFocusFrame {item} />
-
-				{#if item.navigation?.type === 'nav-item'}
-					<a href={resolve(item.navigation.route)}>
-						{@render deskImage(item, item.navigation.title)}
-					</a>
-				{:else if item.navigation?.type === 'social-link'}
-					<a href={item.navigation.href}>
-						{@render deskImage(item, item.navigation.title)}
-					</a>
-				{/if}
+				{@render deskItem(item)}
 			{/if}
 		</BubbleLabel>
 	{:else}
-		{@render deskImage(item, imageAlt)}
+		{@render deskItemImage(item, imageAlt)}
 	{/if}
 </div>
 
