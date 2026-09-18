@@ -73,5 +73,5 @@
 
 <!-- The holy desk of Homepage -->
 <div bind:this={deskArea} class="relative flex flex-1 items-center justify-center">
-	<DeskArea {desk} {deskScale} />
+	<DeskArea {desk} {deskScale} className="absolute origin-center" />
 </div>
