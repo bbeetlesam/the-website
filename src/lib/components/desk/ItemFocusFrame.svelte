@@ -81,3 +81,20 @@ The canvas is used to draw the focus lines around the item using roughjs
 	class="item-focus-frame opacity-0 group-hover/desk-item:opacity-100"
 	aria-hidden="true"
 ></canvas>
+
+<style>
+	/* Focus frame class only for desk items */
+	.item-focus-frame {
+		position: absolute;
+		pointer-events: none;
+
+		width: var(--focus-frame-size);
+		height: var(--focus-frame-size);
+
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+
+		transition: opacity 250ms ease;
+	}
+</style>

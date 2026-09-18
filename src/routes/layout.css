@@ -2,7 +2,6 @@
 @plugin '@tailwindcss/typography';
 
 @import '../styles/fonts.css';
-@import '../styles/desk.css';
 
 @theme {
 	--color-paper: #fdfbf6;

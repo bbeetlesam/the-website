@@ -23,10 +23,27 @@
 </script>
 
 <div
-	class="desk {debug ? 'outline-2 outline-orange-700' : ''}"
-	style={`--desk-width: ${desk.size.width}px; --desk-height: ${desk.size.height}px; --desk-scale: ${deskScale};`}
+	class="desk {debug ? 'outline-2 outline-green-600' : ''}"
+	style={`
+		--desk-width: ${desk.size.width}px;
+		--desk-height: ${desk.size.height}px;
+		--desk-scale: ${deskScale};
+	`}
 >
 	{#each desk.items as item (item.id)}
 		<DeskItem {item} />
 	{/each}
 </div>
+
+<style>
+	.desk {
+		position: absolute;
+		width: var(--desk-width);
+		height: var(--desk-height);
+		/*top: 0;
+  	left: 0;*/
+
+		transform: scale(var(--desk-scale));
+		transform-origin: center;
+	}
+</style>

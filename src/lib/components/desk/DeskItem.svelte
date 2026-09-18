@@ -81,3 +81,13 @@
 		{@render deskImage(item, imageAlt)}
 	{/if}
 </div>
+
+<style>
+	.desk-item {
+		position: absolute;
+		top: 0;
+		left: 0;
+
+		transform: translate(-50%, -50%);
+	}
+</style>
