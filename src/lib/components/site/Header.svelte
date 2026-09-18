@@ -148,7 +148,7 @@
 {/snippet}
 
 <!-- Desktop header -->
-<header class="sticky top-4 z-999 hidden sm:px-4 md:block">
+<header class="fixed top-4 z-999 hidden w-full sm:px-4 md:block">
 	<div class="relative flex items-center justify-center">
 		<!-- Hamburger nav menu -->
 		<div class="absolute left-0">
