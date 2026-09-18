@@ -24,13 +24,14 @@ The canvas is used to draw the focus lines around the item using roughjs
 	} = $props();
 
 	function roughFocus(canvas: HTMLCanvasElement, item: DeskItem) {
-		const focusSize = item.focusFrame?.size ?? 100;
+		const itemSize = item.size ?? 100;
+		const focusSize = item.focusFrame?.size ?? 10;
 		const cornerSize = item.focusFrame?.cornerSize ?? 20;
 		const cornerThickness = item.focusFrame?.cornerThickness ?? 3;
 		const edgeOffset = 2 + (item.focusFrame?.edgeOffset ?? 0);
 
 		// Logical size of the canvas
-		const size = item.size * (focusSize / 100);
+		const size = itemSize * (focusSize / 100);
 
 		// Canvas drawing resolution
 		canvas.width = size;
