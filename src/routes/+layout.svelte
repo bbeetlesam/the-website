@@ -1,7 +1,6 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { Footer } from '$lib/components/site';
 
 	let { children } = $props();
 </script>
@@ -16,5 +15,4 @@
 	<main class="flex min-h-0 flex-1">
 		{@render children()}
 	</main>
-	<Footer />
 </div>
