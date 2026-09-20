@@ -27,6 +27,20 @@ const EXTERNAL_LINKS_QUERY: string = `
   }
 `;
 
+/** GROQ query for fetching `typeface` documents */
+const TYPEFACES_QUERY: string = `
+	*[_type == "typeface"] {
+		name,
+		variants[] {
+			name,
+			weight,
+			style,
+			"file": file.asset->url,
+			format
+		}
+	}
+`;
+
 type DeskPrefix = 'h' | 'g';
 const DESKS_QUERY = (prefix: DeskPrefix): string => `
 	*[_type == "desk" && string::startsWith(id, "${prefix}")] {
@@ -85,4 +99,10 @@ const HOME_DESKS_QUERY: string = DESKS_QUERY('h');
 /** GROQ query for fetching Game `desk` documents */
 const GAME_DESKS_QUERY: string = DESKS_QUERY('g');
 
-export { NAV_ITEMS_QUERY, HOME_DESKS_QUERY, EXTERNAL_LINKS_QUERY, GAME_DESKS_QUERY };
+export {
+	NAV_ITEMS_QUERY,
+	HOME_DESKS_QUERY,
+	EXTERNAL_LINKS_QUERY,
+	GAME_DESKS_QUERY,
+	TYPEFACES_QUERY
+};

@@ -1,29 +1,31 @@
 import { client } from '$lib/sanity/client';
-import { NAV_ITEMS_QUERY, HOME_DESKS_QUERY } from '$lib/sanity/queries';
+import { NAV_ITEMS_QUERY, HOME_DESKS_QUERY, TYPEFACES_QUERY } from '$lib/sanity/queries';
 import { NAV_ROUTES } from '$lib/data';
 
 import type { RouteId } from '$app/types';
-import type { Desk, PageLink, SanityDesk, SanityPageLink } from '$lib/types';
+import type { Desk, PageLink, SanityDesk, SanityPageLink, Typeface } from '$lib/types';
 
 /**
  * Root layout server load function.
  *
- * Fetches `nav-item` and Home `desk` documents from Sanity in parallel.
+ * Fetches `nav-item`, Home `desk`, and `typeface` documents from Sanity in parallel.
  *
- * `nav-item` documents are converted into {@link PageLink} objects by assigning
+ * - `nav-item` documents are converted into {@link PageLink} objects by assigning
  * each entry a `route` looked up from {@link NAV_ROUTES} via `item.id`.
- *
- * Home Desk item `navigation` references are resolved directly by GROQ and then
+ * - Home Desk item `navigation` references are resolved directly by GROQ and then
  * transformed here where necessary.
+ * - `typeface` documents are fetched directly as {@link Typeface} objects
+ * and are used for application CSS.
  *
  * Throws errors if a navigation item has no corresponding route or if a desk item
  * references an unsupported navigation type.
  */
 export async function load() {
-	// Fetch `nav-item` and `desk` documents from Sanity
-	const [sanityPageLinks, sanityHomeDesks] = await Promise.all([
+	// Fetch `nav-item`, `desk`, and `typeface` documents from Sanity
+	const [sanityPageLinks, sanityHomeDesks, sanityTypefaces] = await Promise.all([
 		client.fetch<SanityPageLink[]>(NAV_ITEMS_QUERY),
-		client.fetch<SanityDesk[]>(HOME_DESKS_QUERY)
+		client.fetch<SanityDesk[]>(HOME_DESKS_QUERY),
+		client.fetch<Typeface[]>(TYPEFACES_QUERY)
 	]);
 
 	// Convert `sanityPageLinks` to `PageLink` objects, assigning a `route` based on `NAV_ROUTES`
@@ -65,7 +67,9 @@ export async function load() {
 				const route = NAV_ROUTES[navigation.id];
 
 				if (!route) {
-					throw new Error(`Nav item "${navigation.id}" has no route defined in NAV_ROUTES.`);
+					throw new Error(
+						`Nav item "${navigation.id}" has no route defined in NAV_ROUTES.`
+					);
 				}
 
 				return {
@@ -92,10 +96,13 @@ export async function load() {
 				`Desk item "${item.id}" references unsupported navigation type "${navType}".`
 			);
 		})
-	}));
+  }));
+
+	console.dir(sanityTypefaces, { depth: null })
 
 	return {
 		pageLinks,
-		homeDesks
+		homeDesks,
+		typefaces: sanityTypefaces
 	};
 }

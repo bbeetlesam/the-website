@@ -1,8 +1,6 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
-@import '../styles/fonts.css';
-
 @theme {
 	--color-paper: #fdfbf6;
 	--color-fg-dark: #2e2e2e;

@@ -1,8 +1,33 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import { onMount, type Snippet } from 'svelte';
+	import type { LayoutData } from './$types';
 
-	let { children } = $props();
+	let { children, data }: { children: Snippet; data: LayoutData } = $props();
+
+	onMount(() => {
+		// Fetch typefaces from Sanity and inject them into the <style> document head
+		const css = data.typefaces
+			.flatMap((typeface) =>
+				typeface.variants.map(
+					(variant) => `
+  					@font-face {
+  						font-family: '${typeface.name}';
+  						src: url('${variant.file}') format('${variant.format}');
+  						font-weight: ${variant.weight};
+  						font-style: ${variant.style};
+  						font-display: swap;
+  					}
+  				`
+				)
+			)
+			.join('\n');
+
+		const style = document.createElement('style');
+		style.textContent = css;
+		document.head.appendChild(style);
+	});
 </script>
 
 <svelte:head>
