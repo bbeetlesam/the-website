@@ -1,5 +1,5 @@
 import type { RouteId } from '$app/types';
-import type { Icon } from './image';
+import type { Icon } from './objects';
 
 /**
  * Represents a supported navigation type.

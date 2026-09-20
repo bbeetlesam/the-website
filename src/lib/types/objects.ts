@@ -1,3 +1,7 @@
+// General object types, such as Icon, Typeface, et cetera.
+// By general, I mean general as it generic object type that you can possibly call it
+// as 'stuff'. Tuff.
+
 /**
  * Represents an icon.
  *

@@ -1,5 +1,5 @@
 import type { Navigation } from './navigation';
-import type { Icon } from './image';
+import type { Icon } from './objects';
 
 type InteractionEffect = 'none' | 'focus-frame';
 type FocusFrame = {
