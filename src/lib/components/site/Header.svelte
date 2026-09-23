@@ -19,6 +19,7 @@
 	let isMobileNavOpen = $state(false);
 	let isDesktopNavOpen = $state(false);
 	let currentPath = $derived(page.url.pathname);
+	let hoveredNavItem = $state<PageLink | null>(null);
 
 	/** PageLinks with resolved current page state */
 	const resolvedPageLinks = $derived(
@@ -60,9 +61,14 @@
 </script>
 
 <!-- Nav icon snippet used in the header's nav dock -->
-{#snippet navIcon(item: PageLink, isCurrentPage: boolean, alt: string = '')}
+{#snippet navIcon(
+	item: PageLink,
+	isCurrentPage: boolean,
+	alt: string = '',
+	duration: number = 300
+)}
 	{@const iconImgProps = `
-    absolute inset-0 size-full object-contain transition-opacity duration-300
+    absolute inset-0 size-full object-contain transition-opacity
   `}
 
 	<span class="relative block size-full select-none">
@@ -70,12 +76,14 @@
 			src={item.icon?.active}
 			{alt}
 			class={`${iconImgProps} ${isCurrentPage ? 'opacity-100' : 'opacity-0'}`}
+			style={`transition-duration: ${duration}ms`}
 		/>
 
 		<img
 			src={item.icon?.default}
 			{alt}
 			class={`${iconImgProps} ${isCurrentPage ? 'opacity-0' : 'opacity-100'}`}
+			style={`transition-duration: ${duration}ms`}
 		/>
 	</span>
 {/snippet}
@@ -115,11 +123,20 @@
 				>
 					<div
 						class="flex w-max flex-col gap-2 bg-paper pt-2 pr-2 pb-3 pl-3"
-						transition:fade={{ delay: 0, duration: 175 }}
+						transition:fade={{ duration: 175 }}
 					>
 						<!-- Title and the nav icon -->
 						<div class="flex items-center justify-between">
-							<p class="text-xl font-semibold select-none">Navigate!</p>
+							<div class="relative h-7">
+								{#key hoveredNavItem?.id}
+									<p
+										transition:fade={{ duration: 150, delay: 125 }}
+										class="absolute text-xl font-semibold select-none"
+									>
+										{hoveredNavItem?.title ?? 'Navigate!'}
+									</p>
+								{/key}
+							</div>
 							<div
 								bind:this={navDockIcon}
 								class="flex size-9 items-center justify-center"
@@ -133,11 +150,18 @@
 						</div>
 
 						<!-- PageLinks nav list -->
-						<ul class="flex w-max gap-2 pr-1">
-							{#each resolvedPageLinks as item (item.route)}
+						<ul class="debug-outlin flex w-max gap-3 pr-1">
+							{#each pageLinks as item (item.route)}
+								{let isNavItemHovered = $derived(hoveredNavItem?.id === item.id)}
+
 								<li>
-									<a href={item.path} class="flex size-7 items-center justify-center">
-										{@render navIcon(item, item.isCurrentPage)}
+									<a
+										href={resolve(item.route)}
+										class="flex size-8 items-center justify-center"
+										onmouseenter={() => (hoveredNavItem = item)}
+										onmouseleave={() => (hoveredNavItem = null)}
+									>
+										{@render navIcon(item, isNavItemHovered, item.title, 250)}
 									</a>
 								</li>
 							{/each}
