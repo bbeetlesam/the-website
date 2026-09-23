@@ -18,6 +18,7 @@
 
 	let isMobileNavOpen = $state(false);
 	let isDesktopNavOpen = $state(false);
+	let isDesktopNavPinned = $state(false);
 	let currentPath = $derived(page.url.pathname);
 	let hoveredNavItem = $state<PageLink | null>(null);
 
@@ -30,7 +31,7 @@
 	);
 
 	/** The nav button's icon element in the nav dock */
-	let navDockIcon = $state<HTMLDivElement | null>(null);
+	let navDockIcon = $state<HTMLButtonElement | null>(null);
 	function expandNavDock(node: HTMLElement) {
 		if (!navDockIcon) {
 			throw new Error("expandDock: 'dockIcon' element is not available");
@@ -63,7 +64,7 @@
 <!-- Nav icon snippet used in the header's nav dock -->
 {#snippet navIcon(
 	item: PageLink,
-	isCurrentPage: boolean,
+	isActive: boolean,
 	alt: string = '',
 	duration: number = 300
 )}
@@ -75,14 +76,14 @@
 		<img
 			src={item.icon?.active}
 			{alt}
-			class={`${iconImgProps} ${isCurrentPage ? 'opacity-100' : 'opacity-0'}`}
+			class={`${iconImgProps} ${isActive ? 'opacity-100' : 'opacity-0'}`}
 			style={`transition-duration: ${duration}ms`}
 		/>
 
 		<img
 			src={item.icon?.default}
 			{alt}
-			class={`${iconImgProps} ${isCurrentPage ? 'opacity-0' : 'opacity-100'}`}
+			class={`${iconImgProps} ${isActive ? 'opacity-0' : 'opacity-100'}`}
 			style={`transition-duration: ${duration}ms`}
 		/>
 	</span>
@@ -115,7 +116,7 @@
 			</div>
 
 			<!-- Expanded nav dock -->
-			{#if isDesktopNavOpen}
+			{#if isDesktopNavOpen || isDesktopNavPinned}
 				<nav
 					transition:expandNavDock
 					class="absolute -top-2 -right-2 z-20 rounded-lg outline-3"
@@ -125,7 +126,7 @@
 						class="flex w-max flex-col gap-2 bg-paper pt-2 pr-2 pb-3 pl-3"
 						transition:fade={{ duration: 175 }}
 					>
-						<!-- Title and the nav icon -->
+						<!-- Title and the nav icon toggler -->
 						<div class="flex items-center justify-between">
 							<div class="relative h-7">
 								{#key hoveredNavItem?.id}
@@ -133,20 +134,29 @@
 										transition:fade={{ duration: 150, delay: 125 }}
 										class="absolute text-xl font-semibold select-none"
 									>
-										{hoveredNavItem?.title ?? 'Navigate!'}
+										{hoveredNavItem?.title ??
+											(isDesktopNavPinned ? 'Navigate!!' : 'Navigate!')}
 									</p>
 								{/key}
 							</div>
-							<div
+
+							<!-- Nav icon toggler -->
+							<button
+								type="button"
 								bind:this={navDockIcon}
-								class="flex size-9 items-center justify-center"
+								onclick={() => (isDesktopNavPinned = !isDesktopNavPinned)}
+								aria-label={isDesktopNavPinned
+									? 'Unpin navigation menu'
+									: 'Pin navigation menu'}
+								aria-pressed={isDesktopNavPinned}
+								class="flex size-9 cursor-pointer items-center justify-center"
 							>
 								<img
 									src={navSvgIcon}
 									alt="Nav Icon"
 									class="size-7 animate-[spin_2.5s_linear_infinite]"
 								/>
-							</div>
+							</button>
 						</div>
 
 						<!-- PageLinks nav list -->
