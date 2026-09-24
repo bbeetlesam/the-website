@@ -47,4 +47,23 @@ type Typeface = {
 	variants: TypefaceVariant[];
 };
 
-export type { Icon, Typeface, TypefaceVariant };
+/**
+ * Represents an Icon Asset.
+ *
+ * Contains an icon set with its identifier and variants of default and active icon.
+ */
+type IconAsset = {
+	/** The identifier of the Icon Asset. */
+	id: string;
+	/** The icon set of the Icon Asset. */
+	icon: Icon;
+};
+
+/**
+ * Represents a list of Icon Assets.
+ *
+ * A {@link Record} of {@link IconAsset} indexed by their identifier.
+ */
+type IconAssetList = Record<string, IconAsset>;
+
+export type { Icon, Typeface, TypefaceVariant, IconAsset, IconAssetList };

@@ -41,6 +41,17 @@ const TYPEFACES_QUERY: string = `
 	}
 `;
 
+/** GROQ query for fetching `icon-asset` documents */
+const ICON_ASSETS_QUERY: string = `
+	*[_type == "icon-asset"] {
+		id,
+		"icon": {
+      "default": variants.default.asset->url,
+      "active": variants.active.asset->url
+    },
+	}
+`;
+
 type DeskPrefix = 'h' | 'g';
 const DESKS_QUERY = (prefix: DeskPrefix): string => `
 	*[_type == "desk" && string::startsWith(id, "${prefix}")] {
@@ -104,5 +115,6 @@ export {
 	HOME_DESKS_QUERY,
 	EXTERNAL_LINKS_QUERY,
 	GAME_DESKS_QUERY,
-	TYPEFACES_QUERY
+	TYPEFACES_QUERY,
+	ICON_ASSETS_QUERY
 };

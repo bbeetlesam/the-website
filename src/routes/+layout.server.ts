@@ -1,9 +1,22 @@
 import { client } from '$lib/sanity/client';
-import { NAV_ITEMS_QUERY, HOME_DESKS_QUERY, TYPEFACES_QUERY } from '$lib/sanity/queries';
+import {
+	NAV_ITEMS_QUERY,
+	HOME_DESKS_QUERY,
+	TYPEFACES_QUERY,
+	ICON_ASSETS_QUERY
+} from '$lib/sanity/queries';
 import { NAV_ROUTES } from '$lib/data';
 
 import type { RouteId } from '$app/types';
-import type { Desk, PageLink, SanityDesk, SanityPageLink, Typeface } from '$lib/types';
+import type {
+	Desk,
+	IconAsset,
+	IconAssetList,
+	PageLink,
+	SanityDesk,
+	SanityPageLink,
+	Typeface
+} from '$lib/types';
 
 /**
  * Root layout server load function.
@@ -22,11 +35,18 @@ import type { Desk, PageLink, SanityDesk, SanityPageLink, Typeface } from '$lib/
  */
 export async function load() {
 	// Fetch `nav-item`, `desk`, and `typeface` documents from Sanity
-	const [sanityPageLinks, sanityHomeDesks, sanityTypefaces] = await Promise.all([
-		client.fetch<SanityPageLink[]>(NAV_ITEMS_QUERY),
-		client.fetch<SanityDesk[]>(HOME_DESKS_QUERY),
-		client.fetch<Typeface[]>(TYPEFACES_QUERY)
-	]);
+	const [sanityPageLinks, sanityHomeDesks, sanityTypefaces, sanityIconAssets] =
+		await Promise.all([
+			client.fetch<SanityPageLink[]>(NAV_ITEMS_QUERY),
+			client.fetch<SanityDesk[]>(HOME_DESKS_QUERY),
+			client.fetch<Typeface[]>(TYPEFACES_QUERY),
+			client.fetch<IconAsset[]>(ICON_ASSETS_QUERY)
+		]);
+
+	// Convert `sanityIconAssets` to `IconAssetList`
+	const iconAssets: IconAssetList = Object.fromEntries(
+		sanityIconAssets.map((icon) => [icon.id, icon])
+	);
 
 	// Convert `sanityPageLinks` to `PageLink` objects, assigning a `route` based on `NAV_ROUTES`
 	const pageLinks: PageLink[] = sanityPageLinks.map((item) => {
@@ -96,13 +116,14 @@ export async function load() {
 				`Desk item "${item.id}" references unsupported navigation type "${navType}".`
 			);
 		})
-  }));
+	}));
 
-	console.dir(sanityTypefaces, { depth: null })
+	// console.dir(sanityIconAssets, { depth: null });
 
 	return {
 		pageLinks,
 		homeDesks,
-		typefaces: sanityTypefaces
+		typefaces: sanityTypefaces,
+		iconAssets
 	};
 }
