@@ -1,15 +1,26 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import type { PageLink } from '$lib/types';
+	import type { IconAssetList, PageLink } from '$lib/types';
 	import { fade, slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
+	import { getIconAsset } from '$lib/utils';
 
 	import favicon from '$lib/assets/favicon.svg';
-	import navSvgIcon from '$lib/assets/nav.svg';
 
 	// Component props
-	const { pageLinks = [] }: { pageLinks?: PageLink[] } = $props();
+	const {
+		pageLinks = [],
+		iconAssets
+	}: { pageLinks?: PageLink[]; iconAssets: IconAssetList } = $props();
+
+	$effect(() => {
+		// console.table(iconAssets['nav']);
+		// console.table(iconAssets);
+	});
+
+	// Icon Assets used here
+	const navIcon = $derived(getIconAsset(iconAssets, 'nav'));
 
 	// Home PageLink
 	const homePageLink: PageLink | undefined = $derived(
@@ -62,7 +73,7 @@
 </script>
 
 <!-- Nav icon snippet used in the header's nav dock -->
-{#snippet navIcon(
+{#snippet navIconSnippet(
 	item: PageLink,
 	isActive: boolean,
 	alt: string = '',
@@ -111,7 +122,7 @@
 				aria-label="Navigation"
 			>
 				<div class="flex size-9 items-center justify-center">
-					<img src={navSvgIcon} alt="Nav Icon" class="size-full" />
+					<img src={navIcon?.icon.default} alt="Nav Icon" class="size-full" />
 				</div>
 			</div>
 
@@ -152,7 +163,7 @@
 								class="flex size-9 cursor-pointer items-center justify-center"
 							>
 								<img
-									src={navSvgIcon}
+									src={isDesktopNavPinned ? navIcon?.icon.active : navIcon?.icon.default}
 									alt="Nav Icon"
 									class="size-7 animate-[spin_2.5s_linear_infinite]"
 								/>
@@ -171,7 +182,7 @@
 										onmouseenter={() => (hoveredNavItem = item)}
 										onmouseleave={() => (hoveredNavItem = null)}
 									>
-										{@render navIcon(item, isNavItemHovered, item.title, 250)}
+										{@render navIconSnippet(item, isNavItemHovered, item.title, 250)}
 									</a>
 								</li>
 							{/each}
@@ -200,7 +211,7 @@
 								href={item.path}
 								aria-label={item.title}
 							>
-								{@render navIcon(item, item.isCurrentPage, item.title)}
+								{@render navIconSnippet(item, item.isCurrentPage, item.title)}
 							</a>
 						</li>
 					{/each}
@@ -221,7 +232,7 @@
 						isMobileNavOpen ? 'rotate-45' : 'rotate-0'
 					}`}
 				>
-					<img src={navSvgIcon} alt="Nav Menu" class="size-full" />
+					<img src={navIcon?.icon.default} alt="Nav Menu" class="size-full" />
 				</div>
 			</button>
 		</div>

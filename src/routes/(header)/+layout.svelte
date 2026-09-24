@@ -12,6 +12,6 @@
 
 <!-- Header for routes except Home -->
 <div class="flex min-h-0 flex-1 flex-col">
-	<Header pageLinks={data.pageLinks} />
+	<Header pageLinks={data.pageLinks} iconAssets={data.iconAssets}/>
 	{@render children()}
 </div>
