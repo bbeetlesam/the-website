@@ -61,7 +61,8 @@ independently.
 
 	const defaultOptions: RoughOptions = {
 		strokeWidth: 2,
-		stroke: tokens.color.fgDark
+		stroke: tokens.color.fgDark,
+		fill: tokens.color.paper
 	};
 
 	const mergedOptions: RoughOptions = $derived({
