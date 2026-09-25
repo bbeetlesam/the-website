@@ -62,7 +62,7 @@ export async function load() {
 		})
 	}));
 
-	console.dir(gameDesks, { depth: null });
+	// console.dir(gameDesks, { depth: null });
 
 	return {
 		/** Game Desks list */

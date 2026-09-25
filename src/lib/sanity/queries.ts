@@ -31,13 +31,31 @@ const EXTERNAL_LINKS_QUERY: string = `
 const TYPEFACES_QUERY: string = `
 	*[_type == "typeface"] {
 		name,
-		variants[] {
-			name,
-			weight,
-			style,
-			"file": file.asset->url,
-			format
-		}
+		variantsType,
+		...select(
+      variantsType == "static" => {
+        "variants": variants[] {
+          name,
+          "type": ^.variantsType,
+          weight,
+          style,
+          "file": file.asset->url,
+          format
+        }
+      },
+
+      variantsType == "variable" => {
+        "variants": variableFonts[] {
+          name,
+          "type": ^.variantsType,
+          minWeight,
+          maxWeight,
+          style,
+          "file": file.asset->url,
+          format,
+        }
+      }
+    )
 	}
 `;
 

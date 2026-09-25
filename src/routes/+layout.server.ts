@@ -118,8 +118,6 @@ export async function load() {
 		})
 	}));
 
-	// console.dir(sanityIconAssets, { depth: null });
-
 	return {
 		pageLinks,
 		homeDesks,
