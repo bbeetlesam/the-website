@@ -7,6 +7,7 @@
 	--color-rough-dark: #1e1e1e;
 
 	--font-winkysans: 'Winky Sans', sans-serif;
+	--font-balsamiq: 'Balsamiq Sans', sans-serif;
 }
 
 /* FOR DEBUGGING */
@@ -20,8 +21,8 @@ html,
 body {
 	margin: 0;
 	min-height: 100dvh;
-	font-family: var(--font-winkysans);
-	font-size: 1.2rem;
+	font-family: var(--font-balsamiq);
+	font-size: 1.1rem;
 	color: var(--color-fg-dark);
 }
 
