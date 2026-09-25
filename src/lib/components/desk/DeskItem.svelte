@@ -32,7 +32,7 @@
 
 <!-- Reusable Desk Item snippet -->
 {#snippet deskItem(item: DeskItem)}
-	{#if item.navigation?.type === 'nav-item'}
+	{#if item.navigation?.type === 'page-link'}
 		<a href={resolve(item.navigation.route)}>
 			{@render deskItemImage(item, item.navigation.title)}
 		</a>
@@ -54,7 +54,7 @@
 >
 	{#if item.navigation}
 		{@const bubbleLabel =
-			item.navigation.type === 'nav-item' ? item.navigation.desc :
+			item.navigation.type === 'page-link' ? item.navigation.desc :
 			item.navigation.type === 'social-link' ? item.navigation.title : ''
 		}
 

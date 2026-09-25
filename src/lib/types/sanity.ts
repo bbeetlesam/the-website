@@ -3,7 +3,7 @@ import type { PageLink } from './navigation';
 import type { ExternalLink } from './navigation';
 
 /**
- * Raw `nav-item` document returned by Sanity.
+ * Raw `page-link` document returned by Sanity.
  * Like {@link PageLink}, but without the resolved {@link PageLink.route}.
  */
 type SanityPageLink = Omit<PageLink, 'route'>;

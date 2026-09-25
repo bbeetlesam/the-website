@@ -1,6 +1,6 @@
 import { client } from '$lib/sanity/client';
 import {
-	NAV_ITEMS_QUERY,
+	PAGE_LINKS_QUERY,
 	HOME_DESKS_QUERY,
 	TYPEFACES_QUERY,
 	ICON_ASSETS_QUERY
@@ -21,9 +21,9 @@ import type {
 /**
  * Root layout server load function.
  *
- * Fetches `nav-item`, Home `desk`, and `typeface` documents from Sanity in parallel.
+ * Fetches `page-link`, Home `desk`, and `typeface` documents from Sanity in parallel.
  *
- * - `nav-item` documents are converted into {@link PageLink} objects by assigning
+ * - `page-link` documents are converted into {@link PageLink} objects by assigning
  * each entry a `route` looked up from {@link NAV_ROUTES} via `item.id`.
  * - Home Desk item `navigation` references are resolved directly by GROQ and then
  * transformed here where necessary.
@@ -34,10 +34,10 @@ import type {
  * references an unsupported navigation type.
  */
 export async function load() {
-	// Fetch `nav-item`, `desk`, and `typeface` documents from Sanity
+	// Fetch `page-link`, `desk`, and `typeface` documents from Sanity
 	const [sanityPageLinks, sanityHomeDesks, sanityTypefaces, sanityIconAssets] =
 		await Promise.all([
-			client.fetch<SanityPageLink[]>(NAV_ITEMS_QUERY),
+			client.fetch<SanityPageLink[]>(PAGE_LINKS_QUERY),
 			client.fetch<SanityDesk[]>(HOME_DESKS_QUERY),
 			client.fetch<Typeface[]>(TYPEFACES_QUERY),
 			client.fetch<IconAsset[]>(ICON_ASSETS_QUERY)
@@ -57,7 +57,7 @@ export async function load() {
 		}
 
 		return {
-			type: 'nav-item',
+			type: 'page-link',
 			id: item.id,
 			title: item.title,
 			desc: item.desc,
@@ -83,7 +83,7 @@ export async function load() {
 			const effect = interactionEffect ?? 'none';
 
 			// Resolve PageLink navigation type
-			if (navType === 'nav-item') {
+			if (navType === 'page-link') {
 				const route = NAV_ROUTES[navigation.id];
 
 				if (!route) {

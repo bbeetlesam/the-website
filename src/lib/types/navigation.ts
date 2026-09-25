@@ -6,14 +6,14 @@ import type { Icon } from './objects';
  *
  * These types correspond to the navigation types defined in Sanity.
  */
-type NavigationType = 'nav-item' | 'social-link';
+type NavigationType = 'page-link' | 'social-link';
 
 /**
  * Represents a link to a page within the application.
  */
 type PageLink = {
 	/** The navigation type returned by Sanity. */
-	type: 'nav-item';
+	type: 'page-link';
 	/** The unique identifier of the page link. */
 	id: string;
 	/** The SvelteKit RouteId used to resolve the page link. */

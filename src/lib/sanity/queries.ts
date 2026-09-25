@@ -1,8 +1,8 @@
 // Sanity GROQ queries
 
-/** GROQ query for fetching `nav-item` documents */
-const NAV_ITEMS_QUERY: string = `
-	*[_type == "nav-item"] | order(navOrder asc) {
+/** GROQ query for fetching `page-link` documents */
+const PAGE_LINKS_QUERY: string = `
+	*[_type == "page-link"] | order(navOrder asc) {
 		id,
 		title,
 		desc,
@@ -93,7 +93,7 @@ const DESKS_QUERY = (prefix: DeskPrefix): string => `
         "type": _type,
 
         ...select(
-          _type == "nav-item" => {
+          _type == "page-link" => {
             id,
             title,
             desc,
@@ -129,7 +129,7 @@ const HOME_DESKS_QUERY: string = DESKS_QUERY('h');
 const GAME_DESKS_QUERY: string = DESKS_QUERY('g');
 
 export {
-	NAV_ITEMS_QUERY,
+	PAGE_LINKS_QUERY,
 	HOME_DESKS_QUERY,
 	EXTERNAL_LINKS_QUERY,
 	GAME_DESKS_QUERY,

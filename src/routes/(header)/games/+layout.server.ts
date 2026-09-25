@@ -27,7 +27,7 @@ export async function load() {
 			const effect = interactionEffect ?? 'none';
 
 			// Resolve PageLink navigation type
-			if (navType === 'nav-item') {
+			if (navType === 'page-link') {
 				const route = NAV_ROUTES[navigation.id];
 
 				if (!route) {
