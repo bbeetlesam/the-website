@@ -34,7 +34,7 @@ const TYPEFACES_QUERY: string = `
 		variantsType,
 		...select(
       variantsType == "static" => {
-        "variants": variants[] {
+        "variants": staticFonts[] {
           name,
           "type": ^.variantsType,
           weight,
