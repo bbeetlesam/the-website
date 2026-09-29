@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import type { PageProps } from './$types';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 
@@ -37,12 +37,18 @@
 	let horizontalTravel = $state(0);
 	let translateX = $state(0);
 
+	/** Whether the user is on a desktop (large screen) or mobile (small screen) */
+	let isDesktop = $state(false);
+
 	onMount(() => {
 		const html = document.documentElement;
 		const body = document.body;
 
-		const update = () => {
-			if (!scrollSection || !viewport || !track) return;
+		const md = getComputedStyle(html).getPropertyValue('--breakpoint-md').trim();
+		const mediaQuery = window.matchMedia(`(min-width: ${md})`);
+
+		const updateHorizontalScroll = () => {
+			if (!isDesktop || !scrollSection || !viewport || !track) return;
 
 			horizontalTravel = Math.max(track.scrollWidth - viewport.clientWidth, 0);
 
@@ -56,34 +62,45 @@
 			translateX = progress * horizontalTravel;
 		};
 
-		update();
-
 		const resizeObserver = new ResizeObserver(([entry]) => {
 			if (!entry) return;
 
 			deskContainerHeight = entry.contentRect.height;
-			update();
+			updateHorizontalScroll();
 		});
 
-		if (deskContainer) {
-			resizeObserver.observe(deskContainer);
-		}
+		const updateMedia = async () => {
+			isDesktop = mediaQuery.matches;
+
+			await tick();
+
+			if (deskContainer) {
+				resizeObserver.observe(deskContainer);
+			}
+
+			updateHorizontalScroll();
+		};
+
+		mediaQuery.addEventListener('change', updateMedia);
+		updateMedia();
 
 		// Disable overscroll (the bouncing feedback) for the Games page
 		html.classList.add('overscroll-none');
 		body.classList.add('overscroll-none');
 
-		window.addEventListener('scroll', update, { passive: true });
-		window.addEventListener('resize', update);
+		window.addEventListener('scroll', updateHorizontalScroll, { passive: true });
+		window.addEventListener('resize', updateHorizontalScroll);
 
 		return () => {
 			resizeObserver.disconnect();
 
+			mediaQuery.removeEventListener('change', updateMedia);
+
 			html.classList.remove('overscroll-none');
 			body.classList.remove('overscroll-none');
 
-			window.removeEventListener('scroll', update);
-			window.removeEventListener('resize', update);
+			window.removeEventListener('scroll', updateHorizontalScroll);
+			window.removeEventListener('resize', updateHorizontalScroll);
 		};
 	});
 </script>
@@ -91,16 +108,24 @@
 <div
 	bind:this={scrollSection}
 	class="relative"
-	style={`height: calc(100dvh + ${horizontalTravel}px)`}
+	style={isDesktop ? `height: calc(100dvh + ${horizontalTravel}px)` : ''}
 >
-	<div bind:this={viewport} class="sticky top-0 h-dvh w-full overflow-hidden">
+	<div bind:this={viewport} class="w-full md:sticky md:top-0 md:h-dvh md:overflow-hidden">
 		<div
 			bind:this={track}
-			class="absolute top-0 left-0 flex h-full w-max items-center"
-			style={`transform: translateX(-${translateX}px)`}
+			class="
+			  flex w-full flex-col items-center md:absolute md:top-0 md:left-0 md:h-full md:w-max
+				md:flex-row
+			"
+			style={isDesktop ? `transform: translateX(-${translateX}px)` : ''}
 		>
 			<!-- Entrance -->
-			<section class="flex w-screen shrink-0 flex-col gap-10 p-4 md:p-6 xl:p-8">
+			<section
+				class="
+  				flex h-svh flex-col gap-10 p-4
+          md:h-auto md:w-screen md:shrink-0 md:p-6 xl:p-8
+  			"
+			>
 				<div class="flex xl:gap-40">
 					<!-- Game definition -->
 					<div class="flex flex-col items-center gap-2 md:items-start">
@@ -182,33 +207,39 @@
 			</section>
 
 			<!-- The Game gallery -->
-			<div class="h-full w-max px-2 py-6">
-				{#if desk}
-					<section
-						bind:this={deskContainer}
-						class="h-full"
-						style={`width: ${deskWidth}px;`}
-					>
-						<RoughFrame
-							options={roughOptions}
-							scale={101}
-							changeOnHover
-							class="h-full w-full"
+			<section class="w-max px-2 py-6 md:h-full">
+				{#if isDesktop}
+					{#if desk}
+						<div
+							bind:this={deskContainer}
+							class="h-full"
+							style={`width: ${deskWidth}px;`}
 						>
-							<DeskArea
-								{desk}
-								{deskScale}
-								className="absolute top-0 left-0 origin-top-left"
-							/>
-						</RoughFrame>
-					</section>
+							<RoughFrame
+								options={roughOptions}
+								scale={101}
+								changeOnHover
+								class="h-full w-full"
+							>
+								<DeskArea
+									{desk}
+									{deskScale}
+									className="absolute top-0 left-0 origin-top-left"
+								/>
+							</RoughFrame>
+						</div>
+					{:else}
+						<p>Sorry, no desk available.</p>
+					{/if}
 				{:else}
-					<p>Sorry, no desk available.</p>
+					<div class="h-dvh w-full">
+						<p class="p-4 text-center">Need some finishing touches...</p>
+					</div>
 				{/if}
-			</div>
+			</section>
 
 			<!-- Miscellaneous info -->
-			<section class="flex w-screen shrink-0 flex-col gap-10 p-6">
+			<section class="flex h-svh flex-col gap-10 p-6 md:h-auto md:w-screen md:shrink-0">
 				<p class="text-xl">I also published my games in these platforms!</p>
 			</section>
 		</div>
