@@ -23,8 +23,10 @@ This, is the project of **The Website of Sam**.
 - [Svelte](https://svelte.dev/) — The main JavaScript framework.
 - [Tailwind CSS](https://tailwindcss.com/) — The utility-first CSS framework.
 - [Sanity](https://sanity.io/) — The headless CMS for content management.
-- [Rough.js](https://roughjs.com/) — The library used for drawing rough sketches.
+- [Rough.js](https://roughjs.com/) — The library used for drawing rough lines and sketches.
+- [Svelte Vitals](https://oekazuma.github.io/svelte-vitals/) — The library used for tracking and reporting performance metrics of this Svelte site.
 
+<!--- [Rough Notation](https://roughnotation.com/) — The library used for drawing rough annotations.-->
 <!--- [Font Awesome](https://fontawesome.com/)-->
 <!--- [Overlay Scrollbars](https://kingsora.github.io/OverlayScrollbars/)-->
 
