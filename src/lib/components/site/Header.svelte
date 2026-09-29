@@ -14,11 +14,6 @@
 		iconAssets
 	}: { pageLinks?: PageLink[]; iconAssets: IconAssetList } = $props();
 
-	$effect(() => {
-		// console.table(iconAssets['nav']);
-		// console.table(iconAssets);
-	});
-
 	// Icon Assets used here
 	const navIcon = $derived(getIconAsset(iconAssets, 'nav'));
 
@@ -131,7 +126,11 @@
 				<nav
 					transition:expandNavDock
 					class="absolute -top-2 -right-2 z-20 rounded-lg outline-3"
-					onmouseleave={() => (isDesktopNavOpen = false)}
+					onmouseleave={() => {
+						if (!isDesktopNavPinned) {
+							isDesktopNavOpen = false;
+						}
+					}}
 				>
 					<div
 						class="flex w-max flex-col gap-2 bg-paper pt-2 pr-2 pb-3 pl-3"
@@ -142,8 +141,8 @@
 							<div class="relative h-7">
 								{#key hoveredNavItem?.id}
 									<p
-										transition:fade={{ duration: 150, delay: 125 }}
-										class="absolute text-xl font-semibold select-none"
+										transition:fade={{ duration: 125, delay: 125 }}
+										class="absolute font-balsamiq text-xl font-semibold select-none"
 									>
 										{hoveredNavItem?.title ??
 											(isDesktopNavPinned ? 'Navigate!!' : 'Navigate!')}
