@@ -5,3 +5,4 @@ export { default as DeskItem } from './desk/DeskItem.svelte';
 // Shared components
 export { default as BubbleLabel } from './BubbleLabel.svelte';
 export { default as RoughFrame } from './RoughFrame.svelte';
+export { default as RoughShape, type Shape, type Point } from './RoughShape.svelte';
