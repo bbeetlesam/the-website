@@ -5,8 +5,17 @@
 
 	import DeskArea from '$lib/components/desk/DeskArea.svelte';
 	import RoughFrame from '$lib/components/RoughFrame.svelte';
+	import { RoughShape, type Shape } from '$lib/components/index';
 
 	let { data }: PageProps = $props();
+
+	/** The console (PlayStation) icons for the Entrance section. */
+	const psIcons: { type: Shape; color: string }[] = [
+		{ type: 'circle', color: 'red' },
+		{ type: 'cross', color: 'blue' },
+		{ type: 'square', color: 'purple' },
+		{ type: 'triangle', color: 'cyan' }
+	];
 
 	let gameDesks = $derived(data.gameDesks);
 	let desk = $derived(gameDesks[0]); // currently hardcoded, will be changed later
@@ -122,50 +131,83 @@
 			<!-- Entrance -->
 			<section
 				class="
-  				flex h-svh flex-col gap-10 p-4
-          md:h-auto md:w-screen md:shrink-0 md:p-6 xl:p-8
+  				bg-amber-20 flex h-svh w-screen flex-col justify-center gap-2
+          p-4 md:h-screen md:shrink-0 md:gap-10 md:p-6 xl:p-8
   			"
 			>
-				<div class="flex xl:gap-40">
-					<!-- Game definition -->
-					<div class="flex flex-col items-center gap-2 md:items-start">
-						<p
-							class="
-								text-center font-winkysans text-base font-bold
-								md:text-start md:text-xl xl:text-2xl
-							"
-						>
-							"A <span class="font-winkysans" title="/geɪm/">game</span> is a form of art
-							in which participants, termed <span class="font-winkysans">players</span>,
-							make decisions in order to manage resources through game tokens in the
-							pursuit of a goal."
-						</p>
-						<p class="text-center font-winkysans text-sm md:text-start md:text-base">
-							— Costikyan, Greg (1994). <span
-								><a href="http://www.costik.com/nowords2002.pdf" target="_blank"
-									>"I Have No Words & I Must Design."</a
-								></span
-							>
-						</p>
+				<!-- Game definition -->
+				<div class="flex flex-1 items-center justify-between">
+					<div class="flex flex-col items-start gap-0 md:gap-2">
+						{#if isDesktop}
+							<p class="text-start font-bricolage text-xl font-bold xl:text-2xl">
+								"A <span class="cursor-default font-balsamiq text-blue" title="/geɪm/"
+									>game</span
+								>
+								is a form of
+								<span
+									class="cursor-default font-balsamiq text-cyan"
+									title="Part of the human soul">art</span
+								>
+								in which participants, termed
+								<span class="cursor-default font-balsamiq text-purple" title="Are you..?"
+									>players</span
+								>, make decisions in order to manage resources through game tokens in the
+								pursuit of a
+								<span
+									class="cursor-default font-balsamiq text-red"
+									title="Whatever makes you happy!">goal</span
+								>."
+							</p>
+							<p class="text-start text-sm text-dark-medium">
+								— Costikyan, Greg (1994). <span
+									><a href="http://www.costik.com/nowords2002.pdf" target="_blank"
+										>"I Have No Words & I Must Design."</a
+									></span
+								>
+							</p>
+						{:else}
+							<p class="text-start font-bricolage text-xl font-bold">
+								"A form of <span
+									class="cursor-default font-balsamiq text-blue"
+									title="/geɪm/">art</span
+								>
+								for you,
+								<span class="cursor-default font-balsamiq text-purple" title="You..?"
+									>players</span
+								>!"
+							</p>
+							<p class="text-start text-sm text-dark-medium">— Me, probably (2026).</p>
+						{/if}
 					</div>
 
 					<!-- WIP -->
-					<div class="hidden outline-2 lg:block">Image will be here</div>
+					<div class="hidden outline-2 sm:block">Image will be here</div>
 				</div>
 
 				<!-- Last bit of the entrance -->
 				<div
 					class="
-						flex flex-col justify-center gap-3 font-winkysans
-						md:flex-row md:justify-evenly
+						md:items-en flex flex-row items-center justify-between
+						gap-3
 					"
 				>
-					<!-- WIP -->
-					<div>Big image or possibly bunch of images will be here</div>
+					<!-- Console icons -->
+					<div class="flex gap-1 md:gap-2">
+						{#each psIcons as psIcon (psIcon.type)}
+							<RoughShape
+								type={psIcon.type}
+								thickness={12}
+								class={`size-7 md:size-8 lg:size-9 text-${psIcon.color}`}
+							/>
+						{/each}
+					</div>
 
-					<div class="flex items-end gap-1 md:flex-col">
-						<p class="text-start text-sm md:text-end md:text-base lg:text-xl">
-							See the <br class="block md:hidden" />Gallery!
+					<!-- See the gallery! -->
+					<div class="md:flex-co flex items-end gap-2 md:items-start md:gap-5">
+						<p class="text-end text-lg font-semibold md:text-xl lg:text-2xl">
+							See the <br /><span class="cursor-default font-baskerville font-bold italic"
+								>Gallery</span
+							>!
 						</p>
 						<div class="hidden md:block" aria-hidden="true">
 							<svg
@@ -232,7 +274,7 @@
 						<p>Sorry, no desk available.</p>
 					{/if}
 				{:else}
-					<div class="h-dvh w-full">
+					<div class="h-svh w-full">
 						<p class="p-4 text-center">Need some finishing touches...</p>
 					</div>
 				{/if}
