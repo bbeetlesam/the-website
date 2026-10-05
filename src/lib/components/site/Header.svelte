@@ -145,7 +145,7 @@
 										class="absolute font-balsamiq text-xl font-semibold select-none"
 									>
 										{hoveredNavItem?.title ??
-											(isDesktopNavPinned ? 'Navigate!!' : 'Navigate!')}
+											(isDesktopNavPinned ? 'Navigate!!' : 'Navigate?')}
 									</p>
 								{/key}
 							</div>
