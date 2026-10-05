@@ -3,9 +3,8 @@
 	import type { PageProps } from './$types';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 
-	import DeskArea from '$lib/components/desk/DeskArea.svelte';
-	import RoughFrame from '$lib/components/RoughFrame.svelte';
-	import { RoughShape, type Shape } from '$lib/components/index';
+	import { DeskArea, RoughFrame, RoughShape, type Shape } from '$lib/components';
+	import { getIconAsset } from '$lib/utils';
 
 	let { data }: PageProps = $props();
 
@@ -16,6 +15,9 @@
 		{ type: 'square', color: 'purple' },
 		{ type: 'triangle', color: 'cyan' }
 	];
+
+	/** The minigame icon used in the Entrance section. */
+	const minigameIcon = $derived(getIconAsset(data.iconAssets, 'minigame')?.icon);
 
 	let gameDesks = $derived(data.gameDesks);
 	let desk = $derived(gameDesks[0]); // currently hardcoded, will be changed later
@@ -128,7 +130,7 @@
 			"
 			style={isDesktop ? `transform: translateX(-${translateX}px)` : ''}
 		>
-			<!-- Entrance -->
+			<!-- 1. Entrance -->
 			<section
 				class="
   				bg-amber-20 flex h-svh w-screen flex-col justify-center gap-2
@@ -137,7 +139,7 @@
 			>
 				<!-- Game definition -->
 				<div class="flex flex-1 items-center justify-between">
-					<div class="flex flex-col items-start gap-0 md:gap-2">
+					<div class="flex flex-1 flex-col items-start gap-0 md:gap-2">
 						{#if isDesktop}
 							<p class="text-start font-bricolage text-xl font-bold xl:text-2xl">
 								"A <span class="cursor-default font-balsamiq text-blue" title="/geɪm/"
@@ -180,8 +182,15 @@
 						{/if}
 					</div>
 
-					<!-- WIP -->
-					<div class="hidden outline-2 sm:block">Image will be here</div>
+					<!-- Open minigame (WIP, there's still no game even the pic itself bru) -->
+					<div class="hidden pr-4 pl-4 sm:flex lg:pr-10 lg:pl-26">
+						<button
+							type="button"
+							class="-rotate-10 cursor-pointer transition-all duration-200 hover:-rotate-15"
+						>
+							<img src={minigameIcon?.default} alt="Open minigame" class="size-30" />
+						</button>
+					</div>
 				</div>
 
 				<!-- Last bit of the entrance -->
@@ -248,7 +257,7 @@
 				</div>
 			</section>
 
-			<!-- The Game gallery -->
+			<!-- 2. The Game gallery -->
 			<section class="w-max px-2 py-6 md:h-full">
 				{#if isDesktop}
 					{#if desk}
@@ -280,7 +289,7 @@
 				{/if}
 			</section>
 
-			<!-- Miscellaneous info -->
+			<!-- 3. Miscellaneous info -->
 			<section class="flex h-svh flex-col gap-10 p-6 md:h-auto md:w-screen md:shrink-0">
 				<p class="text-xl">I also published my games in these platforms!</p>
 			</section>
