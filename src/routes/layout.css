@@ -4,11 +4,18 @@
 @theme {
 	--color-paper: #fdfbf6; /* #f8f6f1 alt colour */
 	--color-fg-dark: #2e2a2e;
+	--color-dark-medium: #474a4c;
 	--color-rough-dark: #1e1e1e;
+	--color-blue: #0599BB;
+	--color-purple: #C95BB5;
+	--color-cyan: #259EA2;
+	--color-red: #ef0000;
 
 	--font-winkysans: 'Winky Sans', sans-serif;
 	--font-balsamiq: 'Balsamiq Sans', sans-serif;
 	--font-akt: 'Akt', Inter, sans-serif;
+	--font-baskerville: 'Libre Baskerville', serif;
+	--font-bricolage: 'Bricolage Grotesque', sans-serif;
 }
 
 /* FOR DEBUGGING */

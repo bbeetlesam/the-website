@@ -1,12 +1,23 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import type { PageProps } from './$types';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 
-	import DeskArea from '$lib/components/desk/DeskArea.svelte';
-	import RoughFrame from '$lib/components/RoughFrame.svelte';
+	import { DeskArea, RoughFrame, RoughShape, type Shape } from '$lib/components';
+	import { getIconAsset } from '$lib/utils';
 
 	let { data }: PageProps = $props();
+
+	/** The console (PlayStation) icons for the Entrance section. */
+	const psIcons: { type: Shape; color: string }[] = [
+		{ type: 'circle', color: 'red' },
+		{ type: 'cross', color: 'blue' },
+		{ type: 'square', color: 'purple' },
+		{ type: 'triangle', color: 'cyan' }
+	];
+
+	/** The minigame icon used in the Entrance section. */
+	const minigameIcon = $derived(getIconAsset(data.iconAssets, 'minigame')?.icon);
 
 	let gameDesks = $derived(data.gameDesks);
 	let desk = $derived(gameDesks[0]); // currently hardcoded, will be changed later
@@ -37,12 +48,18 @@
 	let horizontalTravel = $state(0);
 	let translateX = $state(0);
 
+	/** Whether the user is on a desktop (large screen) or mobile (small screen) */
+	let isDesktop = $state(false);
+
 	onMount(() => {
 		const html = document.documentElement;
 		const body = document.body;
 
-		const update = () => {
-			if (!scrollSection || !viewport || !track) return;
+		const md = getComputedStyle(html).getPropertyValue('--breakpoint-md').trim();
+		const mediaQuery = window.matchMedia(`(min-width: ${md})`);
+
+		const updateHorizontalScroll = () => {
+			if (!isDesktop || !scrollSection || !viewport || !track) return;
 
 			horizontalTravel = Math.max(track.scrollWidth - viewport.clientWidth, 0);
 
@@ -56,34 +73,45 @@
 			translateX = progress * horizontalTravel;
 		};
 
-		update();
-
 		const resizeObserver = new ResizeObserver(([entry]) => {
 			if (!entry) return;
 
 			deskContainerHeight = entry.contentRect.height;
-			update();
+			updateHorizontalScroll();
 		});
 
-		if (deskContainer) {
-			resizeObserver.observe(deskContainer);
-		}
+		const updateMedia = async () => {
+			isDesktop = mediaQuery.matches;
+
+			await tick();
+
+			if (deskContainer) {
+				resizeObserver.observe(deskContainer);
+			}
+
+			updateHorizontalScroll();
+		};
+
+		mediaQuery.addEventListener('change', updateMedia);
+		updateMedia();
 
 		// Disable overscroll (the bouncing feedback) for the Games page
 		html.classList.add('overscroll-none');
 		body.classList.add('overscroll-none');
 
-		window.addEventListener('scroll', update, { passive: true });
-		window.addEventListener('resize', update);
+		window.addEventListener('scroll', updateHorizontalScroll, { passive: true });
+		window.addEventListener('resize', updateHorizontalScroll);
 
 		return () => {
 			resizeObserver.disconnect();
 
+			mediaQuery.removeEventListener('change', updateMedia);
+
 			html.classList.remove('overscroll-none');
 			body.classList.remove('overscroll-none');
 
-			window.removeEventListener('scroll', update);
-			window.removeEventListener('resize', update);
+			window.removeEventListener('scroll', updateHorizontalScroll);
+			window.removeEventListener('resize', updateHorizontalScroll);
 		};
 	});
 </script>
@@ -91,56 +119,104 @@
 <div
 	bind:this={scrollSection}
 	class="relative"
-	style={`height: calc(100dvh + ${horizontalTravel}px)`}
+	style={isDesktop ? `height: calc(100dvh + ${horizontalTravel}px)` : ''}
 >
-	<div bind:this={viewport} class="sticky top-0 h-dvh w-full overflow-hidden">
+	<div bind:this={viewport} class="w-full md:sticky md:top-0 md:h-dvh md:overflow-hidden">
 		<div
 			bind:this={track}
-			class="absolute top-0 left-0 flex h-full w-max items-center"
-			style={`transform: translateX(-${translateX}px)`}
+			class="
+			  flex w-full flex-col items-center md:absolute md:top-0 md:left-0 md:h-full md:w-max
+				md:flex-row
+			"
+			style={isDesktop ? `transform: translateX(-${translateX}px)` : ''}
 		>
-			<!-- Entrance -->
-			<section class="flex w-screen shrink-0 flex-col gap-10 p-4 md:p-6 xl:p-8">
-				<div class="flex xl:gap-40">
-					<!-- Game definition -->
-					<div class="flex flex-col items-center gap-2 md:items-start">
-						<p
-							class="
-								text-center font-winkysans text-base font-bold
-								md:text-start md:text-xl xl:text-2xl
-							"
-						>
-							"A <span class="font-winkysans" title="/geɪm/">game</span> is a form of art
-							in which participants, termed <span class="font-winkysans">players</span>,
-							make decisions in order to manage resources through game tokens in the
-							pursuit of a goal."
-						</p>
-						<p class="text-center font-winkysans text-sm md:text-start md:text-base">
-							— Costikyan, Greg (1994). <span
-								><a href="http://www.costik.com/nowords2002.pdf" target="_blank"
-									>"I Have No Words & I Must Design."</a
-								></span
-							>
-						</p>
+			<!-- 1. Entrance -->
+			<section
+				class="
+  				bg-amber-20 flex h-svh w-screen flex-col justify-center gap-2
+          p-4 md:h-screen md:shrink-0 md:gap-10 md:p-6 xl:p-8
+  			"
+			>
+				<!-- Game definition -->
+				<div class="flex flex-1 items-center justify-between">
+					<div class="flex flex-1 flex-col items-start gap-0 md:gap-2">
+						{#if isDesktop}
+							<p class="text-start font-bricolage text-xl font-bold xl:text-2xl">
+								"A <span class="cursor-default font-balsamiq text-blue" title="/geɪm/"
+									>game</span
+								>
+								is a form of
+								<span
+									class="cursor-default font-balsamiq text-cyan"
+									title="Part of the human soul">art</span
+								>
+								in which participants, termed
+								<span class="cursor-default font-balsamiq text-purple" title="Are you..?"
+									>players</span
+								>, make decisions in order to manage resources through game tokens in the
+								pursuit of a
+								<span
+									class="cursor-default font-balsamiq text-red"
+									title="Whatever makes you happy!">goal</span
+								>."
+							</p>
+							<p class="text-start text-sm text-dark-medium">
+								— Costikyan, Greg (1994). <span
+									><a href="http://www.costik.com/nowords2002.pdf" target="_blank"
+										>"I Have No Words & I Must Design."</a
+									></span
+								>
+							</p>
+						{:else}
+							<p class="text-start font-bricolage text-xl font-bold">
+								"A form of <span
+									class="cursor-default font-balsamiq text-blue"
+									title="/geɪm/">art</span
+								>
+								for you,
+								<span class="cursor-default font-balsamiq text-purple" title="You..?"
+									>players</span
+								>!"
+							</p>
+							<p class="text-start text-sm text-dark-medium">— Me, probably (2026).</p>
+						{/if}
 					</div>
 
-					<!-- WIP -->
-					<div class="hidden outline-2 lg:block">Image will be here</div>
+					<!-- Open minigame (WIP, there's still no game even the pic itself bru) -->
+					<div class="hidden pr-4 pl-4 sm:flex lg:pr-10 lg:pl-26">
+						<button
+							type="button"
+							class="-rotate-10 cursor-pointer transition-all duration-200 hover:-rotate-15"
+						>
+							<img src={minigameIcon?.default} alt="Open minigame" class="size-30" />
+						</button>
+					</div>
 				</div>
 
 				<!-- Last bit of the entrance -->
 				<div
 					class="
-						flex flex-col justify-center gap-3 font-winkysans
-						md:flex-row md:justify-evenly
+						md:items-en flex flex-row items-center justify-between
+						gap-3
 					"
 				>
-					<!-- WIP -->
-					<div>Big image or possibly bunch of images will be here</div>
+					<!-- Console icons -->
+					<div class="flex gap-1 md:gap-2">
+						{#each psIcons as psIcon (psIcon.type)}
+							<RoughShape
+								type={psIcon.type}
+								thickness={12}
+								class={`size-7 md:size-8 lg:size-9 text-${psIcon.color}`}
+							/>
+						{/each}
+					</div>
 
-					<div class="flex items-end gap-1 md:flex-col">
-						<p class="text-start text-sm md:text-end md:text-base lg:text-xl">
-							See the <br class="block md:hidden" />Gallery!
+					<!-- See the gallery! -->
+					<div class="md:flex-co flex items-end gap-2 md:items-start md:gap-5">
+						<p class="text-end text-lg font-semibold md:text-xl lg:text-2xl">
+							See the <br /><span class="cursor-default font-baskerville font-bold italic"
+								>Gallery</span
+							>!
 						</p>
 						<div class="hidden md:block" aria-hidden="true">
 							<svg
@@ -181,34 +257,40 @@
 				</div>
 			</section>
 
-			<!-- The Game gallery -->
-			<div class="h-full w-max px-2 py-6">
-				{#if desk}
-					<section
-						bind:this={deskContainer}
-						class="h-full"
-						style={`width: ${deskWidth}px;`}
-					>
-						<RoughFrame
-							options={roughOptions}
-							scale={101}
-							changeOnHover
-							class="h-full w-full"
+			<!-- 2. The Game gallery -->
+			<section class="w-max px-2 py-6 md:h-full">
+				{#if isDesktop}
+					{#if desk}
+						<div
+							bind:this={deskContainer}
+							class="h-full"
+							style={`width: ${deskWidth}px;`}
 						>
-							<DeskArea
-								{desk}
-								{deskScale}
-								className="absolute top-0 left-0 origin-top-left"
-							/>
-						</RoughFrame>
-					</section>
+							<RoughFrame
+								options={roughOptions}
+								scale={101}
+								changeOnHover
+								class="h-full w-full"
+							>
+								<DeskArea
+									{desk}
+									{deskScale}
+									className="absolute top-0 left-0 origin-top-left"
+								/>
+							</RoughFrame>
+						</div>
+					{:else}
+						<p>Sorry, no desk available.</p>
+					{/if}
 				{:else}
-					<p>Sorry, no desk available.</p>
+					<div class="h-svh w-full">
+						<p class="p-4 text-center">Need some finishing touches...</p>
+					</div>
 				{/if}
-			</div>
+			</section>
 
-			<!-- Miscellaneous info -->
-			<section class="flex w-screen shrink-0 flex-col gap-10 p-6">
+			<!-- 3. Miscellaneous info -->
+			<section class="flex h-svh flex-col gap-10 p-6 md:h-auto md:w-screen md:shrink-0">
 				<p class="text-xl">I also published my games in these platforms!</p>
 			</section>
 		</div>
