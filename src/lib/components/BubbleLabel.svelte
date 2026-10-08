@@ -101,7 +101,7 @@
 		{#if content}
 			{@render content()}
 		{:else}
-			<div class="px-2 py-1 whitespace-nowrap">
+			<div class="px-2 py-1 font-balsamiq whitespace-nowrap">
 				{label}
 			</div>
 		{/if}
