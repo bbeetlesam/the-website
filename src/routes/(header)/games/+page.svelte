@@ -4,6 +4,8 @@
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 
 	import { DeskArea, RoughFrame, RoughShape, type Shape } from '$lib/components';
+	import { CursorTooltip } from '$lib/components/actions';
+
 	import { getIconAsset } from '$lib/utils';
 
 	let { data }: PageProps = $props();
@@ -142,22 +144,26 @@
 					<div class="flex flex-1 flex-col items-start gap-0 md:gap-2">
 						{#if isDesktop}
 							<p class="text-start font-bricolage text-xl font-bold xl:text-2xl">
-								"A <span class="cursor-default font-balsamiq text-blue" title="/geɪm/"
-									>game</span
+								"A <span
+									class="cursor-default font-balsamiq text-blue"
+									use:CursorTooltip={{ text: 'Pronounced: /geɪm/' }}
+								>
+									game</span
 								>
 								is a form of
 								<span
 									class="cursor-default font-balsamiq text-cyan"
-									title="Part of the human soul">art</span
+									use:CursorTooltip={{ text: 'Part of our souls!' }}>art</span
 								>
 								in which participants, termed
-								<span class="cursor-default font-balsamiq text-purple" title="Are you..?"
-									>players</span
+								<span
+									class="cursor-default font-balsamiq text-purple"
+									use:CursorTooltip={{ text: 'Experienced, are you?' }}>players</span
 								>, make decisions in order to manage resources through game tokens in the
 								pursuit of a
 								<span
 									class="cursor-default font-balsamiq text-red"
-									title="Whatever makes you happy!">goal</span
+									use:CursorTooltip={{ text: 'What ya wanna achieve?' }}>goal</span
 								>."
 							</p>
 							<p class="text-start text-sm text-dark-medium">
@@ -169,14 +175,9 @@
 							</p>
 						{:else}
 							<p class="text-start font-bricolage text-xl font-bold">
-								"A form of <span
-									class="cursor-default font-balsamiq text-blue"
-									title="/geɪm/">art</span
-								>
+								"A form of <span class="cursor-default font-balsamiq text-blue">art</span>
 								for you,
-								<span class="cursor-default font-balsamiq text-purple" title="You..?"
-									>players</span
-								>!"
+								<span class="cursor-default font-balsamiq text-purple">players</span>!"
 							</p>
 							<p class="text-start text-sm text-dark-medium">— Me, probably (2026).</p>
 						{/if}
@@ -194,12 +195,7 @@
 				</div>
 
 				<!-- Last bit of the entrance -->
-				<div
-					class="
-						md:items-en flex flex-row items-center justify-between
-						gap-3
-					"
-				>
+				<div class="md:items-en flex flex-row items-center justify-between gap-3">
 					<!-- Console icons -->
 					<div class="flex gap-1 md:gap-2">
 						{#each psIcons as psIcon (psIcon.type)}
