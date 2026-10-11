@@ -3,7 +3,8 @@
 	import type { PageProps } from './$types';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 
-	import { DeskArea, RoughFrame, RoughShape, type Shape } from '$lib/components';
+	import { RoughFrame, RoughShape, type Shape } from '$lib/components/ui';
+	import { DeskArea } from '$lib/components/desk';
 	import { CursorTooltip } from '$lib/components/actions';
 
 	import { getIconAsset } from '$lib/utils';

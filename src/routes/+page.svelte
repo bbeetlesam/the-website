@@ -3,7 +3,7 @@
 	import type { PageProps } from './$types';
 
 	import type { Desk } from '$lib/types';
-	import { DeskArea } from '$lib/components';
+	import { DeskArea } from '$lib/components/desk';
 	import { scaleToFit } from '$lib/utils';
 
 	// Page props (retrieved from +layout.server.ts)

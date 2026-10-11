@@ -6,9 +6,9 @@
 
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { default as ItemFocusFrame } from './ItemFocusFrame.svelte';
 	import type { DeskItem } from '$lib/types';
-	import BubbleLabel from '../BubbleLabel.svelte';
+	import ItemFocusFrame from '../ui/ItemFocusFrame.svelte';
+	import BubbleLabel from '../ui/BubbleLabel.svelte';
 
 	// Component props
 	const { item }: { item: DeskItem } = $props();
@@ -37,7 +37,7 @@
 			{@render deskItemImage(item, item.navigation.title)}
 		</a>
 	{:else if item.navigation?.type === 'social-link'}
-		<a href={item.navigation.href}>
+		<a href={item.navigation.href} rel="external noopener noreferrer" target="_blank">
 			{@render deskItemImage(item, item.navigation.desc)}
 		</a>
 	{/if}
@@ -54,9 +54,11 @@
 >
 	{#if item.navigation}
 		{@const bubbleLabel =
-			item.navigation.type === 'page-link' ? item.navigation.desc :
-			item.navigation.type === 'social-link' ? item.navigation.title : ''
-		}
+			item.navigation.type === 'page-link'
+				? item.navigation.desc
+				: item.navigation.type === 'social-link'
+					? item.navigation.title
+					: ''}
 
 		<BubbleLabel
 			label={bubbleLabel}
