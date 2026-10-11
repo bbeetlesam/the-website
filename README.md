@@ -1,5 +1,7 @@
 # The Website, Pt. II
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/08a8b6fc-63da-49f6-abfd-87e5e7ba0ecd/deploy-status)](https://app.netlify.com/projects/bbeetlesam/deploys)
+
 In the early days, Sam chose the counterpath, to create a personal website
 plainly, without any libraries to help him.
 However, as the time went on, he realised why those tools were invented by the savants.\
@@ -24,7 +26,9 @@ This, is the project of **The Website of Sam**.
 - [Tailwind CSS](https://tailwindcss.com/) — The utility-first CSS framework.
 - [Sanity](https://sanity.io/) — The headless CMS for content management.
 - [Rough.js](https://roughjs.com/) — The library used for drawing rough lines and sketches.
-- [Svelte Vitals](https://oekazuma.github.io/svelte-vitals/) — The library used for tracking and reporting performance metrics of this Svelte site.
+- [Svelte Vitals](https://oekazuma.github.io/svelte-vitals/) — The library used for tracking
+  and reporting performance metrics of this Svelte site.
+- [Netlify](https://netlify.com) — The hosting platform for this website. It needs to go live!
 
 <!--- [Rough Notation](https://roughnotation.com/) — The library used for drawing rough annotations.-->
 <!--- [Font Awesome](https://fontawesome.com/)-->
