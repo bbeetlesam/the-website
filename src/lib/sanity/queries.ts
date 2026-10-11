@@ -13,20 +13,6 @@ const PAGE_LINKS_QUERY: string = `
 	}
 `;
 
-/** GROQ query for fetching `social-link` documents */
-const EXTERNAL_LINKS_QUERY: string = `
-  *[_type == "social-link"] {
-    id,
-    href,
-    title,
-    "icon": {
-      "default": icon.default.asset->url,
-      "active": icon.active.asset->url
-    },
-    order
-  }
-`;
-
 /** GROQ query for fetching `typeface` documents */
 const TYPEFACES_QUERY: string = `
 	*[_type == "typeface"] {
@@ -70,6 +56,22 @@ const ICON_ASSETS_QUERY: string = `
 	}
 `;
 
+type ExternalLinkCategory = 'social' | 'game';
+const EXTERNAL_LINKS_QUERY = (category: ExternalLinkCategory): string => {
+	return `
+    *[_type == "social-link" && category == "${category}"] {
+      id,
+      href,
+      title,
+      desc,
+      "icon": {
+        "default": icon.default.asset->url,
+        "active": icon.active.asset->url
+      },
+    }
+  `;
+};
+
 type DeskPrefix = 'h' | 'g';
 const DESKS_QUERY = (prefix: DeskPrefix): string => `
 	*[_type == "desk" && string::startsWith(id, "${prefix}")] {
@@ -107,11 +109,11 @@ const DESKS_QUERY = (prefix: DeskPrefix): string => `
             id,
             href,
             title,
+            desc,
             "icon": {
               "default": icon.default.asset->url,
               "active": icon.active.asset->url
             },
-            order
           }
         )
 			},
@@ -122,6 +124,12 @@ const DESKS_QUERY = (prefix: DeskPrefix): string => `
 	}
 `;
 
+/** GROQ query for fetching `Social` type of `social-link` documents */
+const SOCIAL_LINKS_QUERY = EXTERNAL_LINKS_QUERY('social');
+
+/** GROQ query for fetching `Game` type of `social-link` documents */
+const GAME_LINKS_QUERY = EXTERNAL_LINKS_QUERY('game');
+
 /** GROQ query for fetching Home `desk` documents */
 const HOME_DESKS_QUERY: string = DESKS_QUERY('h');
 
@@ -130,8 +138,9 @@ const GAME_DESKS_QUERY: string = DESKS_QUERY('g');
 
 export {
 	PAGE_LINKS_QUERY,
+	SOCIAL_LINKS_QUERY,
+	GAME_LINKS_QUERY,
 	HOME_DESKS_QUERY,
-	EXTERNAL_LINKS_QUERY,
 	GAME_DESKS_QUERY,
 	TYPEFACES_QUERY,
 	ICON_ASSETS_QUERY
