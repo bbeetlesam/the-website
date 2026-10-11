@@ -19,7 +19,7 @@
 </script>
 
 <!-- Reusable Desk Item's image snippet -->
-{#snippet deskItemImage(item: DeskItem, alt: string)}
+{#snippet deskItemImage(item: DeskItem, alt: string | undefined)}
 	<img
 		src={item.icon.default}
 		{alt}
@@ -38,7 +38,7 @@
 		</a>
 	{:else if item.navigation?.type === 'social-link'}
 		<a href={item.navigation.href}>
-			{@render deskItemImage(item, item.navigation.title)}
+			{@render deskItemImage(item, item.navigation.desc)}
 		</a>
 	{/if}
 {/snippet}

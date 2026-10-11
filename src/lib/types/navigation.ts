@@ -21,7 +21,7 @@ type PageLink = {
 	/** The title of the page link. */
 	title: string;
 	/** The description of the page link (technically the 'longer' title). */
-	desc: string;
+	desc?: string;
 	/** The icon of the page link. */
 	icon?: Icon;
 };
@@ -37,11 +37,11 @@ type ExternalLink = {
 	/** The href of the external link (to somewhere else). */
 	href: string;
 	/** The representing title for the external link. */
-	title: string;
+	title?: string;
+	/** The description of the external link. */
+	desc?: string;
 	/** The image icon of the external link. */
-	icon: Icon;
-	/** The order of the external link in its list. */
-	order: number;
+	icon?: Icon;
 };
 
 /** Represents a navigational link. */
