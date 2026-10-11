@@ -1,10 +1,24 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import { page } from '$app/state';
+	import { env } from '$env/dynamic/public';
 	import { onMount, type Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 
 	let { children, data }: { children: Snippet; data: LayoutData } = $props();
+
+	/** Absolute canonical URL for the current route, or null when one shouldn't be emitted */
+	const canonicalUrl = $derived.by(() => {
+		const siteUrl = env.PUBLIC_SITE_URL;
+
+		if (!siteUrl || page.status >= 400) return null;
+
+		const pathname =
+			page.url.pathname === '/' ? '/' : page.url.pathname.replace(/\/+$/, '');
+
+		return new URL(pathname, siteUrl).href; // Don't deceive your free will at all
+	});
 
 	onMount(() => {
 		// Fetch typefaces from Sanity and inject them into the <style> document head
@@ -41,6 +55,9 @@
 	<!-- Default page title for untitled page, if any -->
 	<title>bbeetlesam</title>
 	<link rel="icon" href={favicon} />
+	{#if canonicalUrl}
+		<link rel="canonical" href={canonicalUrl} />
+	{/if}
 </svelte:head>
 
 <div class="flex min-h-dvh flex-col">
