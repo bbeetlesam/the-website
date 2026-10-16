@@ -13,10 +13,13 @@
 @props title: string - The title of the modal.
 @props useCloseButton: boolean - Whether to display the close button.
 Enabling this will prevent the modal from being closed by clicking outside of it.
+@props titlebarPosition: titlePosition - The position of the title bar, if exists.
 -->
 
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+
+	type titlePosition = 'left' | 'center' | 'right';
 
 	type Props = {
 		children: Snippet;
@@ -29,12 +32,18 @@ Enabling this will prevent the modal from being closed by clicking outside of it
 		 * Enabling this will prevent the modal from being closed by clicking outside of it.
 		 */
 		useCloseButton?: boolean;
+		/**
+		 * The position of the title bar, if exists.
+		 * Valid values are `left`, `center`, and `right`.
+		 */
+		titlebarPosition?: titlePosition;
 	};
 
 	let {
 		open = $bindable(false),
 		title,
 		useCloseButton = false,
+		titlebarPosition = 'left',
 		children
 	}: Props = $props();
 	let dialog = $state<HTMLDialogElement>();
@@ -70,11 +79,20 @@ Enabling this will prevent the modal from being closed by clicking outside of it
 	onclick={closeOnBackdrop}
 >
 	<div class="relative">
+		{const titlebarPositionClass =
+			titlebarPosition === 'left'
+				? 'left-5'
+				: titlebarPosition === 'right'
+					? 'right-5'
+					: 'left-1/2 -translate-x-1/2'}
+
+		{const closeButtonClass = titlebarPosition === 'right' ? 'left-5' : 'right-5'}
+
 		<!-- Title bar -->
 		{#if title}
 			<div
 				class="
-				  absolute top-0 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2
+				  absolute top-0 {titlebarPositionClass} z-20 -translate-y-1/2 cursor-default
 				  rounded-lg border-2 border-rough-dark bg-[#B0C5D1] px-4 py-1 text-fg-dark
 				"
 			>
@@ -86,13 +104,14 @@ Enabling this will prevent the modal from being closed by clicking outside of it
 		{#if useCloseButton}
 			<div
 				class="
-				  absolute top-0 right-0 z-20 translate-x-1/2 -translate-y-1/2
-				  rounded-lg border-2 border-rough-dark bg-red text-fg-dark shadow-md
+				  absolute top-0 {closeButtonClass} z-20 -translate-y-1/2
+				  rounded-lg border-2 border-rough-dark bg-red text-fg-dark
+					shadow-md hover:bg-red-700
 				"
 			>
 				<button
 					type="button"
-					class="size-full cursor-pointer rounded-lg px-1.5 font-bold"
+					class="size-full cursor-pointer rounded-lg px-2 font-bold"
 					aria-label="Close dialog"
 					onclick={close}
 				>
