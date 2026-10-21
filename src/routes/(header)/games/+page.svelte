@@ -212,8 +212,8 @@
 					<div class="md:flex-co flex items-end gap-2 md:items-start md:gap-5">
 						<p class="text-end text-lg font-semibold md:text-xl lg:text-2xl">
 							See the <br /><span class="cursor-default font-baskerville font-bold italic"
-								>Gallery</span
-							>!
+								>{isDesktop ? 'Gallery' : 'Cards'}!</span
+							>
 						</p>
 						<div class="hidden md:block" aria-hidden="true">
 							<svg
