@@ -2,13 +2,24 @@
 @plugin '@tailwindcss/typography';
 
 @theme {
+	--text-base: 1.1rem;
+	--text-sm: 1rem;
+	--text-xs: 0.825rem;
+	--text-xss: 0.75rem;
+	--text-lg: 1.25rem;
+	--text-xl: 1.375rem;
+	--text-2xl: 1.5rem;
+	--text-3xl: 1.75rem;
+	--text-4xl: 2rem;
+	--text-5xl: 2.3rem;
+
 	--color-paper: #fdfbf6; /* #f8f6f1 alt colour */
 	--color-fg-dark: #2e2a2e;
 	--color-dark-medium: #474a4c;
 	--color-rough-dark: #1e1e1e;
-	--color-blue: #0599BB;
-	--color-purple: #C95BB5;
-	--color-cyan: #259EA2;
+	--color-blue: #0599bb;
+	--color-purple: #c95bb5;
+	--color-cyan: #259ea2;
 	--color-red: #ef0000;
 
 	--font-winkysans: 'Winky Sans', sans-serif;
@@ -16,6 +27,7 @@
 	--font-akt: 'Akt', Inter, sans-serif;
 	--font-baskerville: 'Libre Baskerville', serif;
 	--font-bricolage: 'Bricolage Grotesque', sans-serif;
+	--font-mono: 'Martian Mono', monospace;
 }
 
 /* FOR DEBUGGING */
@@ -30,7 +42,6 @@ body {
 	margin: 0;
 	min-height: 100dvh;
 	font-family: var(--font-akt);
-	font-size: 1.1rem;
 	color: var(--color-fg-dark);
 }
 
