@@ -1,16 +1,21 @@
 import { NAV_ROUTES } from '$lib/data';
 import { client } from '$lib/sanity/client';
-import { GAME_DESKS_QUERY } from '$lib/sanity/queries';
-import type { Desk, SanityDesk } from '$lib/types';
+import { GAME_DESKS_QUERY, FEATURED_GAME_LINKS_QUERY } from '$lib/sanity/queries';
+import type { Desk, ExternalLink, SanityDesk } from '$lib/types';
 
 /**
  * Games layout server load function.
  *
- * Fetch Game `desk` documents from Sanity, resolve their navigation references,
+ * 1. Fetch Game `desk` documents from Sanity, resolve their navigation references,
  * and then returns them as `gameDesks` with the type of {@link Desk}[].
+ * 2. Fetch FEATURED Game Links from Sanity and returns them as `featuredGameLinks`
+ * with the type of {@link ExternalLink}[].
  */
 export async function load() {
-	const sanityGameDesks = await client.fetch<SanityDesk[]>(GAME_DESKS_QUERY);
+	const [sanityGameDesks, featuredGameLinks] = await Promise.all([
+		client.fetch<SanityDesk[]>(GAME_DESKS_QUERY),
+		client.fetch<ExternalLink[]>(FEATURED_GAME_LINKS_QUERY)
+	]);
 
 	const gameDesks: Desk[] = sanityGameDesks.map((desk) => ({
 		...desk,
@@ -66,6 +71,8 @@ export async function load() {
 
 	return {
 		/** Game Desks list */
-		gameDesks
+		gameDesks,
+		/** Game Links list */
+		featuredGameLinks
 	};
 }
