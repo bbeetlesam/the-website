@@ -25,6 +25,10 @@
 	let gameDesks = $derived(data.gameDesks);
 	let desk = $derived(gameDesks[0]); // currently hardcoded, will be changed later
 
+	const featuredGameList = $derived(data.featuredGameLinks);
+	const cardHeight = 65;
+	// const cardScrollDistance = 1;
+
 	// currently scales the desk to fill the available height,
 	// allowing its width to expand proportionally
 	// the mobile layout will use a different constraint later
@@ -48,11 +52,23 @@
 	let scrollSection = $state<HTMLElement>();
 	let viewport = $state<HTMLElement>();
 	let track = $state<HTMLElement>();
+	let mobileGallery = $state<HTMLElement>();
+	let mobileGalleryStage = $state<HTMLElement>();
+	let mobileCardSlot = $state<HTMLElement>();
+	let mobileScrollStep = $state(0);
+	let mobileProgressStart = 0;
+	let mobilePresentationTop = $state(0);
 	let horizontalTravel = $state(0);
 	let translateX = $state(0);
+	let featuredGameIndex = $state(0);
 
 	/** Whether the user is on a desktop (large screen) or mobile (small screen) */
-	let isDesktop = $state(false);
+	let isDesktop = $state(false); // uses `md` value
+
+	/** Keep entered cards stationary; only the next card travels up from below. */
+	function getCardOffset(index: number): number {
+		return Math.max(index - featuredGameIndex, 0) * mobileScrollStep;
+	}
 
 	onMount(() => {
 		const html = document.documentElement;
@@ -61,38 +77,58 @@
 		const md = getComputedStyle(html).getPropertyValue('--breakpoint-md').trim();
 		const mediaQuery = window.matchMedia(`(min-width: ${md})`);
 
-		const updateHorizontalScroll = () => {
-			if (!isDesktop || !scrollSection || !viewport || !track) return;
+		const measureMobileGallery = () => {
+			if (!mobileGallery || !mobileGalleryStage || !mobileCardSlot) return;
 
-			horizontalTravel = Math.max(track.scrollWidth - viewport.clientWidth, 0);
-
-			const sectionTop = scrollSection.getBoundingClientRect().top + window.scrollY;
-			const currentScroll = window.scrollY - sectionTop;
-			const progress =
-				horizontalTravel > 0
-					? Math.min(Math.max(currentScroll / horizontalTravel, 0), 1)
-					: 0;
-
-			translateX = progress * horizontalTravel;
+			const galleryTop = mobileGallery.getBoundingClientRect().top + window.scrollY;
+			mobileProgressStart = galleryTop;
+			mobileScrollStep = mobileGalleryStage.getBoundingClientRect().height;
+			mobilePresentationTop =
+				mobileCardSlot.getBoundingClientRect().top -
+				mobileGalleryStage.getBoundingClientRect().top;
 		};
 
-		const resizeObserver = new ResizeObserver(([entry]) => {
-			if (!entry) return;
+		const updateScrollPositions = () => {
+			if (isDesktop && scrollSection && viewport && track) {
+				horizontalTravel = Math.max(track.scrollWidth - viewport.clientWidth, 0);
+				const sectionTop = scrollSection.getBoundingClientRect().top + window.scrollY;
+				const currentScroll = window.scrollY - sectionTop;
+				const progress =
+					horizontalTravel > 0
+						? Math.min(Math.max(currentScroll / horizontalTravel, 0), 1)
+						: 0;
+				translateX = progress * horizontalTravel;
+				return;
+			}
 
-			deskContainerHeight = entry.contentRect.height;
-			updateHorizontalScroll();
+			if (featuredGameList.length === 0 || mobileScrollStep <= 0) {
+				featuredGameIndex = 0;
+				return;
+			}
+
+			const progress = (window.scrollY - mobileProgressStart) / mobileScrollStep;
+			featuredGameIndex = Math.min(Math.max(progress, 0), featuredGameList.length - 1);
+		};
+
+		const resizeObserver = new ResizeObserver((entries) => {
+			const deskEntry = entries.find((entry) => entry.target === deskContainer);
+			if (deskEntry) deskContainerHeight = deskEntry.contentRect.height;
+			measureMobileGallery();
+			updateScrollPositions();
 		});
 
 		const updateMedia = async () => {
 			isDesktop = mediaQuery.matches;
 
 			await tick();
+			resizeObserver.disconnect();
+			if (deskContainer) resizeObserver.observe(deskContainer);
+			if (mobileGallery) resizeObserver.observe(mobileGallery);
+			if (mobileGalleryStage) resizeObserver.observe(mobileGalleryStage);
+			if (mobileCardSlot) resizeObserver.observe(mobileCardSlot);
 
-			if (deskContainer) {
-				resizeObserver.observe(deskContainer);
-			}
-
-			updateHorizontalScroll();
+			measureMobileGallery();
+			updateScrollPositions();
 		};
 
 		mediaQuery.addEventListener('change', updateMedia);
@@ -102,8 +138,12 @@
 		html.classList.add('overscroll-none');
 		body.classList.add('overscroll-none');
 
-		window.addEventListener('scroll', updateHorizontalScroll, { passive: true });
-		window.addEventListener('resize', updateHorizontalScroll);
+		window.addEventListener('scroll', updateScrollPositions, { passive: true });
+		const handleResize = () => {
+			measureMobileGallery();
+			updateScrollPositions();
+		};
+		window.addEventListener('resize', handleResize);
 
 		return () => {
 			resizeObserver.disconnect();
@@ -113,8 +153,8 @@
 			html.classList.remove('overscroll-none');
 			body.classList.remove('overscroll-none');
 
-			window.removeEventListener('scroll', updateHorizontalScroll);
-			window.removeEventListener('resize', updateHorizontalScroll);
+			window.removeEventListener('scroll', updateScrollPositions);
+			window.removeEventListener('resize', handleResize);
 		};
 	});
 </script>
@@ -255,8 +295,8 @@
 			</section>
 
 			<!-- 2. The Game gallery -->
-			<section class="w-max px-2 py-6 md:h-full">
-				{#if isDesktop}
+			{#if isDesktop}
+				<section class="w-max px-2 py-6 md:h-full">
 					{#if desk}
 						<div
 							bind:this={deskContainer}
@@ -279,12 +319,110 @@
 					{:else}
 						<p>Sorry, no desk available.</p>
 					{/if}
-				{:else}
-					<div class="h-svh w-full">
-						<p class="p-4 text-center">Need some finishing touches...</p>
-					</div>
-				{/if}
-			</section>
+				</section>
+			{:else}
+				<div
+					bind:this={mobileGallery}
+					class="relative w-[min(100%,30rem)] px-6"
+					style={`height: ${Math.max(featuredGameList.length, 1) * 100}lvh;`}
+				>
+					<section bind:this={mobileGalleryStage} class="sticky top-0 h-lvh">
+						<!-- <h2
+							class="
+  							absolute left-1/2 z-50 w-max -translate-x-1/2 rounded-xl border-3 bg-cyan
+  							px-2 py-1 font-balsamiq text-2xl font-bold
+							"
+							style="bottom: calc(50% + {cardHeight}% / 2 + {headingCardGap}rem);"
+						>
+							Featured Games
+						</h2> -->
+						{#if featuredGameList.length > 0}
+							<div
+								bind:this={mobileCardSlot}
+								class="absolute top-1/2 left-0 w-full -translate-y-1/2"
+								style="height: {cardHeight}%;"
+							></div>
+
+							<div class="absolute inset-0 overflow-hidden">
+								{#each featuredGameList as featuredGame, index (featuredGame.id)}
+									<article
+										class="
+  										absolute left-0 flex w-full flex-col overflow-hidden
+  										rounded-[1.25rem] border-3 border-rough-dark bg-fg-dark p-1
+										"
+										style={`
+  										top: ${mobilePresentationTop}px;
+  										height: ${cardHeight}%;
+  										transform: translateY(${getCardOffset(index)}px);
+  										z-index: ${index + 1};
+										`}
+									>
+										<div class="h-[50%] w-full">
+											<img
+												src={featuredGame.icon?.default}
+												alt={featuredGame.title}
+												class="size-full rounded-[0.9rem] rounded-b-none bg-paper object-cover"
+											/>
+										</div>
+
+										<div
+											class="
+  											flex flex-1 flex-col justify-between rounded-[0.9rem]
+  											rounded-t-none bg-fg-dark px-3 py-3
+											"
+										>
+											<div class="space-y-1">
+												<h3
+													class="
+													  font-bricolage text-4xl leading-tight font-bold
+														whitespace-pre-line text-paper sm:text-3xl
+													"
+												>
+													{featuredGame.title}
+												</h3>
+												<p class="font-balsami text-lg leading-tight text-blue">
+													{featuredGame.desc}
+												</p>
+											</div>
+
+											<div class="flex items-center justify-between">
+												<p
+													class="rounded-md bg-blue px-2 py-0.5 font-balsamiq text-base font-bold text-paper"
+												>
+													Genre
+												</p>
+												<a
+													href={featuredGame.href}
+													class="
+													  rounded-md bg-cyan px-2 py-2 text-2xl outline-1
+														outline-offset-2 outline-paper transition-colors
+													  duration-100 hover:bg-cyan-500
+													"
+													rel="external noopener noreferrer"
+													target="_blank"
+													aria-label="Go to Game's page"
+												>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														viewBox="0 0 24 24"
+														width="24"
+														height="24"
+													>
+														<path
+															fill="#fdfbf6"
+															d="M6 3.5a1 1 0 0 1 1.5-.87l13 8a1.6 1.6 0 0 1 0 2.74l-13 8A1 1 0 0 1 6 20.5z"
+														/>
+													</svg>
+												</a>
+											</div>
+										</div>
+									</article>
+								{/each}
+							</div>
+						{/if}
+					</section>
+				</div>
+			{/if}
 
 			<!-- 3. Miscellaneous info -->
 			<section class="flex h-svh flex-col gap-10 p-6 md:h-auto md:w-screen md:shrink-0">
