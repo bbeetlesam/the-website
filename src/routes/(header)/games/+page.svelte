@@ -3,11 +3,19 @@
 	import type { PageProps } from './$types';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 
+	import type { GamePlatform } from '$lib/types';
 	import { RoughFrame, RoughShape, type Shape } from '$lib/components/ui';
 	import { DeskArea } from '$lib/components/desk';
 	import { CursorTooltip } from '$lib/components/actions';
 
 	import { getIconAsset } from '$lib/utils';
+
+	import playIcon from '$lib/assets/platform-icons/play.svg';
+	import webIcon from '$lib/assets/platform-icons/web.svg';
+	import linuxIcon from '$lib/assets/platform-icons/linux.svg';
+	import windowsIcon from '$lib/assets/platform-icons/windows.svg';
+	import androidIcon from '$lib/assets/platform-icons/android.svg';
+	import macIcon from '$lib/assets/platform-icons/apple.svg';
 
 	let { data }: PageProps = $props();
 
@@ -18,6 +26,16 @@
 		{ type: 'square', color: 'purple' },
 		{ type: 'triangle', color: 'cyan' }
 	];
+
+	const platformIcons: Record<GamePlatform, string> = {
+		web: webIcon,
+		linux: linuxIcon,
+		windows: windowsIcon,
+		mac: macIcon,
+		android: androidIcon,
+		ios: macIcon,
+		other: playIcon
+	};
 
 	/** The minigame icon used in the Entrance section. */
 	const minigameIcon = $derived(getIconAsset(data.iconAssets, 'minigame')?.icon);
@@ -327,15 +345,6 @@
 					style={`height: ${Math.max(featuredGameList.length, 1) * 100}lvh;`}
 				>
 					<section bind:this={mobileGalleryStage} class="sticky top-0 h-lvh">
-						<!-- <h2
-							class="
-  							absolute left-1/2 z-50 w-max -translate-x-1/2 rounded-xl border-3 bg-cyan
-  							px-2 py-1 font-balsamiq text-2xl font-bold
-							"
-							style="bottom: calc(50% + {cardHeight}% / 2 + {headingCardGap}rem);"
-						>
-							Featured Games
-						</h2> -->
 						{#if featuredGameList.length > 0}
 							<div
 								bind:this={mobileCardSlot}
@@ -359,9 +368,9 @@
 									>
 										<div class="h-[50%] w-full">
 											<img
-												src={featuredGame.icon?.default}
-												alt={featuredGame.title}
-												class="size-full rounded-[0.9rem] rounded-b-none bg-paper object-cover"
+												src={featuredGame.screenshot ? featuredGame.screenshot : playIcon}
+												alt={`${featuredGame.title} picture`}
+												class="size-full rounded-[0.9rem] rounded-b-none bg-rough-dark object-cover text-paper"
 											/>
 										</div>
 
@@ -385,34 +394,40 @@
 												</p>
 											</div>
 
-											<div class="flex items-center justify-between">
-												<p
-													class="rounded-md bg-blue px-2 py-0.5 font-balsamiq text-base font-bold text-paper"
-												>
-													Genre
-												</p>
+											<div class="flex items-end justify-between">
+												<div class="flex flex-col gap-2">
+													<div class="flex flex-row gap-1">
+														{#each featuredGame.platforms as platform (platform)}
+															<img
+																src={platformIcons[platform]}
+																alt={platform}
+																class="size-6"
+															/>
+														{/each}
+													</div>
+
+													<p
+														class="
+  														w-max rounded-md bg-blue px-2 py-0.5 font-balsamiq
+                              text-base font-bold text-paper
+														"
+													>
+														{featuredGame.genre ? featuredGame.genre : 'Unknown'}
+													</p>
+												</div>
+
 												<a
 													href={featuredGame.href}
 													class="
-													  rounded-md bg-cyan px-2 py-2 text-2xl outline-1
-														outline-offset-2 outline-paper transition-colors
-													  duration-100 hover:bg-cyan-500
+													  rounded-md bg-cyan p-2 outline-1 outline-offset-2
+														outline-paper transition-all duration-100 hover:bg-cyan-500
+														active:scale-90
 													"
 													rel="external noopener noreferrer"
 													target="_blank"
 													aria-label="Go to Game's page"
 												>
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														viewBox="0 0 24 24"
-														width="24"
-														height="24"
-													>
-														<path
-															fill="#fdfbf6"
-															d="M6 3.5a1 1 0 0 1 1.5-.87l13 8a1.6 1.6 0 0 1 0 2.74l-13 8A1 1 0 0 1 6 20.5z"
-														/>
-													</svg>
+													<img src={playIcon} alt="Play" class="size-8" />
 												</a>
 											</div>
 										</div>

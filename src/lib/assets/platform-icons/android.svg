@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <g fill="#fdfbf6" stroke="none">
+    <!-- Antenna -->
+    <path d="M19 7.5a1.7 1.7 0 0 1 2.9-1.2l7.3 8.1-2.5 2.1-7.3-8.1a1.7 1.7 0 0 1-.4-.9Z"/>
+    <path d="M45 7.5a1.7 1.7 0 0 0-2.9-1.2l-7.3 8.1 2.5 2.1 7.3-8.1a1.7 1.7 0 0 0 .4-.9Z"/>
+
+    <!-- Head -->
+    <path d="M12 29a20 20 0 0 1 40 0Z"/>
+
+    <!-- Body -->
+    <rect x="12" y="31" width="40" height="24" rx="4"/>
+
+    <!-- Arms -->
+    <rect x="5" y="32" width="5.5" height="20" rx="2.75"/>
+    <rect x="53.5" y="32" width="5.5" height="20" rx="2.75"/>
+
+    <!-- Legs -->
+    <path d="M20 52h7v6a3.5 3.5 0 0 1-7 0Z"/>
+    <path d="M37 52h7v6a3.5 3.5 0 0 1-7 0Z"/>
+  </g>
+
+  <!-- Eyes: transparent cut-outs -->
+  <g fill="#000">
+    <circle cx="24" cy="21" r="1.6"/>
+    <circle cx="40" cy="21" r="1.6"/>
+  </g>
+</svg>
