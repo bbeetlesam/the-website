@@ -8,6 +8,9 @@ import type { Icon } from './objects';
  */
 type NavigationType = 'page-link' | 'social-link';
 
+/** Represents a supported game platform of the game. */
+type GamePlatform = 'web' | 'windows' | 'mac' | 'linux' | 'android' | 'ios' | 'other';
+
 /**
  * Represents a link to a page within the application.
  */
@@ -44,7 +47,27 @@ type ExternalLink = {
 	icon?: Icon;
 };
 
+/**
+ * Represents a Game link. Based on {@link GameLink}, but with genre, platform,
+ * and screenshot fields.
+ */
+type GameLink = ExternalLink & {
+	/** The genre of the game. */
+	genre: string;
+	/** The platforms the game is available on. */
+	platforms: GamePlatform[];
+	/** The screenshot of the game. */
+	screenshot?: string;
+};
+
 /** Represents a navigational link. */
 type Navigation = PageLink | ExternalLink;
 
-export type { PageLink, ExternalLink, NavigationType, Navigation };
+export type {
+	PageLink,
+	ExternalLink,
+	GameLink,
+	NavigationType,
+	Navigation,
+	GamePlatform
+};

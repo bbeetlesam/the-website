@@ -67,10 +67,13 @@ const EXTERNAL_LINKS_QUERY = (
       href,
       title,
       desc,
+      genre,
+      platforms,
       "icon": {
         "default": icon.default.asset->url,
         "active": icon.active.asset->url
       },
+      "screenshot": screenshot.asset->url,
     }
   `;
 };
