@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
+	import { resolve } from '$app/paths';
 	import type { PageProps } from './$types';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 
 	import type { GamePlatform } from '$lib/types';
+	import { Footer } from '$lib/components/site';
 	import { RoughFrame, RoughShape, type Shape } from '$lib/components/ui';
 	import { DeskArea } from '$lib/components/desk';
 	import { CursorTooltip } from '$lib/components/actions';
@@ -18,6 +20,10 @@
 	import macIcon from '$lib/assets/platform-icons/apple.svg';
 
 	let { data }: PageProps = $props();
+
+	// WIP: hardcoded and unreliable data fecthing here.
+	// Gotta change the data structure of pageLinks to a key-value list
+	const artPageLink = $derived(data.pageLinks[3].route);
 
 	/** The console (PlayStation) icons for the Entrance section. */
 	const psIcons: { type: Shape; color: string }[] = [
@@ -182,20 +188,23 @@
 	class="relative"
 	style={isDesktop ? `height: calc(100dvh + ${horizontalTravel}px)` : ''}
 >
-	<div bind:this={viewport} class="w-full md:sticky md:top-0 md:h-dvh md:overflow-hidden">
+	<div
+		bind:this={viewport}
+		class="w-screen md:sticky md:top-0 md:h-dvh md:w-full md:overflow-hidden"
+	>
 		<div
 			bind:this={track}
 			class="
-			  flex w-full flex-col items-center md:absolute md:top-0 md:left-0 md:h-full md:w-max
-				md:flex-row
+			  flex w-full flex-col items-center md:absolute md:top-0 md:left-0
+			  md:h-full md:w-max md:flex-row
 			"
 			style={isDesktop ? `transform: translateX(-${translateX}px)` : ''}
 		>
 			<!-- 1. Entrance -->
 			<section
 				class="
-  				bg-amber-20 flex h-svh w-screen flex-col justify-center gap-2
-          p-4 md:h-screen md:shrink-0 md:gap-10 md:p-6 xl:p-8
+					flex h-svh w-full flex-col justify-center gap-2
+					p-4 md:h-screen md:shrink-0 md:gap-10 md:p-6 xl:p-8
   			"
 			>
 				<!-- Game definition -->
@@ -439,10 +448,66 @@
 				</div>
 			{/if}
 
-			<!-- 3. Miscellaneous info -->
-			<section class="flex h-svh flex-col gap-10 p-6 md:h-auto md:w-screen md:shrink-0">
-				<p class="text-xl">I also published my games in these platforms!</p>
+			<!-- 3. Miscellaneous info and footer -->
+			<section class="relative w-full px-4 pt-4 pb-7 md:h-auto md:shrink-0">
+				{#if isDesktop}
+					<p>Desktop version is undergoing</p>
+				{:else}
+					<div>
+						<RoughShape
+							type="triangle"
+							thickness={8}
+							class="absolute -top-20 left-0 size-12 rotate-45 text-cyan"
+						/>
+						<RoughShape
+							type="circle"
+							thickness={8}
+							class="absolute -top-25 right-2 size-14 text-red"
+						/>
+						<RoughShape
+							type="rectangle"
+							thickness={10}
+							class="absolute -top-28 left-[30%] size-10 -rotate-20 text-purple"
+						/>
+						<RoughShape
+							type="cross"
+							thickness={10}
+							class="absolute -top-15 right-[35%] size-8 rotate-10 text-blue"
+						/>
+					</div>
+
+					<div class="flex h-full flex-col items-center justify-between gap-18">
+						<div class="flex flex-col items-center gap-4">
+							<p class="text-center text-xl">
+								Pause, there are many <b class="font-bricolage text-3xl text-cyan"
+									>MORE!</b
+								>
+							</p>
+
+							<!-- The link list to discover more of my games -->
+							<!-- WIP -->
+							<div class="w-max">
+								<p
+									class="cursor-pointer rounded-xl bg-red px-3 py-2 text-lg text-paper hover:bg-red-600 active:scale-95"
+								>
+									itch.io — WIP
+								</p>
+							</div>
+						</div>
+
+						<!-- Designed by -->
+						<p class="font-bricolage text-xs font-medium">
+							Designed by the people from <a
+								href={resolve(artPageLink)}
+								class="font-bold text-blue underline">Art Department</a
+							>.
+						</p>
+					</div>
+				{/if}
 			</section>
+
+			<!-- Temporary secretary, I mean Footer -->
+			<Footer />
 		</div>
 	</div>
 </div>
