@@ -124,14 +124,14 @@
 			padding: 0.35rem;
 			border-radius: 0 0.6rem 0.6rem 0.6rem;
 			background: #a1dfc5;
-			color: var(--color-fg-dark);
+			color: var(--color-dark-2);
 			font-family: var(--font-balsamiq);
 			font-size: 0.835rem;
 			font-weight: bold;
 			line-height: 1;
 			white-space: nowrap;
 			transition: opacity 100ms ease;
-			outline: 2.5px solid var(--color-rough-dark);
+			outline: 2.5px solid var(--color-dark-1);
 		}
 	}
 </style>

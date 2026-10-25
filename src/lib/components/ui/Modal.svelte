@@ -93,7 +93,7 @@ Enabling this will prevent the modal from being closed by clicking outside of it
 			<div
 				class="
 				  absolute top-0 {titlebarPositionClass} z-20 -translate-y-1/2 cursor-default
-				  rounded-lg border-2 border-rough-dark bg-[#B0C5D1] px-4 py-1 text-fg-dark
+				  rounded-lg border-2 border-dark-1 bg-[#B0C5D1] px-4 py-1 text-dark-2
 				"
 			>
 				<h2 class="font-balsamiq text-xl font-bold whitespace-nowrap">{title}</h2>
@@ -105,7 +105,7 @@ Enabling this will prevent the modal from being closed by clicking outside of it
 			<div
 				class="
 				  absolute top-0 {closeButtonClass} z-20 -translate-y-1/2
-				  rounded-lg border-2 border-rough-dark bg-red text-fg-dark
+				  rounded-lg border-2 border-dark-1 bg-red text-dark-2
 					shadow-md hover:bg-red-700
 				"
 			>
@@ -123,8 +123,8 @@ Enabling this will prevent the modal from being closed by clicking outside of it
 		<!-- Main modal content -->
 		<section
 			class={`
-				modal-content rounded-xl border-2 border-rough-dark bg-paper
-				p-4 text-fg-dark sm:p-6 ${title ? 'pt-7 sm:pt-8' : ''}
+				modal-content rounded-xl border-2 border-dark-1 bg-paper
+				p-4 text-dark-2 sm:p-6 ${title ? 'pt-7 sm:pt-8' : ''}
 			`}
 		>
 			<div>

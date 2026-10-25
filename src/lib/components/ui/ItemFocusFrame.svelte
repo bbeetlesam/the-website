@@ -17,7 +17,7 @@ The canvas is used to draw the focus lines around the item using roughjs
 	// Component props
 	const {
 		item,
-		strokeColor = tokens.color.roughDark
+		strokeColor = tokens.color.dark1
 	}: {
 		item: DeskItem;
 		strokeColor?: string;

@@ -4,9 +4,9 @@ import { getCssProperty } from '$lib/utils';
 const tokens = {
 	color: {
 		paper: '',
-		fgDark: '',
-		darkMedium: '',
-		roughDark: '',
+		dark2: '',
+		dark3: '',
+		dark1: '',
 		blue: '',
 		purple: '',
 		cyan: '',
@@ -16,15 +16,16 @@ const tokens = {
 		akt: '',
 		balsamiq: '',
 		baskerville: '',
-		bricolage: ''
+		bricolage: '',
+		mono: ''
 	}
 };
 
 export function initializeCssTokens(): void {
 	tokens.color.paper = getCssProperty('--color-paper');
-	tokens.color.fgDark = getCssProperty('--color-fg-dark');
-	tokens.color.darkMedium = getCssProperty('--color-dark-medium');
-	tokens.color.roughDark = getCssProperty('--color-rough-dark');
+	tokens.color.dark2 = getCssProperty('--color-dark-2');
+	tokens.color.dark3 = getCssProperty('--color-dark-3');
+	tokens.color.dark1 = getCssProperty('--color-dark-1');
 	tokens.color.blue = getCssProperty('--color-blue');
 	tokens.color.purple = getCssProperty('--color-purple');
 	tokens.color.cyan = getCssProperty('--color-cyan');
@@ -34,6 +35,7 @@ export function initializeCssTokens(): void {
 	tokens.font.balsamiq = getCssProperty('--font-balsamiq');
 	tokens.font.baskerville = getCssProperty('--font-baskerville');
 	tokens.font.bricolage = getCssProperty('--font-bricolage');
+	tokens.font.mono = getCssProperty('--font-mono');
 }
 
 export default tokens;

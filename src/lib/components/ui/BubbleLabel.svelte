@@ -53,9 +53,9 @@
 		tipOffsetY = 0,
 		bubbleOffsetX = 0,
 		bubbleColor = tokens.color.paper,
-		textColor = tokens.color.fgDark,
+		textColor = tokens.color.dark2,
 		outlineSize = 2.5,
-		outlineColor = tokens.color.fgDark,
+		outlineColor = tokens.color.dark2,
 		borderRadius = 12,
 		shadow = '2px 8px 12px rgba(0, 0, 0, 0.35)'
 	}: Props = $props();

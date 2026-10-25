@@ -199,7 +199,7 @@
 		<!-- Nav dock -->
 		{#if isMobileNavOpen}
 			<nav
-				class="z-10 w-full rounded-br-lg bg-paper py-2 outline-3 outline-fg-dark"
+				class="z-10 w-full rounded-br-lg bg-paper py-2 outline-3 outline-dark-2"
 				transition:slide={{ duration: 250 }}
 			>
 				<ul class="flex justify-evenly">
@@ -223,7 +223,7 @@
 				type="button"
 				aria-label={isMobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
 				aria-expanded={isMobileNavOpen}
-				class="z-0 cursor-pointer rounded-b-md bg-paper px-1 py-1.5 outline-3 outline-fg-dark"
+				class="z-0 cursor-pointer rounded-b-md bg-paper px-1 py-1.5 outline-3 outline-dark-2"
 				onclick={() => (isMobileNavOpen = !isMobileNavOpen)}
 			>
 				<div

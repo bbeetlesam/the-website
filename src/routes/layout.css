@@ -13,10 +13,23 @@
 	--text-4xl: 2rem;
 	--text-5xl: 2.3rem;
 
-	--color-paper: #fdfbf6; /* #f8f6f1 alt colour */
-	--color-fg-dark: #2e2a2e;
-	--color-dark-medium: #474a4c;
-	--color-rough-dark: #1e1e1e;
+	--color-paper: #f6f5f4; /* fallback compatibility; too lazy to change all to paper-50 */
+	--color-paper-50: #f6f5f4;
+	--color-paper-100: #eaeae8;
+	--color-paper-200: #dad9d5;
+	--color-paper-300: #c2c0ba;
+	--color-paper-400: #a39f95;
+	--color-paper-500: #908b7e;
+	--color-paper-600: #7e796c;
+	--color-paper-700: #69645a;
+	--color-paper-800: #57534b;
+	--color-paper-900: #494640;
+	--color-paper-950: #25231f;
+
+	--color-dark-1: #1e1e1e; /* usually used for rough line colours */
+	--color-dark-2: #2e2a2e; /* primarily used for text */
+	--color-dark-3: #474a4c;
+
 	--color-blue: #0599bb;
 	--color-purple: #c95bb5;
 	--color-cyan: #259ea2;
@@ -42,7 +55,7 @@ body {
 	margin: 0;
 	min-height: 100dvh;
 	font-family: var(--font-akt);
-	color: var(--color-fg-dark);
+	color: var(--color-dark-2);
 }
 
 /* Set the base background pattern and colour */

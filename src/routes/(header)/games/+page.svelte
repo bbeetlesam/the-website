@@ -277,7 +277,7 @@
 									use:CursorTooltip={{ text: 'What ya wanna achieve?' }}>goal</span
 								>."
 							</p>
-							<p class="text-start text-sm text-dark-medium">
+							<p class="text-start text-sm text-dark-3">
 								— Costikyan, Greg (1994). <span
 									><a href="http://www.costik.com/nowords2002.pdf" target="_blank"
 										>"I Have No Words & I Must Design."</a
@@ -290,7 +290,7 @@
 								for you,
 								<span class="cursor-default font-balsamiq text-purple">players</span>!"
 							</p>
-							<p class="text-start text-sm text-dark-medium">— Me, probably (2026).</p>
+							<p class="text-start text-sm text-dark-3">— Me, probably (2026).</p>
 						{/if}
 					</div>
 
@@ -413,7 +413,7 @@
 									<article
 										class="
   										absolute left-0 flex w-full flex-col overflow-hidden
-  										rounded-[1.25rem] border-3 border-rough-dark bg-fg-dark p-1
+  										rounded-[1.25rem] border-3 border-dark-1 bg-dark-2 p-1
 										"
 										style={`
   										top: ${mobilePresentationTop}px;
@@ -426,14 +426,14 @@
 											<img
 												src={featuredGame.screenshot ? featuredGame.screenshot : playIcon}
 												alt={`${featuredGame.title} picture`}
-												class="size-full rounded-[0.9rem] rounded-b-none bg-rough-dark object-cover text-paper"
+												class="size-full rounded-[0.9rem] rounded-b-none bg-dark-1 object-cover text-paper"
 											/>
 										</div>
 
 										<div
 											class="
   											flex flex-1 flex-col justify-between rounded-[0.9rem]
-  											rounded-t-none bg-fg-dark px-3 py-3
+  											rounded-t-none bg-dark-2 px-3 py-3
 											"
 										>
 											<div class="space-y-1">

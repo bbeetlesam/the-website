@@ -61,7 +61,7 @@ independently.
 
 	const defaultOptions: RoughOptions = {
 		strokeWidth: 2,
-		stroke: tokens.color.fgDark,
+		stroke: tokens.color.dark2,
 		fill: tokens.color.paper
 	};
 
