@@ -10,6 +10,7 @@
 	import { DeskArea } from '$lib/components/desk';
 	import { CursorTooltip } from '$lib/components/actions';
 
+	import { getDesktopState } from '$lib/state/desktop';
 	import { getIconAsset } from '$lib/utils';
 
 	import playIcon from '$lib/assets/platform-icons/play.svg';
@@ -20,6 +21,9 @@
 	import macIcon from '$lib/assets/platform-icons/apple.svg';
 
 	let { data }: PageProps = $props();
+
+	const desktopState = getDesktopState();
+	let isDesktop = $derived(desktopState.isDesktop);
 
 	const artPageLink = $derived(data.pageLinks.arts.route);
 
@@ -89,8 +93,11 @@
 	let translateX = $state(0);
 	let featuredGameIndex = $state(0);
 
-	/** Whether the user is on a desktop (large screen) or mobile (small screen) */
-	let isDesktop = $state(false); // uses `md` value
+	/** Re-measure and observe elements for the active responsive layout */
+	let refreshResponsiveLayout: ((isDesktop: boolean) => void) | undefined;
+	$effect(() => {
+		refreshResponsiveLayout?.(isDesktop);
+	});
 
 	/** Keep entered cards stationary; only the next card travels up from below. */
 	function getCardOffset(index: number): number {
@@ -100,9 +107,6 @@
 	onMount(() => {
 		const html = document.documentElement;
 		const body = document.body;
-
-		const md = getComputedStyle(html).getPropertyValue('--breakpoint-md').trim();
-		const mediaQuery = window.matchMedia(`(min-width: ${md})`);
 
 		const measureMobileGallery = () => {
 			if (!mobileGallery || !mobileGalleryStage || !mobileCardSlot) return;
@@ -181,23 +185,24 @@
 			updateScrollPositions();
 		});
 
-		const updateMedia = async () => {
-			isDesktop = mediaQuery.matches;
-
+		const refreshLayout = async (desktop: boolean) => {
 			await tick();
 			resizeObserver.disconnect();
-			if (deskContainer) resizeObserver.observe(deskContainer);
-			if (mobileGallery) resizeObserver.observe(mobileGallery);
-			if (mobileGalleryStage) resizeObserver.observe(mobileGalleryStage);
-			if (mobileCardSlot) resizeObserver.observe(mobileCardSlot);
-			if (entranceShapes) resizeObserver.observe(entranceShapes);
+			if (desktop) {
+				if (deskContainer) resizeObserver.observe(deskContainer);
+			} else {
+				if (mobileGallery) resizeObserver.observe(mobileGallery);
+				if (mobileGalleryStage) resizeObserver.observe(mobileGalleryStage);
+				if (mobileCardSlot) resizeObserver.observe(mobileCardSlot);
+				if (entranceShapes) resizeObserver.observe(entranceShapes);
+			}
 
 			measureMobileGallery();
 			updateScrollPositions();
 		};
 
-		mediaQuery.addEventListener('change', updateMedia);
-		updateMedia();
+		refreshResponsiveLayout = refreshLayout;
+		refreshLayout(isDesktop);
 
 		// Disable overscroll (the bouncing feedback) for the Games page
 		html.classList.add('overscroll-none');
@@ -213,7 +218,7 @@
 		return () => {
 			resizeObserver.disconnect();
 
-			mediaQuery.removeEventListener('change', updateMedia);
+			refreshResponsiveLayout = undefined;
 
 			html.classList.remove('overscroll-none');
 			body.classList.remove('overscroll-none');

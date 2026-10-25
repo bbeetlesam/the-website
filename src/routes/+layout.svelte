@@ -6,7 +6,14 @@
 	import { onMount, type Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 
+	import { provideDesktopState } from '$lib/state/desktop';
+	import { watchDesktop } from '$lib/utils';
+
 	let { children, data }: { children: Snippet; data: LayoutData } = $props();
+
+	/** Per-layout responsive state shared with all descendant components */
+	const desktopState = $state({ isDesktop: false });
+	provideDesktopState(desktopState);
 
 	/** Absolute canonical URL for the current route, or null when one shouldn't be emitted */
 	const canonicalUrl = $derived.by(() => {
@@ -21,6 +28,11 @@
 	});
 
 	onMount(() => {
+		// Keep the shared state synchronized with the site's CSS `md` breakpoint
+		const stopWatchingDesktop = watchDesktop((isDesktop) => {
+			desktopState.isDesktop = isDesktop;
+		});
+
 		// Fetch typefaces from Sanity and inject them into the <style> document head
 		const css = data.typefaces
 			.flatMap((typeface) =>
@@ -48,6 +60,8 @@
 		const style = document.createElement('style');
 		style.textContent = css;
 		document.head.appendChild(style);
+
+		return stopWatchingDesktop;
 	});
 </script>
 
