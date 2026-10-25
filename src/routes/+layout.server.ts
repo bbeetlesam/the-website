@@ -13,6 +13,7 @@ import type {
 	IconAsset,
 	IconAssetList,
 	PageLink,
+	PageLinkMap,
 	SanityDesk,
 	SanityPageLink,
 	Typeface
@@ -48,23 +49,28 @@ export async function load() {
 		sanityIconAssets.map((icon) => [icon.id, icon])
 	);
 
-	// Convert `sanityPageLinks` to `PageLink` objects, assigning a `route` based on `NAV_ROUTES`
-	const pageLinks: PageLink[] = sanityPageLinks.map((item) => {
-		const route: RouteId = NAV_ROUTES[item.id];
+	// Convert `sanityPageLinks` to a PageLinkMap keyed by each item's stable id.
+	const pageLinks: PageLinkMap = sanityPageLinks.reduce<PageLinkMap>(
+		(linksById, item) => {
+			const route: RouteId = NAV_ROUTES[item.id];
 
-		if (!route) {
-			throw new Error(`Nav item "${item.id}" has no route defined in NAV_ROUTES.`);
-		}
+			if (!route) {
+				throw new Error(`Nav item "${item.id}" has no route defined in NAV_ROUTES.`);
+			}
 
-		return {
-			type: 'page-link',
-			id: item.id,
-			title: item.title,
-			desc: item.desc,
-			route,
-			icon: item.icon
-		} satisfies PageLink;
-	});
+			linksById[item.id] = {
+				type: 'page-link',
+				id: item.id,
+				title: item.title,
+				desc: item.desc,
+				route,
+				icon: item.icon
+			} satisfies PageLink;
+
+			return linksById;
+		},
+		{}
+	);
 
 	// Resolve navigation references in `sanityHomeDesks`.
 	// The referenced document is already included by the GROQ query.

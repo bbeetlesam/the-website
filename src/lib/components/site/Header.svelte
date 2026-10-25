@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import type { IconAssetList, PageLink } from '$lib/types';
+	import type { IconAssetList, PageLink, PageLinkMap } from '$lib/types';
 	import { fade, slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
 	import { getIconAsset } from '$lib/utils';
@@ -10,17 +10,15 @@
 
 	// Component props
 	const {
-		pageLinks = [],
+		pageLinks = {},
 		iconAssets
-	}: { pageLinks?: PageLink[]; iconAssets: IconAssetList } = $props();
+	}: { pageLinks?: PageLinkMap; iconAssets: IconAssetList } = $props();
 
 	// Icon Assets used here
 	const navIcon = $derived(getIconAsset(iconAssets, 'nav'));
 
 	// Home PageLink
-	const homePageLink: PageLink | undefined = $derived(
-		pageLinks.find((pageLink) => pageLink.id === 'home')
-	);
+	const homePageLink: PageLink | undefined = $derived(pageLinks.home);
 
 	let isMobileNavOpen = $state(false);
 	let isDesktopNavOpen = $state(false);
@@ -30,7 +28,7 @@
 
 	/** PageLinks with resolved current page state */
 	const resolvedPageLinks = $derived(
-		pageLinks.map((item) => {
+		Object.values(pageLinks).map((item) => {
 			const path = resolve(item.route);
 			return { ...item, path, isCurrentPage: currentPath === path };
 		})
@@ -171,7 +169,7 @@
 
 						<!-- PageLinks nav list -->
 						<ul class="debug-outlin flex w-max gap-3 pr-1">
-							{#each pageLinks as item (item.route)}
+							{#each Object.values(pageLinks) as item (item.route)}
 								{let isNavItemHovered = $derived(hoveredNavItem?.id === item.id)}
 
 								<li>

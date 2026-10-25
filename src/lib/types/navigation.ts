@@ -29,6 +29,9 @@ type PageLink = {
 	icon?: Icon;
 };
 
+/** Page links indexed by their stable Sanity `id` (for example, `home` or `arts`). */
+type PageLinkMap = Record<string, PageLink>;
+
 /**
  * Represents an external link to an external resource.
  */
@@ -65,6 +68,7 @@ type Navigation = PageLink | ExternalLink;
 
 export type {
 	PageLink,
+	PageLinkMap,
 	ExternalLink,
 	GameLink,
 	NavigationType,

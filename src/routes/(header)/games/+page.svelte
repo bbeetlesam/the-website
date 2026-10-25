@@ -21,9 +21,7 @@
 
 	let { data }: PageProps = $props();
 
-	// WIP: hardcoded and unreliable data fecthing here.
-	// Gotta change the data structure of pageLinks to a key-value list
-	const artPageLink = $derived(data.pageLinks[3].route);
+	const artPageLink = $derived(data.pageLinks.arts.route);
 
 	/** The console (PlayStation) icons for the Entrance section. */
 	const psIcons: { type: Shape; color: string }[] = [
