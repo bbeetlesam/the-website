@@ -100,7 +100,7 @@
 		<div class="">
 			{#if homePageLink}
 				<a href={resolve(homePageLink.route)} aria-label={homePageLink.title}>
-					<img src={favicon} alt={homePageLink.title} class="size-8" />
+					<img src={favicon} alt={homePageLink.title} class="size-10" />
 				</a>
 			{/if}
 		</div>
@@ -114,7 +114,7 @@
 				role="navigation"
 				aria-label="Navigation"
 			>
-				<div class="flex size-9 items-center justify-center">
+				<div class="flex size-11 items-center justify-center">
 					<img src={navIcon?.icon.default} alt="Nav Icon" class="size-full" />
 				</div>
 			</div>
@@ -140,7 +140,7 @@
 								{#key hoveredNavItem?.id}
 									<p
 										transition:fade={{ duration: 125, delay: 125 }}
-										class="absolute font-balsamiq text-xl font-semibold select-none"
+										class="absolute font-balsamiq text-2xl font-semibold select-none"
 									>
 										{hoveredNavItem?.title ??
 											(isDesktopNavPinned ? 'Navigate!!' : 'Navigate?')}
@@ -157,12 +157,12 @@
 									? 'Unpin navigation menu'
 									: 'Pin navigation menu'}
 								aria-pressed={isDesktopNavPinned}
-								class="flex size-9 cursor-pointer items-center justify-center"
+								class="flex size-11 cursor-pointer items-center justify-center"
 							>
 								<img
 									src={isDesktopNavPinned ? navIcon?.icon.active : navIcon?.icon.default}
 									alt="Nav Icon"
-									class="size-7 animate-[spin_2.5s_linear_infinite]"
+									class="size-9 animate-[spin_2.5s_linear_infinite]"
 								/>
 							</button>
 						</div>
@@ -175,7 +175,7 @@
 								<li>
 									<a
 										href={resolve(item.route)}
-										class="flex size-8 items-center justify-center"
+										class="flex size-9 items-center justify-center"
 										onmouseenter={() => (hoveredNavItem = item)}
 										onmouseleave={() => (hoveredNavItem = null)}
 									>
@@ -204,7 +204,7 @@
 					{#each resolvedPageLinks as item (item.route)}
 						<li>
 							<a
-								class="flex size-7 items-center justify-center"
+								class="flex size-9 items-center justify-center active:scale-90"
 								href={item.path}
 								aria-label={item.title}
 							>
@@ -225,7 +225,7 @@
 				onclick={() => (isMobileNavOpen = !isMobileNavOpen)}
 			>
 				<div
-					class={`flex size-7 items-center justify-center transition-transform duration-250 ${
+					class={`flex size-9 items-center justify-center transition-transform duration-250 ${
 						isMobileNavOpen ? 'rotate-45' : 'rotate-0'
 					}`}
 				>
