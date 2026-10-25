@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { resolve } from '$app/paths';
 	import type { PageProps } from './$types';
 
 	import type { Desk } from '$lib/types';
@@ -14,7 +15,7 @@
 
 	let desk = $state<Desk | null>(null);
 	let deskScale = $state(1);
-	let isDeskReady = $state(false);
+	let deskStatus = $state<'pending' | 'error' | 'ready'>('pending');
 
 	const helpIcon = $derived(getIconAsset(data.iconAssets, 'help')?.icon);
 
@@ -59,10 +60,23 @@
 
 	function updateDesk(): void {
 		const { width, height } = deskArea.getBoundingClientRect();
-		if (width <= 0 || height <= 0) return;
+		if (
+			!Number.isFinite(width) ||
+			!Number.isFinite(height) ||
+			width <= 0 ||
+			height <= 0
+		) {
+			desk = null;
+			deskStatus = 'error';
+			return;
+		}
 
 		const selectedDesk = findBestFittingDesk(width, height);
-		if (!selectedDesk) return;
+		if (!selectedDesk) {
+			desk = null;
+			deskStatus = 'error';
+			return;
+		}
 
 		const scale = scaleToFit(
 			width,
@@ -70,11 +84,15 @@
 			selectedDesk.size.width,
 			selectedDesk.size.height
 		);
-		if (!Number.isFinite(scale) || scale <= 0) return;
+		if (!Number.isFinite(scale) || scale <= 0) {
+			desk = null;
+			deskStatus = 'error';
+			return;
+		}
 
 		desk = selectedDesk;
 		deskScale = scale;
-		isDeskReady = true;
+		deskStatus = 'ready';
 	}
 
 	onMount(() => {
@@ -99,8 +117,32 @@
 
 <!-- The holy desk of Homepage -->
 <div bind:this={deskArea} class="relative flex flex-1 items-center justify-center">
-	{#if isDeskReady && desk}
+	{#if deskStatus === 'ready' && desk}
 		<DeskArea {desk} {deskScale} animateItems className="absolute origin-center" />
+	{:else if deskStatus === 'error'}
+		<!--Fallback display if the desk failed to load -->
+		<div class="flex flex-col gap-6 px-6 font-balsamiq">
+			<p role="status" class="text-center text-lg text-dark-2">
+				The desk is unavailable right now :(
+			</p>
+			<div class="text-center">
+				<p>Consider refreshing the page or go to:</p>
+				<nav aria-label="Site pages">
+					<ul class="flex flex-wrap justify-center gap-x-3 gap-y-0">
+						{#each Object.values(data.pageLinks).filter((pageLink) => pageLink.id !== 'home') as pageLink (pageLink.id)}
+							<li>
+								<a
+									href={resolve(pageLink.route)}
+									class="font-akt font-medium text-cyan underline active:text-red"
+								>
+									{pageLink.title}
+								</a>
+							</li>
+						{/each}
+					</ul>
+				</nav>
+			</div>
+		</div>
 	{/if}
 </div>
 
