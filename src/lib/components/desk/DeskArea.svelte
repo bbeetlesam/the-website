@@ -1,12 +1,14 @@
 <!--
 @component A container for the desk items.
 
-@prop desk: Desk - The desk to display.
-@prop deskScale: number - The scale of the desk.
+@prop desk: Desk - The desk data, including its dimensions and items.
+@prop deskScale: number - The scale applied to the desk area.
+@prop className?: string - Additional classes for the desk area.
+@prop animateItems?: boolean - Whether desk items animate into view. Defaults to `false`.
 
 @example
 ```svelte
-<DeskArea {desk} {deskScale} />
+<DeskArea {desk} {deskScale} className="absolute top-0 left-0 origin-top-left" animateItems />
 ```
 -->
 

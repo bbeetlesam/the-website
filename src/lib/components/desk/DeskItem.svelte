@@ -1,7 +1,14 @@
 <!--
 @component A single desk item in a DeskArea.
 
-@prop item: DeskItem - The desk item to display.
+@prop item: DeskItem - The item data, including its icon, position, size, and optional
+navigation and interaction settings.
+@prop animateItems?: boolean - Whether the item animates into view. Defaults to `false`.
+
+@example
+```svelte
+<DeskItem {item} animateItems />
+```
 -->
 
 <script lang="ts">
