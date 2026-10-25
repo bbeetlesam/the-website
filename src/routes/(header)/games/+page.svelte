@@ -53,6 +53,9 @@
 	const cardHeight = 65;
 	// const cardScrollDistance = 1;
 
+	const galleryShapeSizeRem = 2.75; // rem value
+	const galleryShapeGapRem = 1.5; // rem value
+
 	// currently scales the desk to fill the available height,
 	// allowing its width to expand proportionally
 	// the mobile layout will use a different constraint later
@@ -79,9 +82,11 @@
 	let mobileGallery = $state<HTMLElement>();
 	let mobileGalleryStage = $state<HTMLElement>();
 	let mobileCardSlot = $state<HTMLElement>();
+	let entranceShapes = $state<HTMLElement>();
 	let mobileScrollStep = $state(0);
 	let mobileProgressStart = 0;
 	let mobilePresentationTop = $state(0);
+	let mobileShapeOverlay = $state({ visible: false, left: 0, top: 0, width: 0, size: 0 });
 	let horizontalTravel = $state(0);
 	let translateX = $state(0);
 	let featuredGameIndex = $state(0);
@@ -114,6 +119,7 @@
 
 		const updateScrollPositions = () => {
 			if (isDesktop && scrollSection && viewport && track) {
+				mobileShapeOverlay.visible = false;
 				horizontalTravel = Math.max(track.scrollWidth - viewport.clientWidth, 0);
 				const sectionTop = scrollSection.getBoundingClientRect().top + window.scrollY;
 				const currentScroll = window.scrollY - sectionTop;
@@ -125,13 +131,49 @@
 				return;
 			}
 
-			if (featuredGameList.length === 0 || mobileScrollStep <= 0) {
+			if (
+				featuredGameList.length === 0 ||
+				mobileScrollStep <= 0 ||
+				!entranceShapes ||
+				!mobileCardSlot
+			) {
 				featuredGameIndex = 0;
+				mobileShapeOverlay.visible = false;
 				return;
 			}
 
 			const progress = (window.scrollY - mobileProgressStart) / mobileScrollStep;
 			featuredGameIndex = Math.min(Math.max(progress, 0), featuredGameList.length - 1);
+
+			const source = entranceShapes.getBoundingClientRect();
+			const target = mobileCardSlot.getBoundingClientRect();
+			const rootFontSize = Number.parseFloat(getComputedStyle(html).fontSize);
+			const galleryShapeSize = galleryShapeSizeRem * rootFontSize;
+			const galleryShapeGap = galleryShapeGapRem * rootFontSize;
+			const startScroll = Math.max(0, mobileProgressStart - mobileScrollStep);
+			const travel = Math.min(
+				Math.max(
+					(window.scrollY - startScroll) / (mobileProgressStart - startScroll || 1),
+					0
+				),
+				1
+			);
+			const sourceSize =
+				entranceShapes.querySelector('svg')?.getBoundingClientRect().width ?? 28;
+			const targetTop =
+				window.scrollY < mobileProgressStart
+					? mobilePresentationTop - galleryShapeGap - galleryShapeSize
+					: target.top - galleryShapeGap - galleryShapeSize;
+			const sourceTop = source.top + window.scrollY - startScroll;
+			const lerp = (from: number, to: number) => from + (to - from) * travel;
+
+			mobileShapeOverlay = {
+				visible: true,
+				left: lerp(source.left, target.left),
+				top: window.scrollY < startScroll ? source.top : lerp(sourceTop, targetTop),
+				width: lerp(source.width, target.width),
+				size: lerp(sourceSize, galleryShapeSize)
+			};
 		};
 
 		const resizeObserver = new ResizeObserver((entries) => {
@@ -150,6 +192,7 @@
 			if (mobileGallery) resizeObserver.observe(mobileGallery);
 			if (mobileGalleryStage) resizeObserver.observe(mobileGalleryStage);
 			if (mobileCardSlot) resizeObserver.observe(mobileCardSlot);
+			if (entranceShapes) resizeObserver.observe(entranceShapes);
 
 			measureMobileGallery();
 			updateScrollPositions();
@@ -203,7 +246,7 @@
 			<!-- 1. Entrance -->
 			<section
 				class="
-					flex h-svh w-full flex-col justify-center gap-2
+					flex h-svh w-screen flex-col justify-center gap-2
 					p-4 md:h-screen md:shrink-0 md:gap-10 md:p-6 xl:p-8
   			"
 			>
@@ -265,12 +308,16 @@
 				<!-- Last bit of the entrance -->
 				<div class="md:items-en flex flex-row items-center justify-between gap-3">
 					<!-- Console icons -->
-					<div class="flex gap-1 md:gap-2">
+					<div
+						bind:this={entranceShapes}
+						class="flex gap-1 md:gap-2"
+						style={!isDesktop && mobileShapeOverlay.visible ? 'opacity: 0' : ''}
+					>
 						{#each psIcons as psIcon (psIcon.type)}
 							<RoughShape
 								type={psIcon.type}
 								thickness={12}
-								class={`size-7 md:size-8 lg:size-9 text-${psIcon.color}`}
+								class={`size-7 sm:size-8 lg:size-9 text-${psIcon.color}`}
 							/>
 						{/each}
 					</div>
@@ -279,7 +326,7 @@
 					<div class="md:flex-co flex items-end gap-2 md:items-start md:gap-5">
 						<p class="text-end text-lg font-semibold md:text-xl lg:text-2xl">
 							See the <br /><span class="cursor-default font-baskerville font-bold italic"
-								>{isDesktop ? 'Gallery' : 'Cards'}!</span
+								>{isDesktop ? 'Mural' : 'Cards'}!</span
 							>
 						</p>
 						<div class="hidden md:block" aria-hidden="true">
@@ -449,7 +496,7 @@
 			{/if}
 
 			<!-- 3. Miscellaneous info and footer -->
-			<section class="relative w-full px-4 pt-4 pb-7 md:h-auto md:shrink-0">
+			<section class="relative w-screen px-4 pt-4 pb-7 md:h-auto md:shrink-0 md:pb-0">
 				{#if isDesktop}
 					<p>Desktop version is undergoing</p>
 				{:else}
@@ -510,4 +557,26 @@
 			<Footer />
 		</div>
 	</div>
+
+	<!-- Mobile top card rough shapes -->
+	{#if !isDesktop && mobileShapeOverlay.visible}
+		<div
+			aria-hidden="true"
+			class="pointer-events-none fixed z-50 flex items-center justify-between"
+			style={`left: ${mobileShapeOverlay.left}px; top: ${mobileShapeOverlay.top}px; width: ${mobileShapeOverlay.width}px; height: ${mobileShapeOverlay.size}px;`}
+		>
+			{#each psIcons as psIcon (psIcon.type)}
+				<div
+					class="shrink-0"
+					style={`width: ${mobileShapeOverlay.size}px; height: ${mobileShapeOverlay.size}px;`}
+				>
+					<RoughShape
+						type={psIcon.type}
+						thickness={12}
+						class={`size-full text-${psIcon.color}`}
+					/>
+				</div>
+			{/each}
+		</div>
+	{/if}
 </div>
