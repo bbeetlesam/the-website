@@ -18,12 +18,17 @@
 	const {
 		desk,
 		deskScale,
-		className
-	}: { desk: Desk; deskScale: number; className?: string } = $props();
+		className,
+		animateItems = false
+	}: {
+		desk: Desk;
+		deskScale: number;
+		className?: string;
+		animateItems?: boolean;
+	} = $props();
 
-	// A debug flag that is true in development mode (for DeskArea)
 	// idk what im doing bruh
-	const debug: boolean = import.meta.env.DEV;
+	const debug: boolean = false; // import.meta.env.DEV;
 </script>
 
 <div
@@ -35,6 +40,6 @@
 	`}
 >
 	{#each desk.items as item (item.id)}
-		<DeskItem {item} />
+		<DeskItem {item} {animateItems} />
 	{/each}
 </div>

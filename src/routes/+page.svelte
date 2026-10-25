@@ -12,8 +12,9 @@
 
 	let deskArea: HTMLDivElement;
 
-	let desk = $derived<Desk>(data.homeDesks[0]);
+	let desk = $state<Desk | null>(null);
 	let deskScale = $state(1);
+	let isDeskReady = $state(false);
 
 	const helpIcon = $derived(getIconAsset(data.iconAssets, 'help')?.icon);
 
@@ -22,35 +23,58 @@
 	const isHelpIconActive = $derived(isInfoHovered && !isInfoModalOpen);
 
 	/**
-	 * Finds the closest desk to the given width/height ratio.
-	 *
-	 * It may not be the best algorithm so may change this later
+	 * Selects the desk whose aspect ratio fills the largest portion of the available area
+	 * when scaled to fit.
+	 * This compares the actual fitted coverage rather than raw ratio differences, which
+	 * can rank portrait and landscape layouts inconsistently. Jolly good!
 	 */
-	function findClosestDesk(width: number, height: number): Desk {
-		const targetRatio = width / height;
+	function findBestFittingDesk(width: number, height: number): Desk | undefined {
+		const candidates = data.homeDesks.filter(
+			(candidate) =>
+				Number.isFinite(candidate.size.width) &&
+				Number.isFinite(candidate.size.height) &&
+				candidate.size.width > 0 &&
+				candidate.size.height > 0
+		);
 
-		return data.homeDesks.reduce((closest, candidate) => {
-			const candidateRatio = candidate.size.width / candidate.size.height;
-			const closestRatio = closest.size.width / closest.size.height;
+		return candidates.reduce<Desk | undefined>((best, candidate) => {
+			if (!best) return candidate;
 
-			const currentDistance = Math.abs(candidateRatio - targetRatio);
-			const closestDistance = Math.abs(closestRatio - targetRatio);
+			const candidateScale = scaleToFit(
+				width,
+				height,
+				candidate.size.width,
+				candidate.size.height
+			);
+			const bestScale = scaleToFit(width, height, best.size.width, best.size.height);
+			const candidateCoverage =
+				(candidate.size.width * candidateScale * candidate.size.height * candidateScale) /
+				(width * height);
+			const bestCoverage =
+				(best.size.width * bestScale * best.size.height * bestScale) / (width * height);
 
-			return currentDistance < closestDistance ? candidate : closest;
-		});
+			return candidateCoverage > bestCoverage ? candidate : best;
+		}, undefined);
 	}
 
 	function updateDesk(): void {
 		const { width, height } = deskArea.getBoundingClientRect();
+		if (width <= 0 || height <= 0) return;
 
-		desk = findClosestDesk(width, height);
+		const selectedDesk = findBestFittingDesk(width, height);
+		if (!selectedDesk) return;
 
-		const parentWidth = width;
-		const parentHeight = height;
-		const deskWidth = desk.size.width;
-		const deskHeight = desk.size.height;
+		const scale = scaleToFit(
+			width,
+			height,
+			selectedDesk.size.width,
+			selectedDesk.size.height
+		);
+		if (!Number.isFinite(scale) || scale <= 0) return;
 
-		deskScale = scaleToFit(parentWidth, parentHeight, deskWidth, deskHeight);
+		desk = selectedDesk;
+		deskScale = scale;
+		isDeskReady = true;
 	}
 
 	onMount(() => {
@@ -75,7 +99,9 @@
 
 <!-- The holy desk of Homepage -->
 <div bind:this={deskArea} class="relative flex flex-1 items-center justify-center">
-	<DeskArea {desk} {deskScale} className="absolute origin-center" />
+	{#if isDeskReady && desk}
+		<DeskArea {desk} {deskScale} animateItems className="absolute origin-center" />
+	{/if}
 </div>
 
 <!-- Information about the items on the home desk -->

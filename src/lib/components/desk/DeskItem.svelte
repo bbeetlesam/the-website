@@ -11,7 +11,13 @@
 	import BubbleLabel from '../ui/BubbleLabel.svelte';
 
 	// Component props
-	const { item }: { item: DeskItem } = $props();
+	const {
+		item,
+		animateItems = false
+	}: {
+		item: DeskItem;
+		animateItems?: boolean;
+	} = $props();
 
 	let size = $derived(item.size ? item.size : 100);
 	let rotation = $derived(item.rotation ? item.rotation : 0);
@@ -52,32 +58,34 @@
     height: ${size}px;
   `}
 >
-	{#if item.navigation}
-		{@const bubbleLabel =
-			item.navigation.type === 'page-link'
-				? item.navigation.desc
-				: item.navigation.type === 'social-link'
-					? item.navigation.title
-					: ''}
+	<div class:desk-item-enter={animateItems}>
+		{#if item.navigation}
+			{@const bubbleLabel =
+				item.navigation.type === 'page-link'
+					? item.navigation.desc
+					: item.navigation.type === 'social-link'
+						? item.navigation.title
+						: ''}
 
-		<BubbleLabel
-			label={bubbleLabel}
-			bubbleOffsetX={0}
-			tipOffsetY={0}
-			class="text-xs font-semibold"
-		>
-			{#if item.interactionEffect === 'none'}
-				<!-- No effect -->
-				{@render deskItem(item)}
-			{:else if item.interactionEffect === 'focus-frame'}
-				<!-- Focus frame -->
-				<ItemFocusFrame {item} />
-				{@render deskItem(item)}
-			{/if}
-		</BubbleLabel>
-	{:else}
-		{@render deskItemImage(item, imageAlt)}
-	{/if}
+			<BubbleLabel
+				label={bubbleLabel}
+				bubbleOffsetX={0}
+				tipOffsetY={0}
+				class="text-xs font-semibold"
+			>
+				{#if item.interactionEffect === 'none'}
+					<!-- No effect -->
+					{@render deskItem(item)}
+				{:else if item.interactionEffect === 'focus-frame'}
+					<!-- Focus frame -->
+					<ItemFocusFrame {item} />
+					{@render deskItem(item)}
+				{/if}
+			</BubbleLabel>
+		{:else}
+			{@render deskItemImage(item, imageAlt)}
+		{/if}
+	</div>
 </div>
 
 <style>
@@ -87,5 +95,21 @@
 		left: 0;
 
 		transform: translate(-50%, -50%);
+	}
+
+	.desk-item-enter {
+		animation: desk-item-enter 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+	}
+
+	@keyframes desk-item-enter {
+		from {
+			opacity: 0;
+			transform: scale(0.8);
+		}
+
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
 	}
 </style>
