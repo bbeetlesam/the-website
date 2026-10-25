@@ -304,7 +304,7 @@
 				</div>
 
 				<!-- Last bit of the entrance -->
-				<div class="md:items-en flex flex-row items-center justify-between gap-3">
+				<div class="flex flex-row items-center justify-between gap-3">
 					<!-- Console icons -->
 					<div
 						bind:this={entranceShapes}
@@ -321,7 +321,7 @@
 					</div>
 
 					<!-- See the gallery! -->
-					<div class="md:flex-co flex items-end gap-2 md:items-start md:gap-5">
+					<div class="flex items-end gap-2 md:items-start md:gap-5">
 						<p class="text-end text-lg font-semibold md:text-xl lg:text-2xl">
 							See the <br /><span class="cursor-default font-baskerville font-bold italic"
 								>{isDesktop ? 'Mural' : 'Cards'}!</span
@@ -443,7 +443,7 @@
 												>
 													{featuredGame.title}
 												</h3>
-												<p class="font-balsami text-lg leading-tight text-blue">
+												<p class="font-balsamiq text-lg leading-tight text-blue">
 													{featuredGame.desc}
 												</p>
 											</div>

@@ -168,7 +168,7 @@
 						</div>
 
 						<!-- PageLinks nav list -->
-						<ul class="debug-outlin flex w-max gap-3 pr-1">
+						<ul class="flex w-max gap-3 pr-1">
 							{#each Object.values(pageLinks) as item (item.route)}
 								{let isNavItemHovered = $derived(hoveredNavItem?.id === item.id)}
 
