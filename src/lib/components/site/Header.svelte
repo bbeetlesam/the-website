@@ -206,7 +206,7 @@
 					{#each resolvedPageLinks as item (item.route)}
 						<li>
 							<a
-								class="flex size-7 items-center justify-center"
+								class="flex size-9 items-center justify-center active:scale-90"
 								href={item.path}
 								aria-label={item.title}
 							>
@@ -227,7 +227,7 @@
 				onclick={() => (isMobileNavOpen = !isMobileNavOpen)}
 			>
 				<div
-					class={`flex size-7 items-center justify-center transition-transform duration-250 ${
+					class={`flex size-9 items-center justify-center transition-transform duration-250 ${
 						isMobileNavOpen ? 'rotate-45' : 'rotate-0'
 					}`}
 				>
