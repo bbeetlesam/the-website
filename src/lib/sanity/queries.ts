@@ -57,17 +57,23 @@ const ICON_ASSETS_QUERY: string = `
 `;
 
 type ExternalLinkCategory = 'social' | 'game';
-const EXTERNAL_LINKS_QUERY = (category: ExternalLinkCategory): string => {
+const EXTERNAL_LINKS_QUERY = (
+	category: ExternalLinkCategory,
+	optFilter?: string
+): string => {
 	return `
-    *[_type == "social-link" && category == "${category}"] {
+    *[_type == "social-link" && category == "${category}" && (${optFilter ?? 'true'})] {
       id,
       href,
       title,
       desc,
+      genre,
+      platforms,
       "icon": {
         "default": icon.default.asset->url,
         "active": icon.active.asset->url
       },
+      "screenshot": screenshot.asset->url,
     }
   `;
 };
@@ -127,8 +133,8 @@ const DESKS_QUERY = (prefix: DeskPrefix): string => `
 /** GROQ query for fetching `Social` type of `social-link` documents */
 const SOCIAL_LINKS_QUERY = EXTERNAL_LINKS_QUERY('social');
 
-/** GROQ query for fetching `Game` type of `social-link` documents */
-const GAME_LINKS_QUERY = EXTERNAL_LINKS_QUERY('game');
+/** GROQ query for fetching FEATURED `Game` type of `social-link` documents */
+const FEATURED_GAME_LINKS_QUERY = EXTERNAL_LINKS_QUERY('game', 'featured == true');
 
 /** GROQ query for fetching Home `desk` documents */
 const HOME_DESKS_QUERY: string = DESKS_QUERY('h');
@@ -139,7 +145,7 @@ const GAME_DESKS_QUERY: string = DESKS_QUERY('g');
 export {
 	PAGE_LINKS_QUERY,
 	SOCIAL_LINKS_QUERY,
-	GAME_LINKS_QUERY,
+	FEATURED_GAME_LINKS_QUERY,
 	HOME_DESKS_QUERY,
 	GAME_DESKS_QUERY,
 	TYPEFACES_QUERY,
