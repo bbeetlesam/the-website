@@ -147,11 +147,11 @@
 </div>
 
 <!-- Information about the items on the home desk -->
-<div class="fixed top-4 right-4 z-50 flex items-center gap-1.5">
+<div class="fixed top-4 right-4 z-50 flex items-center gap-2">
 	<span
 		class={`
 			overflow-hidden font-balsamiq text-lg font-bold whitespace-nowrap
-			transition-all duration-250 ease-out select-none
+			transition-all duration-200 ease-out select-none
 			${
 				isHelpIconActive
 					? 'max-w-40 translate-x-0 opacity-100'
@@ -165,7 +165,7 @@
 
 	<button
 		type="button"
-		class="relative size-10 cursor-pointer"
+		class="relative size-12 cursor-pointer"
 		aria-label="Home page information"
 		aria-haspopup="dialog"
 		aria-expanded={isInfoModalOpen}
