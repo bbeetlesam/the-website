@@ -19,7 +19,7 @@ export default defineConfig({
 	],
 	server: {
 		host: true,
-		allowedHosts: ['.ngrok-free.app'],
+		allowedHosts: ['.ngrok-free.app', '.trycloudflare.com'],
 		port: 5173
 	}
 });
