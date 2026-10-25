@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { resolve } from '$app/paths';
 	import type { PageProps } from './$types';
 
 	import type { Desk } from '$lib/types';
@@ -12,8 +13,9 @@
 
 	let deskArea: HTMLDivElement;
 
-	let desk = $derived<Desk>(data.homeDesks[0]);
+	let desk = $state<Desk | null>(null);
 	let deskScale = $state(1);
+	let deskStatus = $state<'pending' | 'error' | 'ready'>('pending');
 
 	const helpIcon = $derived(getIconAsset(data.iconAssets, 'help')?.icon);
 
@@ -22,35 +24,75 @@
 	const isHelpIconActive = $derived(isInfoHovered && !isInfoModalOpen);
 
 	/**
-	 * Finds the closest desk to the given width/height ratio.
-	 *
-	 * It may not be the best algorithm so may change this later
+	 * Selects the desk whose aspect ratio fills the largest portion of the available area
+	 * when scaled to fit.
+	 * This compares the actual fitted coverage rather than raw ratio differences, which
+	 * can rank portrait and landscape layouts inconsistently. Jolly good!
 	 */
-	function findClosestDesk(width: number, height: number): Desk {
-		const targetRatio = width / height;
+	function findBestFittingDesk(width: number, height: number): Desk | undefined {
+		const candidates = data.homeDesks.filter(
+			(candidate) =>
+				Number.isFinite(candidate.size.width) &&
+				Number.isFinite(candidate.size.height) &&
+				candidate.size.width > 0 &&
+				candidate.size.height > 0
+		);
 
-		return data.homeDesks.reduce((closest, candidate) => {
-			const candidateRatio = candidate.size.width / candidate.size.height;
-			const closestRatio = closest.size.width / closest.size.height;
+		return candidates.reduce<Desk | undefined>((best, candidate) => {
+			if (!best) return candidate;
 
-			const currentDistance = Math.abs(candidateRatio - targetRatio);
-			const closestDistance = Math.abs(closestRatio - targetRatio);
+			const candidateScale = scaleToFit(
+				width,
+				height,
+				candidate.size.width,
+				candidate.size.height
+			);
+			const bestScale = scaleToFit(width, height, best.size.width, best.size.height);
+			const candidateCoverage =
+				(candidate.size.width * candidateScale * candidate.size.height * candidateScale) /
+				(width * height);
+			const bestCoverage =
+				(best.size.width * bestScale * best.size.height * bestScale) / (width * height);
 
-			return currentDistance < closestDistance ? candidate : closest;
-		});
+			return candidateCoverage > bestCoverage ? candidate : best;
+		}, undefined);
 	}
 
 	function updateDesk(): void {
 		const { width, height } = deskArea.getBoundingClientRect();
+		if (
+			!Number.isFinite(width) ||
+			!Number.isFinite(height) ||
+			width <= 0 ||
+			height <= 0
+		) {
+			desk = null;
+			deskStatus = 'error';
+			return;
+		}
 
-		desk = findClosestDesk(width, height);
+		const selectedDesk = findBestFittingDesk(width, height);
+		if (!selectedDesk) {
+			desk = null;
+			deskStatus = 'error';
+			return;
+		}
 
-		const parentWidth = width;
-		const parentHeight = height;
-		const deskWidth = desk.size.width;
-		const deskHeight = desk.size.height;
+		const scale = scaleToFit(
+			width,
+			height,
+			selectedDesk.size.width,
+			selectedDesk.size.height
+		);
+		if (!Number.isFinite(scale) || scale <= 0) {
+			desk = null;
+			deskStatus = 'error';
+			return;
+		}
 
-		deskScale = scaleToFit(parentWidth, parentHeight, deskWidth, deskHeight);
+		desk = selectedDesk;
+		deskScale = scale;
+		deskStatus = 'ready';
 	}
 
 	onMount(() => {
@@ -75,15 +117,41 @@
 
 <!-- The holy desk of Homepage -->
 <div bind:this={deskArea} class="relative flex flex-1 items-center justify-center">
-	<DeskArea {desk} {deskScale} className="absolute origin-center" />
+	{#if deskStatus === 'ready' && desk}
+		<DeskArea {desk} {deskScale} animateItems className="absolute origin-center" />
+	{:else if deskStatus === 'error'}
+		<!--Fallback display if the desk failed to load -->
+		<div class="flex flex-col gap-6 px-6 font-balsamiq">
+			<p role="status" class="text-center text-lg text-dark-2">
+				The desk is unavailable right now :(
+			</p>
+			<div class="text-center">
+				<p>Consider refreshing the page or go to:</p>
+				<nav aria-label="Site pages">
+					<ul class="flex flex-wrap justify-center gap-x-3 gap-y-0">
+						{#each Object.values(data.pageLinks).filter((pageLink) => pageLink.id !== 'home') as pageLink (pageLink.id)}
+							<li>
+								<a
+									href={resolve(pageLink.route)}
+									class="font-akt font-medium text-cyan underline active:text-red"
+								>
+									{pageLink.title}
+								</a>
+							</li>
+						{/each}
+					</ul>
+				</nav>
+			</div>
+		</div>
+	{/if}
 </div>
 
 <!-- Information about the items on the home desk -->
-<div class="fixed top-4 right-4 z-50 flex items-center gap-1.5">
+<div class="fixed top-4 right-4 z-50 flex items-center gap-2">
 	<span
 		class={`
 			overflow-hidden font-balsamiq text-lg font-bold whitespace-nowrap
-			transition-all duration-250 ease-out select-none
+			transition-all duration-200 ease-out select-none
 			${
 				isHelpIconActive
 					? 'max-w-40 translate-x-0 opacity-100'
@@ -97,7 +165,7 @@
 
 	<button
 		type="button"
-		class="relative size-10 cursor-pointer"
+		class="relative size-12 cursor-pointer"
 		aria-label="Home page information"
 		aria-haspopup="dialog"
 		aria-expanded={isInfoModalOpen}
