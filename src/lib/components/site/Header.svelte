@@ -1,24 +1,24 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import type { IconAssetList, PageLink, PageLinkMap } from '$lib/types';
+	import type { IconAssetList, PageLink } from '$lib/types';
 	import { fade, slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
-	import { getIconAsset } from '$lib/utils';
+	import { getIconAsset, getPageRoute } from '$lib/utils';
 
 	import favicon from '$lib/assets/favicon.svg';
 
 	// Component props
 	const {
-		pageLinks = {},
+		pageLinks = [],
 		iconAssets
-	}: { pageLinks?: PageLinkMap; iconAssets: IconAssetList } = $props();
+	}: { pageLinks?: PageLink[]; iconAssets: IconAssetList } = $props();
 
 	// Icon Assets used here
 	const navIcon = $derived(getIconAsset(iconAssets, 'nav'));
 
 	// Home PageLink
-	const homePageLink: PageLink | undefined = $derived(pageLinks.home);
+	const homePageLink = $derived(pageLinks.find((item) => item.id === 'home'));
 
 	let isMobileNavOpen = $state(false);
 	let isDesktopNavOpen = $state(false);
@@ -28,8 +28,8 @@
 
 	/** PageLinks with resolved current page state */
 	const resolvedPageLinks = $derived(
-		Object.values(pageLinks).map((item) => {
-			const path = resolve(item.route);
+		pageLinks.map((item) => {
+			const path = resolve(getPageRoute(item.id));
 			return { ...item, path, isCurrentPage: currentPath === path };
 		})
 	);
@@ -75,21 +75,27 @@
 	{@const iconImgProps = `
     absolute inset-0 size-full object-contain transition-opacity
   `}
+	{@const activeIcon = item.icon?.active ?? item.icon?.default}
+	{@const defaultIcon = item.icon?.default ?? item.icon?.active}
 
 	<span class="relative block size-full select-none">
-		<img
-			src={item.icon?.active}
-			{alt}
-			class={`${iconImgProps} ${isActive ? 'opacity-100' : 'opacity-0'}`}
-			style={`transition-duration: ${duration}ms`}
-		/>
+		{#if activeIcon}
+			<img
+				src={activeIcon}
+				{alt}
+				class={`${iconImgProps} ${isActive ? 'opacity-100' : 'opacity-0'}`}
+				style={`transition-duration: ${duration}ms`}
+			/>
+		{/if}
 
-		<img
-			src={item.icon?.default}
-			{alt}
-			class={`${iconImgProps} ${isActive ? 'opacity-0' : 'opacity-100'}`}
-			style={`transition-duration: ${duration}ms`}
-		/>
+		{#if defaultIcon}
+			<img
+				src={defaultIcon}
+				{alt}
+				class={`${iconImgProps} ${isActive ? 'opacity-0' : 'opacity-100'}`}
+				style={`transition-duration: ${duration}ms`}
+			/>
+		{/if}
 	</span>
 {/snippet}
 
@@ -99,7 +105,7 @@
 		<!-- Home with favicon -->
 		<div class="">
 			{#if homePageLink}
-				<a href={resolve(homePageLink.route)} aria-label={homePageLink.title}>
+				<a href={resolve(getPageRoute(homePageLink.id))} aria-label={homePageLink.title}>
 					<img src={favicon} alt={homePageLink.title} class="size-10" />
 				</a>
 			{/if}
@@ -115,7 +121,13 @@
 				aria-label="Navigation"
 			>
 				<div class="flex size-11 items-center justify-center">
-					<img src={navIcon?.icon.default} alt="Nav Icon" class="size-full" />
+					{#if navIcon?.icon.default || navIcon?.icon.active}
+						<img
+							src={navIcon.icon.default ?? navIcon.icon.active ?? ''}
+							alt="Nav Icon"
+							class="size-full"
+						/>
+					{/if}
 				</div>
 			</div>
 
@@ -159,22 +171,26 @@
 								aria-pressed={isDesktopNavPinned}
 								class="flex size-11 cursor-pointer items-center justify-center"
 							>
-								<img
-									src={isDesktopNavPinned ? navIcon?.icon.active : navIcon?.icon.default}
-									alt="Nav Icon"
-									class="size-9 animate-[spin_2.5s_linear_infinite]"
-								/>
+								{#if isDesktopNavPinned ? (navIcon?.icon.active ?? navIcon?.icon.default) : (navIcon?.icon.default ?? navIcon?.icon.active)}
+									<img
+										src={isDesktopNavPinned
+											? (navIcon?.icon.active ?? navIcon?.icon.default ?? '')
+											: (navIcon?.icon.default ?? navIcon?.icon.active ?? '')}
+										alt="Nav Icon"
+										class="size-9 animate-[spin_2.5s_linear_infinite]"
+									/>
+								{/if}
 							</button>
 						</div>
 
 						<!-- PageLinks nav list -->
-						<ul class="debug-outlin flex w-max gap-3 pr-1">
-							{#each Object.values(pageLinks) as item (item.route)}
+						<ul class="flex w-max gap-3 pr-1">
+							{#each pageLinks as item (item.id)}
 								{let isNavItemHovered = $derived(hoveredNavItem?.id === item.id)}
 
 								<li>
 									<a
-										href={resolve(item.route)}
+										href={resolve(getPageRoute(item.id))}
 										class="flex size-9 items-center justify-center"
 										onmouseenter={() => (hoveredNavItem = item)}
 										onmouseleave={() => (hoveredNavItem = null)}
@@ -201,7 +217,7 @@
 				transition:slide={{ duration: 250 }}
 			>
 				<ul class="flex justify-evenly">
-					{#each resolvedPageLinks as item (item.route)}
+					{#each resolvedPageLinks as item (item.id)}
 						<li>
 							<a
 								class="flex size-9 items-center justify-center active:scale-90"
@@ -229,7 +245,13 @@
 						isMobileNavOpen ? 'rotate-45' : 'rotate-0'
 					}`}
 				>
-					<img src={navIcon?.icon.default} alt="Nav Menu" class="size-full" />
+					{#if navIcon?.icon.default || navIcon?.icon.active}
+						<img
+							src={navIcon.icon.default ?? navIcon.icon.active ?? ''}
+							alt="Nav Menu"
+							class="size-full"
+						/>
+					{/if}
 				</div>
 			</button>
 		</div>

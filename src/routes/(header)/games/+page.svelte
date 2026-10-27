@@ -4,13 +4,13 @@
 	import type { PageProps } from './$types';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 
-	import type { GamePlatform } from '$lib/types';
 	import { Footer } from '$lib/components/site';
 	import { RoughFrame, RoughShape, type Shape } from '$lib/components/ui';
 	import { DeskArea } from '$lib/components/desk';
 	import { CursorTooltip } from '$lib/components/actions';
 
-	import { getIconAsset } from '$lib/utils';
+	import { getDesktopState } from '$lib/state/desktop';
+	import { getIconAsset, getPageRoute } from '$lib/utils';
 
 	import playIcon from '$lib/assets/platform-icons/play.svg';
 	import webIcon from '$lib/assets/platform-icons/web.svg';
@@ -21,7 +21,10 @@
 
 	let { data }: PageProps = $props();
 
-	const artPageLink = $derived(data.pageLinks.arts.route);
+	const desktopState = getDesktopState();
+	let isDesktop = $derived(desktopState.isDesktop);
+
+	const artPageLink = getPageRoute('arts');
 
 	/** The console (PlayStation) icons for the Entrance section. */
 	const psIcons: { type: Shape; color: string }[] = [
@@ -31,7 +34,7 @@
 		{ type: 'triangle', color: 'cyan' }
 	];
 
-	const platformIcons: Record<GamePlatform, string> = {
+	const platformIcons: Record<string, string> = {
 		web: webIcon,
 		linux: linuxIcon,
 		windows: windowsIcon,
@@ -44,8 +47,16 @@
 	/** The minigame icon used in the Entrance section. */
 	const minigameIcon = $derived(getIconAsset(data.iconAssets, 'minigame')?.icon);
 
-	let gameDesks = $derived(data.gameDesks);
-	let desk = $derived(gameDesks[0]); // currently hardcoded, will be changed later
+	const gameDesks = $derived(data.gameDesks);
+	const desk = $derived.by(() => {
+		const firstDesk = gameDesks[0];
+
+		if (!firstDesk) {
+			throw new Error('No game desk is configured in Sanity.');
+		}
+
+		return firstDesk;
+	}); // currently hardcoded, will be changed later
 
 	const featuredGameList = $derived(data.featuredGameLinks);
 	const cardHeight = 65;
@@ -89,8 +100,11 @@
 	let translateX = $state(0);
 	let featuredGameIndex = $state(0);
 
-	/** Whether the user is on a desktop (large screen) or mobile (small screen) */
-	let isDesktop = $state(false); // uses `md` value
+	/** Re-measure and observe elements for the active responsive layout */
+	let refreshResponsiveLayout: ((isDesktop: boolean) => void) | undefined;
+	$effect(() => {
+		refreshResponsiveLayout?.(isDesktop);
+	});
 
 	/** Keep entered cards stationary; only the next card travels up from below. */
 	function getCardOffset(index: number): number {
@@ -100,9 +114,6 @@
 	onMount(() => {
 		const html = document.documentElement;
 		const body = document.body;
-
-		const md = getComputedStyle(html).getPropertyValue('--breakpoint-md').trim();
-		const mediaQuery = window.matchMedia(`(min-width: ${md})`);
 
 		const measureMobileGallery = () => {
 			if (!mobileGallery || !mobileGalleryStage || !mobileCardSlot) return;
@@ -181,23 +192,24 @@
 			updateScrollPositions();
 		});
 
-		const updateMedia = async () => {
-			isDesktop = mediaQuery.matches;
-
+		const refreshLayout = async (desktop: boolean) => {
 			await tick();
 			resizeObserver.disconnect();
-			if (deskContainer) resizeObserver.observe(deskContainer);
-			if (mobileGallery) resizeObserver.observe(mobileGallery);
-			if (mobileGalleryStage) resizeObserver.observe(mobileGalleryStage);
-			if (mobileCardSlot) resizeObserver.observe(mobileCardSlot);
-			if (entranceShapes) resizeObserver.observe(entranceShapes);
+			if (desktop) {
+				if (deskContainer) resizeObserver.observe(deskContainer);
+			} else {
+				if (mobileGallery) resizeObserver.observe(mobileGallery);
+				if (mobileGalleryStage) resizeObserver.observe(mobileGalleryStage);
+				if (mobileCardSlot) resizeObserver.observe(mobileCardSlot);
+				if (entranceShapes) resizeObserver.observe(entranceShapes);
+			}
 
 			measureMobileGallery();
 			updateScrollPositions();
 		};
 
-		mediaQuery.addEventListener('change', updateMedia);
-		updateMedia();
+		refreshResponsiveLayout = refreshLayout;
+		refreshLayout(isDesktop);
 
 		// Disable overscroll (the bouncing feedback) for the Games page
 		html.classList.add('overscroll-none');
@@ -213,7 +225,7 @@
 		return () => {
 			resizeObserver.disconnect();
 
-			mediaQuery.removeEventListener('change', updateMedia);
+			refreshResponsiveLayout = undefined;
 
 			html.classList.remove('overscroll-none');
 			body.classList.remove('overscroll-none');
@@ -298,13 +310,15 @@
 							type="button"
 							class="-rotate-10 cursor-pointer transition-all duration-200 hover:-rotate-15"
 						>
-							<img src={minigameIcon?.default} alt="Open minigame" class="size-30" />
+							{#if minigameIcon?.default}
+								<img src={minigameIcon.default} alt="Open minigame" class="size-30" />
+							{/if}
 						</button>
 					</div>
 				</div>
 
 				<!-- Last bit of the entrance -->
-				<div class="md:items-en flex flex-row items-center justify-between gap-3">
+				<div class="flex flex-row items-center justify-between gap-3">
 					<!-- Console icons -->
 					<div
 						bind:this={entranceShapes}
@@ -321,7 +335,7 @@
 					</div>
 
 					<!-- See the gallery! -->
-					<div class="md:flex-co flex items-end gap-2 md:items-start md:gap-5">
+					<div class="flex items-end gap-2 md:items-start md:gap-5">
 						<p class="text-end text-lg font-semibold md:text-xl lg:text-2xl">
 							See the <br /><span class="cursor-default font-baskerville font-bold italic"
 								>{isDesktop ? 'Mural' : 'Cards'}!</span
@@ -443,7 +457,7 @@
 												>
 													{featuredGame.title}
 												</h3>
-												<p class="font-balsami text-lg leading-tight text-blue">
+												<p class="font-balsamiq text-lg leading-tight text-blue">
 													{featuredGame.desc}
 												</p>
 											</div>
@@ -451,9 +465,9 @@
 											<div class="flex items-end justify-between">
 												<div class="flex flex-col gap-2">
 													<div class="flex flex-row gap-1">
-														{#each featuredGame.platforms as platform (platform)}
+														{#each featuredGame.platforms ?? [] as platform (platform)}
 															<img
-																src={platformIcons[platform]}
+																src={platformIcons[platform] ?? playIcon}
 																alt={platform}
 																class="size-6"
 															/>

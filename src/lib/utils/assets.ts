@@ -14,7 +14,7 @@ export function getIconAsset(
 	iconAssets: IconAssetList,
 	id: string
 ): IconAsset | undefined {
-	const icon = iconAssets[id];
+	const icon = iconAssets.find((asset) => asset.id === id);
 
 	if (!icon) {
 		console.warn(`Icon Asset "${id}" does not exist.`);

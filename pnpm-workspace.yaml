@@ -1,2 +1,4 @@
 allowBuilds:
   esbuild: true
+minimumReleaseAgeExclude:
+  - '@bbeetlesam/website-sanity-schema@1.0.0'

@@ -6,7 +6,14 @@
 	import { onMount, type Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 
+	import { provideDesktopState } from '$lib/state/desktop';
+	import { watchDesktop } from '$lib/utils';
+
 	let { children, data }: { children: Snippet; data: LayoutData } = $props();
+
+	/** Per-layout responsive state shared with all descendant components */
+	const desktopState = $state({ isDesktop: false });
+	provideDesktopState(desktopState);
 
 	/** Absolute canonical URL for the current route, or null when one shouldn't be emitted */
 	const canonicalUrl = $derived.by(() => {
@@ -21,18 +28,29 @@
 	});
 
 	onMount(() => {
+		// Keep the shared state synchronized with the site's CSS `md` breakpoint
+		const stopWatchingDesktop = watchDesktop((isDesktop) => {
+			desktopState.isDesktop = isDesktop;
+		});
+
 		// Fetch typefaces from Sanity and inject them into the <style> document head
 		const css = data.typefaces
 			.flatMap((typeface) =>
-				typeface.variants.map((variant) => {
-					const weight =
-						variant.type === 'static'
-							? `${variant.weight}`
-							: variant.type === 'variable'
-								? `${variant.minWeight} ${variant.maxWeight}`
-								: `400`;
+				(typeface.variants ?? []).flatMap((variant) => {
+					if (!variant.file) {
+						console.warn(
+							`Skipping font variant "${variant.name}" in typeface "${typeface.name}": no file URL was returned.`
+						);
+						return [];
+					}
 
-					return `
+					const weight =
+						'weight' in variant
+							? `${variant.weight}`
+							: `${variant.minWeight} ${variant.maxWeight}`;
+
+					return [
+						`
             @font-face {
               font-family: '${typeface.name}';
               src: url('${variant.file}') format('${variant.format}');
@@ -40,7 +58,8 @@
               font-style: ${variant.style};
               font-display: swap;
             }
-          `;
+					`
+					];
 				})
 			)
 			.join('\n');
@@ -48,6 +67,8 @@
 		const style = document.createElement('style');
 		style.textContent = css;
 		document.head.appendChild(style);
+
+		return stopWatchingDesktop;
 	});
 </script>
 
