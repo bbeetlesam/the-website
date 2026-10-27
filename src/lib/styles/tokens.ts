@@ -1,41 +1,36 @@
-// Design tokens sourced from CSS custom propertieS
-import { getCssProperty } from '$lib/utils';
+// This file is generated from the color and font tokens in src/routes/layout.css.
+// Run pnpm tokens:generate after changing those declarations.
 
 const tokens = {
 	color: {
-		paper: '',
-		dark2: '',
-		dark3: '',
-		dark1: '',
-		blue: '',
-		purple: '',
-		cyan: '',
-		red: ''
+		paper: '#f6f5f4',
+		paper50: '#f6f5f4',
+		paper100: '#eaeae8',
+		paper200: '#dad9d5',
+		paper300: '#c2c0ba',
+		paper400: '#a39f95',
+		paper500: '#908b7e',
+		paper600: '#7e796c',
+		paper700: '#69645a',
+		paper800: '#57534b',
+		paper900: '#494640',
+		paper950: '#25231f',
+		dark1: '#1e1e1e',
+		dark2: '#2e2a2e',
+		dark3: '#474a4c',
+		blue: '#0599bb',
+		purple: '#c95bb5',
+		cyan: '#259ea2',
+		red: '#ef0000'
 	},
 	font: {
-		akt: '',
-		balsamiq: '',
-		baskerville: '',
-		bricolage: '',
-		mono: ''
+		winkysans: "'Winky Sans', sans-serif",
+		balsamiq: "'Balsamiq Sans', sans-serif",
+		akt: "'Akt', Inter, sans-serif",
+		baskerville: "'Libre Baskerville', serif",
+		bricolage: "'Bricolage Grotesque', sans-serif",
+		mono: "'Martian Mono', monospace"
 	}
-};
-
-export function initializeCssTokens(): void {
-	tokens.color.paper = getCssProperty('--color-paper');
-	tokens.color.dark2 = getCssProperty('--color-dark-2');
-	tokens.color.dark3 = getCssProperty('--color-dark-3');
-	tokens.color.dark1 = getCssProperty('--color-dark-1');
-	tokens.color.blue = getCssProperty('--color-blue');
-	tokens.color.purple = getCssProperty('--color-purple');
-	tokens.color.cyan = getCssProperty('--color-cyan');
-	tokens.color.red = getCssProperty('--color-red');
-
-	tokens.font.akt = getCssProperty('--font-akt');
-	tokens.font.balsamiq = getCssProperty('--font-balsamiq');
-	tokens.font.baskerville = getCssProperty('--font-baskerville');
-	tokens.font.bricolage = getCssProperty('--font-bricolage');
-	tokens.font.mono = getCssProperty('--font-mono');
-}
+} as const;
 
 export default tokens;

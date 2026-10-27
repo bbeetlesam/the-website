@@ -7,13 +7,19 @@
 		"node": ">=22.12.0"
 	},
 	"scripts": {
+		"tokens:generate": "node scripts/css-to-ts-tokens.mjs",
+		"predev": "pnpm tokens:generate",
 		"dev": "vite dev",
+		"prebuild": "pnpm tokens:generate",
 		"build": "vite build",
 		"typegen": "sanity schemas extract --force --enforce-required-fields --path ./.sanity/schema.json && sanity typegen generate && ts-to-zod --config sanity-query-results && prettier --write ./src/lib/sanity/sanity.zod.ts",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo '' && husky",
+		"precheck": "pnpm tokens:generate",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"precheck:watch": "pnpm tokens:generate",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"prelint": "pnpm tokens:generate",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"vitals": "svelte-vitals"
@@ -32,6 +38,7 @@
 		"eslint-plugin-svelte": "^3.23.0",
 		"globals": "^17.11.0",
 		"husky": "^9.1.7",
+		"postcss": "^8.5.31",
 		"prettier": "^3.9.6",
 		"prettier-plugin-svelte": "^4.1.1",
 		"prettier-plugin-tailwindcss": "^0.8.1",
