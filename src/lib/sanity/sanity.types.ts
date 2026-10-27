@@ -535,3 +535,19 @@ export type DESKS_QUERY_RESULT = Array<{
 		focusFrame: FocusFrame | null;
 	}>;
 }>;
+
+// Query TypeMap
+declare global {
+	interface SanityQueries {
+		'\n\t*[_type == "page-link"] | order(navOrder asc) {\n\t\t"type": _type,\n\t\tid,\n\t\ttitle,\n\t\tdesc,\n\t\t"icon": {\n\t\t\t"default": icon.default.asset->url,\n\t\t\t"active": icon.active.asset->url\n\t\t}\n\t}\n': PAGE_LINKS_QUERY_RESULT;
+		'\n\t*[_type == "typeface"] {\n\t\tname,\n\t\tvariantsType,\n\t\t...select(\n\t\t\tvariantsType == "static" => {\n\t\t\t\t"variants": staticFonts[] {\n\t\t\t\t\tname,\n\t\t\t\t\t"type": ^.variantsType,\n\t\t\t\t\tweight,\n\t\t\t\t\tstyle,\n\t\t\t\t\t"file": file.asset->url,\n\t\t\t\t\tformat\n\t\t\t\t}\n\t\t\t},\n\t\t\tvariantsType == "variable" => {\n\t\t\t\t"variants": variableFonts[] {\n\t\t\t\t\tname,\n\t\t\t\t\t"type": ^.variantsType,\n\t\t\t\t\tminWeight,\n\t\t\t\t\tmaxWeight,\n\t\t\t\t\tstyle,\n\t\t\t\t\t"file": file.asset->url,\n\t\t\t\t\tformat\n\t\t\t\t}\n\t\t\t}\n\t\t)\n\t}\n': TYPEFACES_QUERY_RESULT;
+		'\n\t*[_type == "icon-asset"] {\n\t\tid,\n\t\t"icon": {\n\t\t\t"default": variants.default.asset->url,\n\t\t\t"active": variants.active.asset->url\n\t\t}\n\t}\n': ICON_ASSETS_QUERY_RESULT;
+		'\n\t*[_type == "social-link" && category == "social"] {\n\t\t"type": _type,\n\t\tid,\n\t\thref,\n\t\ttitle,\n\t\tdesc,\n\t\t"icon": {\n\t\t\t"default": icon.default.asset->url,\n\t\t\t"active": icon.active.asset->url\n\t\t}\n\t}\n': SOCIAL_LINKS_QUERY_RESULT;
+		'\n\t*[_type == "social-link" && category == "game" && featured == true] {\n\t\t"type": _type,\n\t\tid,\n\t\thref,\n\t\ttitle,\n\t\tdesc,\n\t\tgenre,\n\t\tplatforms,\n\t\t"icon": {\n\t\t\t"default": icon.default.asset->url,\n\t\t\t"active": icon.active.asset->url\n\t\t},\n\t\t"screenshot": screenshot.asset->url\n\t}\n': FEATURED_GAME_LINKS_QUERY_RESULT;
+		'\n\t*[_type == "desk" && string::startsWith(id, $prefix)] {\n\t\t"id": id,\n\t\t"size": size,\n\t\t"items": deskItems[] {\n\t\t\t"id": id,\n\t\t\t"icon": {\n\t\t\t\t"default": icon.default.asset->url,\n\t\t\t\t"active": icon.active.asset->url\n\t\t\t},\n\t\t\t"imageAlt": imageAlt,\n\t\t\t"x": position.x,\n\t\t\t"y": position.y,\n\t\t\t"size": size,\n\t\t\t"rotation": rotation,\n\t\t\t"navigation": navigation->{\n\t\t\t\t"type": _type,\n\t\t\t\t...select(\n\t\t\t\t\t_type == "page-link" => {\n\t\t\t\t\t\tid,\n\t\t\t\t\t\ttitle,\n\t\t\t\t\t\tdesc,\n\t\t\t\t\t\t"icon": {\n\t\t\t\t\t\t\t"default": icon.default.asset->url,\n\t\t\t\t\t\t\t"active": icon.active.asset->url\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\t_type == "social-link" => {\n\t\t\t\t\t\tid,\n\t\t\t\t\t\thref,\n\t\t\t\t\t\ttitle,\n\t\t\t\t\t\tdesc,\n\t\t\t\t\t\t"icon": {\n\t\t\t\t\t\t\t"default": icon.default.asset->url,\n\t\t\t\t\t\t\t"active": icon.active.asset->url\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t)\n\t\t\t},\n\t\t\t"interactionEffect": interactionEffect,\n\t\t\t"focusFrame": focusFrame\n\t\t}\n\t}\n': DESKS_QUERY_RESULT;
+	}
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module '@sanity/client' {
+	interface SanityQueries extends globalThis.SanityQueries {}
+}

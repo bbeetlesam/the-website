@@ -34,6 +34,11 @@ export default defineConfig(
 		}
 	},
 	{
+		// TypeGen emits this empty compatibility augmentation for older client versions.
+		files: ['src/lib/sanity/sanity.types.ts'],
+		rules: { '@typescript-eslint/no-empty-object-type': 'off' }
+	},
+	{
 		// Override or add rule settings here, such as:
 		// 'svelte/button-has-type': 'error'
 		rules: {}
