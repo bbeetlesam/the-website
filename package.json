@@ -9,7 +9,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"typegen": "sanity schemas extract --force --path ./.sanity/schema.json && sanity typegen generate",
+		"typegen": "sanity schemas extract --force --enforce-required-fields --path ./.sanity/schema.json && sanity typegen generate",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -45,6 +45,7 @@
 	},
 	"dependencies": {
 		"@sanity/client": "^8.5.0",
+		"groq": "^6.20.0",
 		"roughjs": "^4.6.6"
 	}
 }

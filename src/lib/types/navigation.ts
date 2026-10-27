@@ -1,77 +1,48 @@
-import type { RouteId } from '$app/types';
-import type { Icon } from './objects';
+import type {
+	FEATURED_GAME_LINKS_QUERY_RESULT,
+	PAGE_LINKS_QUERY_RESULT,
+	SOCIAL_LINKS_QUERY_RESULT
+} from '$lib/sanity/sanity.types';
+import type { DeskItem } from './desk';
+
+/**
+ * Represents a link to a page within the application.
+ *
+ * The SvelteKit route is resolved from the Sanity identifier in the frontend.
+ */
+export type PageLink = PAGE_LINKS_QUERY_RESULT[number];
+
+/**
+ * Represents a link to an external resource.
+ */
+export type ExternalLink = SOCIAL_LINKS_QUERY_RESULT[number];
+
+/**
+ * Represents a game link. Based on {@link ExternalLink}, with genre, platform,
+ * and screenshot fields.
+ */
+export type GameLink = FEATURED_GAME_LINKS_QUERY_RESULT[number];
+
+/**
+ * Represents a navigational link attached to a desk item.
+ *
+ * It is either an internal page link or an external social link dereferenced by
+ * the desk GROQ query.
+ */
+export type Navigation = NonNullable<DeskItem['navigation']>;
 
 /**
  * Represents a supported navigation type.
  *
- * These types correspond to the navigation types defined in Sanity.
+ * These types correspond to the navigation document kinds defined in Sanity.
  */
-type NavigationType = 'page-link' | 'social-link';
-
-/** Represents a supported game platform of the game. */
-type GamePlatform = 'web' | 'windows' | 'mac' | 'linux' | 'android' | 'ios' | 'other';
+export type NavigationType = Navigation['type'];
 
 /**
- * Represents a link to a page within the application.
+ * Represents a platform value returned for a game link.
+ *
+ * Sanity configures the available platform options, but TypeGen exposes the
+ * query field as `string[]`. This alias therefore resolves to `string` and does
+ * not restrict values to that option list at compile time.
  */
-type PageLink = {
-	/** The navigation type returned by Sanity. */
-	type: 'page-link';
-	/** The unique identifier of the page link. */
-	id: string;
-	/** The SvelteKit RouteId used to resolve the page link. */
-	route: RouteId;
-	/** The title of the page link. */
-	title: string;
-	/** The description of the page link (technically the 'longer' title). */
-	desc?: string;
-	/** The icon of the page link. */
-	icon?: Icon;
-};
-
-/** Page links indexed by their stable Sanity `id` (for example, `home` or `arts`). */
-type PageLinkMap = Record<string, PageLink>;
-
-/**
- * Represents an external link to an external resource.
- */
-type ExternalLink = {
-	/** The type of the link based from Sanity. */
-	type: 'social-link';
-	/** The unique identifier for the external link. */
-	id: string;
-	/** The href of the external link (to somewhere else). */
-	href: string;
-	/** The representing title for the external link. */
-	title?: string;
-	/** The description of the external link. */
-	desc?: string;
-	/** The image icon of the external link. */
-	icon?: Icon;
-};
-
-/**
- * Represents a Game link. Based on {@link GameLink}, but with genre, platform,
- * and screenshot fields.
- */
-type GameLink = ExternalLink & {
-	/** The genre of the game. */
-	genre: string;
-	/** The platforms the game is available on. */
-	platforms: GamePlatform[];
-	/** The screenshot of the game. */
-	screenshot?: string;
-};
-
-/** Represents a navigational link. */
-type Navigation = PageLink | ExternalLink;
-
-export type {
-	PageLink,
-	PageLinkMap,
-	ExternalLink,
-	GameLink,
-	NavigationType,
-	Navigation,
-	GamePlatform
-};
+export type GamePlatform = NonNullable<GameLink['platforms']>[number];

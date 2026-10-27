@@ -4,7 +4,7 @@
 	import type { PageProps } from './$types';
 
 	import type { Desk } from '$lib/types';
-	import { getIconAsset, scaleToFit } from '$lib/utils';
+	import { getIconAsset, getPageRoute, scaleToFit } from '$lib/utils';
 	import { DeskArea } from '$lib/components/desk';
 	import { Modal } from '$lib/components/ui';
 
@@ -129,10 +129,10 @@
 				<p>Consider refreshing the page or go to:</p>
 				<nav aria-label="Site pages">
 					<ul class="flex flex-wrap justify-center gap-x-3 gap-y-0">
-						{#each Object.values(data.pageLinks).filter((pageLink) => pageLink.id !== 'home') as pageLink (pageLink.id)}
+						{#each data.pageLinks.filter((pageLink) => pageLink.id !== 'home') as pageLink (pageLink.id)}
 							<li>
 								<a
-									href={resolve(pageLink.route)}
+									href={resolve(getPageRoute(pageLink.id))}
 									class="font-akt font-medium text-cyan underline active:text-red"
 								>
 									{pageLink.title}
@@ -176,22 +176,26 @@
 			isInfoModalOpen = true;
 		}}
 	>
-		<img
-			src={helpIcon?.default}
-			alt=""
-			aria-hidden="true"
-			class={`
+		{#if helpIcon?.default}
+			<img
+				src={helpIcon.default}
+				alt=""
+				aria-hidden="true"
+				class={`
 				absolute inset-0 size-full transition-opacity duration-200
 				${isHelpIconActive ? 'opacity-0' : 'opacity-100'}`}
-		/>
-		<img
-			src={helpIcon?.active}
-			alt=""
-			aria-hidden="true"
-			class={`
+			/>
+		{/if}
+		{#if helpIcon?.active || helpIcon?.default}
+			<img
+				src={helpIcon.active ?? helpIcon.default ?? ''}
+				alt=""
+				aria-hidden="true"
+				class={`
 				absolute inset-0 size-full opacity-0 transition-opacity duration-200
 				${isHelpIconActive ? 'opacity-100' : 'opacity-0'}`}
-		/>
+			/>
+		{/if}
 	</button>
 </div>
 

@@ -1,47 +1,27 @@
-import type { Navigation } from './navigation';
-import type { Icon } from './objects';
+import type { DESKS_QUERY_RESULT } from '$lib/sanity/sanity.types';
 
-type InteractionEffect = 'none' | 'focus-frame';
-type FocusFrame = {
-	/** The size of the focus frame as a percentage of the item's size. */
-	size?: number;
-	/** The size of the focus frame's corner. */
-	cornerSize?: number;
-	/** The thickness of the focus frame's corner. */
-	cornerThickness?: number;
-	/** The offset of the focus drawing from the canvas edge of the item. */
-	edgeOffset?: number;
-};
+/** Represents the interaction effect to apply when a desk item is interacted with. */
+export type InteractionEffect = NonNullable<DeskItem['interactionEffect']>;
 
-type DeskItem = {
-	id: string;
-	icon: Icon;
-	imageAlt: string;
-	x: number;
-	y: number;
-	rotation: number;
-	size: number;
-	/** The navigation item associated with this item (if navigable). */
-	navigation?: Navigation;
-	/** The interaction effect to apply when the item is interacted with. */
-	interactionEffect?: InteractionEffect;
-	/** The focus frame configuration for the item (only on navigable items). */
-	focusFrame?: FocusFrame;
-};
+/**
+ * Represents the focus frame configuration for a navigable desk item.
+ */
+export type FocusFrame = NonNullable<DeskItem['focusFrame']>;
 
-type DeskSize = {
-	/** The width of the Desk in pixels. */
-	width: number;
-	/** The height of the Desk in pixels. */
-	height: number;
-};
+/**
+ * Represents the size of a desk in pixels.
+ */
+export type DeskSize = DESKS_QUERY_RESULT[number]['size'];
 
-type Desk = {
-	id: string;
-	/** The size of the Desk. */
-	size: DeskSize;
-	/** The items on the Desk. */
-	items: DeskItem[];
-};
+/**
+ * Represents a desk item.
+ *
+ * Its Sanity position is flattened into coordinates, and image assets and
+ * referenced navigation documents are projected for display and routing.
+ */
+export type DeskItem = DESKS_QUERY_RESULT[number]['items'][number];
 
-export type { DeskItem, DeskSize, Desk };
+/**
+ * Represents a desk with its dimensions and its desk items.
+ */
+export type Desk = DESKS_QUERY_RESULT[number];

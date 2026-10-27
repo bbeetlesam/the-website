@@ -4,14 +4,13 @@
 	import type { PageProps } from './$types';
 	import type { Options as RoughOptions } from 'roughjs/bin/core';
 
-	import type { GamePlatform } from '$lib/types';
 	import { Footer } from '$lib/components/site';
 	import { RoughFrame, RoughShape, type Shape } from '$lib/components/ui';
 	import { DeskArea } from '$lib/components/desk';
 	import { CursorTooltip } from '$lib/components/actions';
 
 	import { getDesktopState } from '$lib/state/desktop';
-	import { getIconAsset } from '$lib/utils';
+	import { getIconAsset, getPageRoute } from '$lib/utils';
 
 	import playIcon from '$lib/assets/platform-icons/play.svg';
 	import webIcon from '$lib/assets/platform-icons/web.svg';
@@ -25,7 +24,7 @@
 	const desktopState = getDesktopState();
 	let isDesktop = $derived(desktopState.isDesktop);
 
-	const artPageLink = $derived(data.pageLinks.arts.route);
+	const artPageLink = getPageRoute('arts');
 
 	/** The console (PlayStation) icons for the Entrance section. */
 	const psIcons: { type: Shape; color: string }[] = [
@@ -35,7 +34,7 @@
 		{ type: 'triangle', color: 'cyan' }
 	];
 
-	const platformIcons: Record<GamePlatform, string> = {
+	const platformIcons: Record<string, string> = {
 		web: webIcon,
 		linux: linuxIcon,
 		windows: windowsIcon,
@@ -48,8 +47,16 @@
 	/** The minigame icon used in the Entrance section. */
 	const minigameIcon = $derived(getIconAsset(data.iconAssets, 'minigame')?.icon);
 
-	let gameDesks = $derived(data.gameDesks);
-	let desk = $derived(gameDesks[0]); // currently hardcoded, will be changed later
+	const gameDesks = $derived(data.gameDesks);
+	const desk = $derived.by(() => {
+		const firstDesk = gameDesks[0];
+
+		if (!firstDesk) {
+			throw new Error('No game desk is configured in Sanity.');
+		}
+
+		return firstDesk;
+	}); // currently hardcoded, will be changed later
 
 	const featuredGameList = $derived(data.featuredGameLinks);
 	const cardHeight = 65;
@@ -303,7 +310,9 @@
 							type="button"
 							class="-rotate-10 cursor-pointer transition-all duration-200 hover:-rotate-15"
 						>
-							<img src={minigameIcon?.default} alt="Open minigame" class="size-30" />
+							{#if minigameIcon?.default}
+								<img src={minigameIcon.default} alt="Open minigame" class="size-30" />
+							{/if}
 						</button>
 					</div>
 				</div>
@@ -456,9 +465,9 @@
 											<div class="flex items-end justify-between">
 												<div class="flex flex-col gap-2">
 													<div class="flex flex-row gap-1">
-														{#each featuredGame.platforms as platform (platform)}
+														{#each featuredGame.platforms ?? [] as platform (platform)}
 															<img
-																src={platformIcons[platform]}
+																src={platformIcons[platform] ?? playIcon}
 																alt={platform}
 																class="size-6"
 															/>

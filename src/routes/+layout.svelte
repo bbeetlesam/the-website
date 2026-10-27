@@ -36,15 +36,21 @@
 		// Fetch typefaces from Sanity and inject them into the <style> document head
 		const css = data.typefaces
 			.flatMap((typeface) =>
-				typeface.variants.map((variant) => {
-					const weight =
-						variant.type === 'static'
-							? `${variant.weight}`
-							: variant.type === 'variable'
-								? `${variant.minWeight} ${variant.maxWeight}`
-								: `400`;
+				(typeface.variants ?? []).flatMap((variant) => {
+					if (!variant.file) {
+						console.warn(
+							`Skipping font variant "${variant.name}" in typeface "${typeface.name}": no file URL was returned.`
+						);
+						return [];
+					}
 
-					return `
+					const weight =
+						'weight' in variant
+							? `${variant.weight}`
+							: `${variant.minWeight} ${variant.maxWeight}`;
+
+					return [
+						`
             @font-face {
               font-family: '${typeface.name}';
               src: url('${variant.file}') format('${variant.format}');
@@ -52,7 +58,8 @@
               font-style: ${variant.style};
               font-display: swap;
             }
-          `;
+					`
+					];
 				})
 			)
 			.join('\n');

@@ -1,16 +1,16 @@
 import { client } from '$lib/sanity/client';
 import { SOCIAL_LINKS_QUERY } from '$lib/sanity/queries';
 
-import type { ExternalLink } from '$lib/types';
+import type { SOCIAL_LINKS_QUERY_RESULT } from '$lib/sanity/sanity.types';
 
 /**
  * Bio layout server load function.
  *
- * Fetch Social external link documents from Sanity, and then returns them as `socialLinks`
- * with the type of {@link ExternalLink}[].
+ * Fetch the social-link query projection and return it as `socialLinks`.
  */
 export async function load() {
-	const sanitySocialLinks = await client.fetch<ExternalLink[]>(SOCIAL_LINKS_QUERY);
+	const sanitySocialLinks =
+		await client.fetch<SOCIAL_LINKS_QUERY_RESULT>(SOCIAL_LINKS_QUERY);
 
 	return {
 		socialLinks: sanitySocialLinks

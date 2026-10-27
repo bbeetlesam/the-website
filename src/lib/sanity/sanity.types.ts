@@ -24,35 +24,35 @@ export type SanityFileAssetReference = {
 
 export type VariableFont = {
 	_type: 'variable-font';
-	name?: string;
-	minWeight?: number;
-	maxWeight?: number;
-	style?: 'normal' | 'italic';
-	file?: {
+	name: string;
+	minWeight: number;
+	maxWeight: number;
+	style: 'normal' | 'italic';
+	file: {
 		asset?: SanityFileAssetReference;
 		media?: unknown;
 		_type: 'file';
 	};
-	format?: 'woff' | 'woff2' | 'truetype' | 'opentype';
+	format: 'woff' | 'woff2' | 'truetype' | 'opentype';
 };
 
 export type Font = {
 	_type: 'font';
-	name?: string;
-	weight?: number;
-	style?: 'normal' | 'italic';
-	file?: {
+	name: string;
+	weight: number;
+	style: 'normal' | 'italic';
+	file: {
 		asset?: SanityFileAssetReference;
 		media?: unknown;
 		_type: 'file';
 	};
-	format?: 'woff' | 'woff2' | 'truetype' | 'opentype';
+	format: 'woff' | 'woff2' | 'truetype' | 'opentype';
 };
 
 export type Position = {
 	_type: 'position';
-	x?: number;
-	y?: number;
+	x: number;
+	y: number;
 };
 
 export type FocusFrame = {
@@ -104,11 +104,11 @@ export type SocialLinkReference = {
 
 export type DeskItem = {
 	_type: 'desk-item';
-	id?: string;
-	icon?: Icon;
+	id: string;
+	icon: Icon;
 	imageAlt?: string;
-	position?: Position;
-	size?: number;
+	position: Position;
+	size: number;
 	rotation?: number;
 	navigation?: PageLinkReference | SocialLinkReference;
 	interactionEffect?: 'none' | 'focus-frame';
@@ -121,8 +121,8 @@ export type IconAsset = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	id?: string;
-	variants?: Icon;
+	id: string;
+	variants: Icon;
 };
 
 export type Typeface = {
@@ -131,8 +131,8 @@ export type Typeface = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	name?: string;
-	variantsType?: 'static' | 'variable';
+	name: string;
+	variantsType: 'static' | 'variable';
 	staticFonts?: Array<
 		{
 			_key: string;
@@ -158,12 +158,12 @@ export type Blog = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	title?: string;
-	slug?: Slug;
-	author?: AuthorReference;
-	publishedAt?: string;
-	excerpt?: string;
-	body?: Array<{
+	title: string;
+	slug: Slug;
+	author: AuthorReference;
+	publishedAt: string;
+	excerpt: string;
+	body: Array<{
 		children?: Array<{
 			marks?: Array<string>;
 			text?: string;
@@ -189,14 +189,14 @@ export type Author = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	name?: string;
-	nickname?: string;
+	name: string;
+	nickname: string;
 	slug?: Slug;
 };
 
 export type Slug = {
 	_type: 'slug';
-	current?: string;
+	current: string;
 	source?: string;
 };
 
@@ -206,12 +206,12 @@ export type SocialLink = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	id?: string;
-	category?: 'social' | 'game';
+	id: string;
+	category: 'social' | 'game';
 	featured?: boolean;
 	genre?: string;
 	platforms?: Array<string>;
-	href?: string;
+	href: string;
 	title?: string;
 	desc?: string;
 	icon?: Icon;
@@ -226,18 +226,18 @@ export type SocialLink = {
 
 export type SanityImageCrop = {
 	_type: 'sanity.imageCrop';
-	top?: number;
-	bottom?: number;
-	left?: number;
-	right?: number;
+	top: number;
+	bottom: number;
+	left: number;
+	right: number;
 };
 
 export type SanityImageHotspot = {
 	_type: 'sanity.imageHotspot';
-	x?: number;
-	y?: number;
-	height?: number;
-	width?: number;
+	x: number;
+	y: number;
+	height: number;
+	width: number;
 };
 
 export type PageLink = {
@@ -246,11 +246,11 @@ export type PageLink = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	id?: string;
-	title?: string;
-	desc?: string;
-	icon?: Icon;
-	navOrder?: number;
+	id: string;
+	title: string;
+	desc: string;
+	icon: Icon;
+	navOrder: number;
 };
 
 export type Desk = {
@@ -259,12 +259,12 @@ export type Desk = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	id?: string;
-	size?: {
-		width?: number;
-		height?: number;
+	id: string;
+	size: {
+		width: number;
+		height: number;
 	};
-	deskItems?: Array<
+	deskItems: Array<
 		{
 			_key: string;
 		} & DeskItem
@@ -292,9 +292,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
 	_type: 'sanity.imageDimensions';
-	height?: number;
-	width?: number;
-	aspectRatio?: number;
+	height: number;
+	width: number;
+	aspectRatio: number;
 };
 
 export type SanityImageMetadata = {
@@ -320,14 +320,14 @@ export type SanityFileAsset = {
 	title?: string;
 	description?: string;
 	altText?: string;
-	sha1hash?: string;
-	extension?: string;
-	mimeType?: string;
-	size?: number;
-	assetId?: string;
+	sha1hash: string;
+	extension: string;
+	mimeType: string;
+	size: number;
+	assetId: string;
 	uploadId?: string;
-	path?: string;
-	url?: string;
+	path: string;
+	url: string;
 	source?: SanityAssetSourceData;
 };
 
@@ -349,14 +349,14 @@ export type SanityImageAsset = {
 	title?: string;
 	description?: string;
 	altText?: string;
-	sha1hash?: string;
-	extension?: string;
-	mimeType?: string;
-	size?: number;
-	assetId?: string;
+	sha1hash: string;
+	extension: string;
+	mimeType: string;
+	size: number;
+	assetId: string;
 	uploadId?: string;
-	path?: string;
-	url?: string;
+	path: string;
+	url: string;
 	metadata?: SanityImageMetadata;
 	source?: SanityAssetSourceData;
 };
@@ -398,3 +398,140 @@ export type AllSanitySchemaTypes =
 	| SanityAssetSourceData
 	| SanityImageAsset
 	| Geopoint;
+
+// Source: src/lib/sanity/queries.ts
+// Variable: PAGE_LINKS_QUERY
+// Query: *[_type == "page-link"] | order(navOrder asc) {		"type": _type,		id,		title,		desc,		"icon": {			"default": icon.default.asset->url,			"active": icon.active.asset->url		}	}
+export type PAGE_LINKS_QUERY_RESULT = Array<{
+	type: 'page-link';
+	id: string;
+	title: string;
+	desc: string;
+	icon: {
+		default: string | null;
+		active: string | null;
+	};
+}>;
+
+// Source: src/lib/sanity/queries.ts
+// Variable: TYPEFACES_QUERY
+// Query: *[_type == "typeface"] {		name,		variantsType,		...select(			variantsType == "static" => {				"variants": staticFonts[] {					name,					"type": ^.variantsType,					weight,					style,					"file": file.asset->url,					format				}			},			variantsType == "variable" => {				"variants": variableFonts[] {					name,					"type": ^.variantsType,					minWeight,					maxWeight,					style,					"file": file.asset->url,					format				}			}		)	}
+export type TYPEFACES_QUERY_RESULT = Array<
+	| {
+			name: string;
+			variantsType: 'static' | 'variable';
+			variants: Array<{
+				name: string;
+				type: 'static' | 'variable';
+				minWeight: number;
+				maxWeight: number;
+				style: 'italic' | 'normal';
+				file: string | null;
+				format: 'opentype' | 'truetype' | 'woff' | 'woff2';
+			}> | null;
+	  }
+	| {
+			name: string;
+			variantsType: 'static' | 'variable';
+			variants: Array<{
+				name: string;
+				type: 'static' | 'variable';
+				weight: number;
+				style: 'italic' | 'normal';
+				file: string | null;
+				format: 'opentype' | 'truetype' | 'woff' | 'woff2';
+			}> | null;
+	  }
+>;
+
+// Source: src/lib/sanity/queries.ts
+// Variable: ICON_ASSETS_QUERY
+// Query: *[_type == "icon-asset"] {		id,		"icon": {			"default": variants.default.asset->url,			"active": variants.active.asset->url		}	}
+export type ICON_ASSETS_QUERY_RESULT = Array<{
+	id: string;
+	icon: {
+		default: string | null;
+		active: string | null;
+	};
+}>;
+
+// Source: src/lib/sanity/queries.ts
+// Variable: SOCIAL_LINKS_QUERY
+// Query: *[_type == "social-link" && category == "social"] {		"type": _type,		id,		href,		title,		desc,		"icon": {			"default": icon.default.asset->url,			"active": icon.active.asset->url		}	}
+export type SOCIAL_LINKS_QUERY_RESULT = Array<{
+	type: 'social-link';
+	id: string;
+	href: string;
+	title: string | null;
+	desc: string | null;
+	icon: {
+		default: string | null;
+		active: string | null;
+	};
+}>;
+
+// Source: src/lib/sanity/queries.ts
+// Variable: FEATURED_GAME_LINKS_QUERY
+// Query: *[_type == "social-link" && category == "game" && featured == true] {		"type": _type,		id,		href,		title,		desc,		genre,		platforms,		"icon": {			"default": icon.default.asset->url,			"active": icon.active.asset->url		},		"screenshot": screenshot.asset->url	}
+export type FEATURED_GAME_LINKS_QUERY_RESULT = Array<{
+	type: 'social-link';
+	id: string;
+	href: string;
+	title: string | null;
+	desc: string | null;
+	genre: string | null;
+	platforms: Array<string> | null;
+	icon: {
+		default: string | null;
+		active: string | null;
+	};
+	screenshot: string | null;
+}>;
+
+// Source: src/lib/sanity/queries.ts
+// Variable: DESKS_QUERY
+// Query: *[_type == "desk" && string::startsWith(id, $prefix)] {		"id": id,		"size": size,		"items": deskItems[] {			"id": id,			"icon": {				"default": icon.default.asset->url,				"active": icon.active.asset->url			},			"imageAlt": imageAlt,			"x": position.x,			"y": position.y,			"size": size,			"rotation": rotation,			"navigation": navigation->{				"type": _type,				...select(					_type == "page-link" => {						id,						title,						desc,						"icon": {							"default": icon.default.asset->url,							"active": icon.active.asset->url						}					},					_type == "social-link" => {						id,						href,						title,						desc,						"icon": {							"default": icon.default.asset->url,							"active": icon.active.asset->url						}					}				)			},			"interactionEffect": interactionEffect,			"focusFrame": focusFrame		}	}
+export type DESKS_QUERY_RESULT = Array<{
+	id: string;
+	size: {
+		width: number;
+		height: number;
+	};
+	items: Array<{
+		id: string;
+		icon: {
+			default: string | null;
+			active: string | null;
+		};
+		imageAlt: string | null;
+		x: number;
+		y: number;
+		size: number;
+		rotation: number | null;
+		navigation:
+			| {
+					type: 'page-link';
+					id: string;
+					title: string;
+					desc: string;
+					icon: {
+						default: string | null;
+						active: string | null;
+					};
+			  }
+			| {
+					type: 'social-link';
+					id: string;
+					href: string;
+					title: string | null;
+					desc: string | null;
+					icon: {
+						default: string | null;
+						active: string | null;
+					};
+			  }
+			| null;
+		interactionEffect: 'focus-frame' | 'none' | null;
+		focusFrame: FocusFrame | null;
+	}>;
+}>;

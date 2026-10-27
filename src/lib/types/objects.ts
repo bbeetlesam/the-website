@@ -1,112 +1,65 @@
-// General object types, such as Icon, Typeface, et cetera.
-// By general, I mean general as it generic object type that you can possibly call it
-// as 'stuff'. Tuff.
+import type {
+	ICON_ASSETS_QUERY_RESULT,
+	TYPEFACES_QUERY_RESULT
+} from '$lib/sanity/sanity.types';
 
 /**
  * Represents an icon.
  *
- * An Icon contains the default and active versions of the icon,
- * and may contain additional properties of the icon. (WIP)
+ * An icon contains default and active image variants. The GROQ query projects
+ * each image to its Sanity asset URL. A URL may be `null` if its image reference
+ * or asset URL cannot be resolved.
  */
-type Icon = {
-	/** The default version of the icon. */
-	default: string;
-	/** The active version of the icon. */
-	active: string;
-};
+export type Icon = ICON_ASSETS_QUERY_RESULT[number]['icon'];
 
 /** Represents the style of a font (normal or italic). */
-type FontStyle = 'normal' | 'italic';
-
-/** Represents the type of a font (static or variable). */
-// type FontType = 'static' | 'variable';
+export type FontStyle = NonNullable<
+	TYPEFACES_QUERY_RESULT[number]['variants']
+>[number]['style'];
 
 /**
  * Represents a static font.
  *
- * Contains the name, weight, style, and file of a variant of a static font
- * that will be used in the application CSS.
+ * Contains the name, weight, style, and file of a static font variant used by
+ * the application CSS. Its fields follow the Sanity `font` object, with the
+ * file asset projected to a URL string. The URL may be `null` if the asset
+ * cannot be resolved.
  */
-type StaticFont = {
-	/** The name of the static font (Regular, Bold, Italic, etc.). */
-	name: string;
-	/** The type of the font (static). */
-	type: 'static';
-	/** The weight of the static font. Ranges from 100 to 900. */
-	weight: number;
-	/** The style of the static font (normal or italic). */
-	style: FontStyle;
-	/** The file path of the static font. */
-	file: string;
-	/** The format of the static font (woff2, woff, etc.). */
-	format: string;
-};
+export type StaticFont = Extract<
+	NonNullable<TYPEFACES_QUERY_RESULT[number]['variants']>[number],
+	{ weight: number }
+> & { type: 'static' };
 
 /**
  * Represents a variable font.
  *
- * Contains the name, weight range, style, and file of a variable font
- * that will be used in the application CSS.
+ * Contains the name, weight range, style, and file of a variable font variant
+ * used by the application CSS. Its fields follow the Sanity `variable-font`
+ * object, with the file asset projected to a URL string. The URL may be `null`
+ * if the asset cannot be resolved.
  */
-type VariableFont = {
-	/** The name of the variable font. */
-	name: string;
-	/** The type of the font (variable). */
-	type: 'variable';
-	/** The minimum weight of the variable font. */
-	minWeight: number;
-	/** The maximum weight of the variable font. */
-	maxWeight: number;
-	/** The style of the variable font (normal or italic). */
-	style: FontStyle;
-	/** The file path of the variable font. */
-	file: string;
-	/** The format of the variable font (woff2, woff, etc.). */
-	format: string;
-};
+export type VariableFont = Extract<
+	NonNullable<TYPEFACES_QUERY_RESULT[number]['variants']>[number],
+	{ minWeight: number; maxWeight: number }
+> & { type: 'variable' };
 
 /**
- * Represents a Typeface.
+ * Represents a typeface and its projected static or variable font variants.
  *
- * Contains the name, variantsType, and variants list of
- * {@link StaticFont} or {@link VariableFont} of
- * a Typeface that will be used in the application CSS.
+ * The GROQ query combines the selected Sanity font array into `variants` for
+ * use by the application font CSS.
  */
-type Typeface =
-	| {
-			/** The name of the Typeface family. */
-			name: string;
-			/** The type of variants of the Typeface. */
-			variantsType: 'static';
-			/** The list of {@link StaticFont} variants of the Typeface. */
-			variants: StaticFont[];
-	  }
-	| {
-			/** The name of the Typeface family. */
-			name: string;
-			/** The type of variants of the Typeface. */
-			variantsType: 'variable';
-			/** The list of {@link VariableFont} variants of the Typeface. */
-			variants: VariableFont[];
-	  };
+export type Typeface = TYPEFACES_QUERY_RESULT[number];
 
 /**
- * Represents an Icon Asset.
- *
- * Contains an icon set with its identifier and variants of default and active icon.
+ * Represents an icon asset record with its identifier and default and active
+ * image URLs.
  */
-type IconAsset = {
-	/** The identifier of the Icon Asset. */
-	id: string;
-	/** The icon set of the Icon Asset. */
-	icon: Icon;
-};
+export type IconAsset = ICON_ASSETS_QUERY_RESULT[number];
 
 /**
- * Represents a list of Icon Assets.
+ * Represents the list of icon asset records returned by the GROQ query.
  *
- * A {@link Record} of {@link IconAsset} indexed by their identifier.
+ * Each record can be located by its stable Sanity identifier.
  */
-type IconAssetList = Record<string, IconAsset>;
-
-export type { Icon, Typeface, StaticFont, VariableFont, IconAsset, IconAssetList };
+export type IconAssetList = ICON_ASSETS_QUERY_RESULT;
